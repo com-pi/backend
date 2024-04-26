@@ -1,1 +1,5 @@
 rootProject.name = 'compi'
+include 'api-gateway'
+include 'common'
+include 'board-service'
+include 'discovery-eureka'
