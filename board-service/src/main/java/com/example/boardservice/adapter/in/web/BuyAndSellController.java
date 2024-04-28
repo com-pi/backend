@@ -1,13 +1,12 @@
 package com.example.boardservice.adapter.in.web;
 
 import com.example.boardservice.application.port.in.PostArticleUseCase;
+import com.example.boardservice.application.port.in.PostBuyAndSellCommand;
 import com.example.boardservice.domain.ArticleStatusType;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,7 +33,7 @@ public class BuyAndSellController {
             @Parameter(description = "이미지 배열") @RequestPart("imageFiles") List<MultipartFile> imageFiles,
             @Parameter(description = "해시태그 배열") String[] hashtags) {
 
-        PostBuyAndSellRequest request = PostBuyAndSellRequest.builder()
+        PostBuyAndSellCommand request = PostBuyAndSellCommand.builder()
                 .title(title)
                 .content(content)
                 .price(price)
@@ -44,15 +43,12 @@ public class BuyAndSellController {
                 .articleStatus(ArticleStatusType.of(articleStatus))
                 .imageFiles(imageFiles)
                 .hashtags(List.of(hashtags))
-                .build();
+                .buildAndValidate();
 
         postArticleUseCase.postBuyAndSell(request);
     }
 
-    @Tag(name = "식물거래 게시글 작성", description = "새로운 식물거래 게시글을 작성합니다.")
-    @PostMapping(value = "/v2/buy-and-sell", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void postBuyAndSell2(@ParameterObject @ModelAttribute PostBuyAndSellRequest d)  {
 
-    }
+
 
 }

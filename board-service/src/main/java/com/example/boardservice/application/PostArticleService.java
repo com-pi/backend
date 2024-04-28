@@ -1,6 +1,6 @@
 package com.example.boardservice.application;
 
-import com.example.boardservice.adapter.in.web.PostBuyAndSellRequest;
+import com.example.boardservice.application.port.in.PostBuyAndSellCommand;
 import com.example.boardservice.application.port.in.PostArticleUseCase;
 import com.example.boardservice.application.port.out.ImageCommandPort;
 import com.example.boardservice.application.port.out.PostArticlePort;
@@ -23,7 +23,7 @@ public class PostArticleService implements PostArticleUseCase {
 
     @Override
     @Transactional
-    public void postBuyAndSell(PostBuyAndSellRequest command) {
+    public void postBuyAndSell(PostBuyAndSellCommand command) {
 
         List<String> imageUrls = imageCommandPort.saveImages(command.getImageFiles());
 

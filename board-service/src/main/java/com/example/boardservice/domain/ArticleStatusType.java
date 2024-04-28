@@ -2,7 +2,7 @@ package com.example.boardservice.domain;
 
 public enum ArticleStatusType {
 
-    ongoing, completed, saved;
+    ONGOING, COMPLETED, SAVED;
 
     public static ArticleStatusType of(String status) {
         for(ArticleStatusType type : ArticleStatusType.values()){
