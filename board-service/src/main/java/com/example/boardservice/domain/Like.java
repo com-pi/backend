@@ -6,13 +6,11 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder(builderMethodName = "generate")
-public class Comment {
+public class Like {
 
+    private Long likeId;
     private Long boardId;
-    private Integer dept;
-    private Long parentCommentId;
-    private Long commentId;
-    private Long authorId;
-    private String content;
+    private Long userId;
+    private Boolean isLiked;
 
 }

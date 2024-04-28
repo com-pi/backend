@@ -1,28 +1,43 @@
 package com.example.boardservice.domain;
 
-import java.util.HashSet;
+import com.example.boardservice.adapter.out.persistence.JsonToStringListConverter;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import java.util.List;
+
+@Entity
+@Table(name = "article")
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder(builderMethodName = "generate")
 public class BuyAndSell {
 
-    private Author author;
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Enumerated(EnumType.STRING)
     private ArticleType articleType;
 
     private String title;
-
     private String content;
-
     private Integer price;
 
-    private Area meetingArea;
+    @Embedded
+    private Area area;
 
-    private String meetingPoint;
+    @Convert(converter = JsonToStringListConverter.class)
+    private List<String> imageUrls;
 
-    private ArticleStatusType articleStatus;
-
-    private Integer readCount;
-
-    private HashSet<String> hashtags;
-
+    @Convert(converter = JsonToStringListConverter.class)
+    private List<String> hashtags;
 
 }

@@ -5,6 +5,16 @@ spring:
   application:
     name: board-service
 
+springdoc:
+  swagger-ui:
+    display-request-duration: true
+    tags-sorter: alpha
+    operations-sorter: alpha
+    doc-expansion: none
+    syntax-highlight:
+      theme: nord
+    persist-authorization: true
+  pre-loading-enabled: true
 
 management:
   endpoint:
@@ -14,8 +24,5 @@ management:
 
 eureka:
   client:
-    register-with-eureka: true
-    fetch-registry: true
-    service-url:
-      defaultZone: http://localhost:8761/eureka
-
+    register-with-eureka: false
+    fetch-registry: false

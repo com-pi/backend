@@ -4,8 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/api-gateway/compi.api-gateway.main.iml" filepath="$PROJECT_DIR$/.idea/modules/api-gateway/compi.api-gateway.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/board-service/compi.board-service.main.iml" filepath="$PROJECT_DIR$/.idea/modules/board-service/compi.board-service.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common/compi.common.main.iml" filepath="$PROJECT_DIR$/.idea/modules/common/compi.common.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/discovery-eureka/compi.discovery-eureka.main.iml" filepath="$PROJECT_DIR$/.idea/modules/discovery-eureka/compi.discovery-eureka.main.iml" />
     </modules>
   </component>
 </project>

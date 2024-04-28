@@ -1,0 +1,16 @@
+package com.example.boardservice.common.config;
+
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+
+//@Configuration
+public class SwaggerConfig {
+
+//    @Bean
+    public OpenAPI api() {
+        return new OpenAPI()
+                .info(new Info().title("꼼삐 Swagger API")
+                        .description("게시판 서비스 API"));
+    }
+
+}
