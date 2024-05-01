@@ -2,6 +2,7 @@ package com.example.authserver.client;
 
 /**
  * 카카오 사용자 정보를 받기 위한 레코드 입니다.
+
  */
 public record KakaoUserInfoResponse(
         Long id,

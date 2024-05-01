@@ -1,7 +1,12 @@
 package com.example.authserver.client;
 
 
-public record KakaoAccount(
-        String email,
-        KakaoProfile kakao_profile
-) {}
+import lombok.AllArgsConstructor;
+
+@AllArgsConstructor
+public class KakaoAccount {
+
+    private final String email;
+    private final KakaoProfile kakaoProfile;
+
+}
