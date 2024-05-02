@@ -1,6 +1,30 @@
 spring:
+  application:
+    name: auth-service
+
   profiles:
     default: dev
+
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+
+  h2:
+    console:
+      enabled: true
+      path: /h2
+      settings:
+        trace: false
+        web-allow-others: true
 
 springdoc:
   swagger-ui:
@@ -12,3 +36,8 @@ springdoc:
       theme: nord
     persist-authorization: true
   pre-loading-enabled: true
+
+oauth:
+  naver:
+    app-key: OhHssSBOwmc929lDfGOg
+    secret: JIZ1uNAFt7

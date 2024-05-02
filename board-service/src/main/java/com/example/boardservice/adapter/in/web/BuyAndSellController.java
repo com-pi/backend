@@ -48,7 +48,4 @@ public class BuyAndSellController {
         postArticleUseCase.postBuyAndSell(request);
     }
 
-
-
-
 }
