@@ -1,18 +1,9 @@
-server:
-  port: 8000
-
-eureka:
-  instance:
-    appname: api-gateway
-  client:
-    fetch-registry: true
-    register-with-eureka: true
-    service-url:
-      defaultZone: http://discovery-eureka:8761/eureka
-
 spring:
   application:
     name: api-gateway
+
+  profiles:
+    default: dev
 
   cloud:
     gateway:
@@ -25,3 +16,14 @@ spring:
             - name: PathPrefixRemoveFilter
               args:
                 prefix: /board-service
+
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth-service/**
+          filters:
+            - name: PathPrefixRemoveFilter
+              args:
+                prefix: /auth-service
+
+

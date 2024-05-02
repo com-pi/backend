@@ -1,6 +1,12 @@
 spring:
-  profiles:
-    default: dev
+  application:
+    name: board-service
+
+management:
+  endpoint:
+    web:
+      exposure:
+        include: health
 
 springdoc:
   swagger-ui:
@@ -12,3 +18,5 @@ springdoc:
       theme: nord
     persist-authorization: true
   pre-loading-enabled: true
+
+
