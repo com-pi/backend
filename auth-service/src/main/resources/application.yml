@@ -41,3 +41,10 @@ oauth:
   naver:
     app-key: OhHssSBOwmc929lDfGOg
     secret: JIZ1uNAFt7
+  kakao:
+    app-key: 5b085c799bdb7da9923e226b6a8b6188
+    secret: tGusphDWBKePGSVjyGqY5ElI0jkvzRBj
+
+secret:
+  accessToken: test1
+  refreshToken: test2

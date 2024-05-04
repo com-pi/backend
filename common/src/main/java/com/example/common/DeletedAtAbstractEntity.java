@@ -2,13 +2,12 @@ package com.example.common;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;
-import jakarta.persistence.PrePersist;
 
 import java.time.LocalDateTime;
 
 
 @MappedSuperclass
-public class DeletedAtAbstractEntity {
+public abstract class DeletedAtAbstractEntity extends BaseTimeAbstractEntity {
 
     @Column(name = "DELETED_AT")
     private LocalDateTime deletedAt;
@@ -16,9 +15,10 @@ public class DeletedAtAbstractEntity {
     @Column(name = "DELETION_YN")
     private String deletionYn;
 
-    @PrePersist
-    public void onCreate() {
-        this.deletionYn = "Y";
+    @Override
+    protected void onCreate() {
+        super.onCreate();
+        deletionYn = "N";
     }
 
     protected void delete(){

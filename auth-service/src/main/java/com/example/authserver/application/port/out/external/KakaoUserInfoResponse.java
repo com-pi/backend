@@ -1,8 +1,10 @@
 package com.example.authserver.application.port.out.external;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @AllArgsConstructor
+@Getter
 public class KakaoUserInfoResponse {
     private final Long id;
     private final KakaoAccount kakao_account;
@@ -12,8 +14,7 @@ public class KakaoUserInfoResponse {
      * Feign 클라이언트의 맵핑을 위해 스네이크 케이스를 사용하였습니다.
      */
     public record KakaoAccount(
-            String email,
-            KakaoProfile kakao_profile
+            KakaoProfile profile
     ) {}
 
     public record KakaoProfile(

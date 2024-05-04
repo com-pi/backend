@@ -1,10 +1,19 @@
 package com.example.authserver.application.port.in;
 
-import com.example.authserver.adapter.in.OAuthProvider;
-import com.example.authserver.domain.JWT;
+import com.example.authserver.adapter.in.LoginType;
+import com.example.authserver.domain.ComPToken;
+import jakarta.servlet.http.HttpServletResponse;
 
 public interface OAuthLoginUseCase {
 
-    JWT generateToken(String code, String state, OAuthProvider provider);
+    LoginResponse kakaoLogin(
+            String code,
+            String redirectUrl,
+            HttpServletResponse response);
+
+    LoginResponse naverLogin(
+            String code,
+            String state,
+            HttpServletResponse response);
 
 }
