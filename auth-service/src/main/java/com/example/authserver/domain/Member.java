@@ -4,13 +4,13 @@ import com.example.authserver.adapter.in.JoinRequest;
 import com.example.authserver.application.port.out.external.KakaoUserInfoResponse;
 import com.example.authserver.application.port.out.external.NaverUserInfoResponse;
 import com.example.common.baseentity.DeletedAtAbstractEntity;
+import com.example.common.domain.Role;
 import com.example.common.exception.NotFoundException;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.geo.Point;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.management.relation.Role;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
