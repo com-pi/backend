@@ -1,4 +1,4 @@
-package com.example.authserver.application.port.in;
+package com.example.authserver.adapter.in;
 
 import com.example.authserver.domain.ComPToken;
 

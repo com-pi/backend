@@ -1,12 +1,14 @@
 package com.example.authserver.application;
 
-import com.example.authserver.application.port.in.LoginResponse;
+import com.example.authserver.adapter.in.LoginResponse;
 import com.example.authserver.application.port.in.OAuthLoginUseCase;
 import com.example.authserver.application.port.out.external.*;
 import com.example.authserver.application.port.out.persistence.MemberPort;
-import com.example.authserver.util.JwtGenerator;
+import com.example.authserver.application.port.out.persistence.RedisPort;
 import com.example.authserver.domain.ComPToken;
 import com.example.authserver.domain.Member;
+import com.example.authserver.util.CookieUtil;
+import com.example.authserver.util.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +26,8 @@ public class OAuthLoginService implements OAuthLoginUseCase {
     private final NaverAuthClient naverAuthClient;
     private final NaverAuthClient.NaverTokenClient naverTokenClient;
     private final MemberPort memberPort;
-    private final JwtGenerator jwtGenerator;
+    private final JwtUtil jwtUtil;
+    private final RedisPort redisPort;
     private static final String GRANT_TYPE = "authorization_code";
 
     @Value("${oauth.kakao.app-key}")
@@ -61,9 +64,11 @@ public class OAuthLoginService implements OAuthLoginUseCase {
             kakaoMember = Optional.of(newKakaoMember);
         }
 
-        ComPToken refreshToken = jwtGenerator.generateToken(kakaoMember.get(), JwtGenerator.TokenType.REFRESH_TOKEN);
-        ComPToken accessToken = jwtGenerator.generateToken(kakaoMember.get(), JwtGenerator.TokenType.ACCESS_TOKEN);
-        setRefreshCookie(refreshToken, response);
+        ComPToken refreshToken = jwtUtil.generateToken(kakaoMember.get(), JwtUtil.TokenType.REFRESH_TOKEN);
+        redisPort.saveRefreshToken(kakaoMember.get(), refreshToken.getToken());
+        CookieUtil.setRefreshCookie(refreshToken, response);
+
+        ComPToken accessToken = jwtUtil.generateToken(kakaoMember.get(), JwtUtil.TokenType.ACCESS_TOKEN);
 
         return LoginResponse.of(accessToken, isNewMember);
     }
@@ -89,15 +94,12 @@ public class OAuthLoginService implements OAuthLoginUseCase {
             naverMember = Optional.of(newNaverMember);
         }
 
-        ComPToken refreshToken = jwtGenerator.generateToken(naverMember.get(), JwtGenerator.TokenType.REFRESH_TOKEN);
-        ComPToken accessToken = jwtGenerator.generateToken(naverMember.get(), JwtGenerator.TokenType.ACCESS_TOKEN);
-        setRefreshCookie(refreshToken, response);
+        ComPToken refreshToken = jwtUtil.generateToken(naverMember.get(), JwtUtil.TokenType.REFRESH_TOKEN);
+        redisPort.saveRefreshToken(naverMember.get(), refreshToken.getToken());
+        ComPToken accessToken = jwtUtil.generateToken(naverMember.get(), JwtUtil.TokenType.ACCESS_TOKEN);
 
         return LoginResponse.of(accessToken, isNewMember);
     }
 
-    private void setRefreshCookie(ComPToken comPToken, HttpServletResponse response) {
-        response.setHeader("Set-Cookie", comPToken.generateRefreshTokenCookie());
-    }
 
 }

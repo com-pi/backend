@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 
@@ -20,7 +21,7 @@ import org.springframework.web.server.ServerWebExchange;
  */
 @Component
 @Slf4j
-public class PathPrefixRemoveFilter extends AbstractGatewayFilterFactory<PathPrefixRemoveFilter.Config> {
+public class PathPrefixRemoveFilter extends AbstractGatewayFilterFactory<PathPrefixRemoveFilter.Config> implements Ordered {
 
     public PathPrefixRemoveFilter() {
         super(Config.class); // Config 클래스 타입을 생성자에 전달
@@ -43,6 +44,11 @@ public class PathPrefixRemoveFilter extends AbstractGatewayFilterFactory<PathPre
 
             return chain.filter(exchange);
         };
+    }
+
+    @Override
+    public int getOrder() {
+        return 100;
     }
 
     @Getter

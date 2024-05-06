@@ -1,7 +1,7 @@
 package com.example.boardservice.application;
 
-import com.example.boardservice.application.port.in.PostBuyAndSellCommand;
 import com.example.boardservice.application.port.in.PostArticleUseCase;
+import com.example.boardservice.application.port.in.PostBuyAndSellCommand;
 import com.example.boardservice.application.port.out.ImageCommandPort;
 import com.example.boardservice.application.port.out.PostArticlePort;
 import com.example.boardservice.domain.Area;

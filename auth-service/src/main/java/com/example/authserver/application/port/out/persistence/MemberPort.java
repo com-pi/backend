@@ -9,5 +9,6 @@ public interface MemberPort extends JpaRepository<Member, Long> {
 
     Optional<Member> findByKakaoId(String kakaoId);
     Optional<Member> findByNaverId(String naverId);
+    Optional<Member> findByEmail(String email);
 
 }

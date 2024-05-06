@@ -1,5 +1,6 @@
 package com.example.authserver.domain;
 
+import jakarta.servlet.http.Cookie;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +17,12 @@ public class ComPToken {
 
     public String generateRefreshTokenCookie() {
         return String.format("RefreshToken=%s; Secure; Path=/; HttpOnly;", token);
+    }
+
+    public Cookie removeRefreshTokenCookie() {
+        Cookie deleteCookie = new Cookie("RefreshToken", "");
+        deleteCookie.setMaxAge(0);
+        return deleteCookie;
     }
 
 }

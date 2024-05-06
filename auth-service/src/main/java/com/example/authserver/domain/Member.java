@@ -1,12 +1,17 @@
 package com.example.authserver.domain;
 
+import com.example.authserver.adapter.in.JoinRequest;
 import com.example.authserver.application.port.out.external.KakaoUserInfoResponse;
 import com.example.authserver.application.port.out.external.NaverUserInfoResponse;
-import com.example.common.DeletedAtAbstractEntity;
+import com.example.common.baseentity.DeletedAtAbstractEntity;
+import com.example.common.domain.Role;
+import com.example.common.exception.NotFoundException;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.geo.Point;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -31,13 +36,19 @@ public class Member extends DeletedAtAbstractEntity {
     @Column(unique = true)
     private String email;
     private String password;
+    private String phoneNumber;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @Column(unique = true)
     private String nickname;
     private String imageUrl;
     private String thumbnailUrl;
+    private LocalDateTime lastLogin;
 
-//    @Column(columnDefinition = "Point") d
+    // Todo :mysql 지리 데이터 타입 핸들링 필요
+//    @Column(columnDefinition = "Point")
     private Point location;
 
     public void updateProfileFromSocialProfile(KakaoUserInfoResponse.KakaoProfile kakaoProfile) {
@@ -71,6 +82,28 @@ public class Member extends DeletedAtAbstractEntity {
                 .build();
     }
 
+    public static Member newMemberFromRequest(JoinRequest joinRequest, PasswordEncoder encoder) {
+        return Member.builder()
+                .email(joinRequest.email())
+                .password(encoder.encode(joinRequest.password()))
+                .nickname(joinRequest.nickname())
+                .build();
+    }
+
+    public void authenticateWithPassword(String password, PasswordEncoder encoder) {
+        if(encoder.matches(password, this.password)){
+            throw new NotFoundException(Member.class);
+        }
+    }
+
+    public LocalDateTime loginStamp(){
+        // LocalDateTime 은 불변 객체
+        LocalDateTime lastLoginTime = lastLogin;
+        lastLogin = LocalDateTime.now();
+        return lastLoginTime;
+    }
+
+    @SuppressWarnings("unused")
     public void deleteMember(){
         kakaoId = null;
         naverId = null;
