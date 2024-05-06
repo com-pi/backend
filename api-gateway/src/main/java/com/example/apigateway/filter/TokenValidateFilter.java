@@ -53,13 +53,13 @@ public class TokenValidateFilter extends AbstractGatewayFilterFactory<TokenValid
         return Mono.just(
                 authorizationHeader != null &&
                         authorizationHeader.size() == 1 &&
-                        authorizationHeader.getFirst().startsWith("Bearer ")
+                        authorizationHeader.get(0).startsWith("Bearer ")
         );
     }
 
     private Mono<String> getToken(ServerWebExchange exchange) {
         return Mono.just(exchange.getRequest().getHeaders().get("Authorization")
-                .getFirst().substring(7)); // 널체크 되어있음 정적 분석 도구 오류
+                .get(0).substring(7)); // 널체크 되어있음 정적 분석 도구 오류
     }
 
     @Override
