@@ -30,8 +30,6 @@ spring:
               args:
                 prefix: /auth-service
 
-
-
 secret:
   accessToken: test1
   refreshToken: test2

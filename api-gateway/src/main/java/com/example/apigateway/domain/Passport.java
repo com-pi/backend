@@ -1,4 +1,4 @@
-package com.example.common.domain;
+package com.example.apigateway.domain;
 
 public record Passport(
     Long memberId,
@@ -17,6 +17,12 @@ public record Passport(
             // 멤버 권한 파싱 오류
             return null;
         }
+    }
+
+    public String toJson() {
+        return String.format(
+                "{\"memberId\":\"%s\",\"role\":\"%s\"}", this.memberId, this.role
+        );
     }
 
     public enum Role {
