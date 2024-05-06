@@ -120,6 +120,8 @@ project(':auth-service'){
 
 		implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
+
+
 		// feign
 		implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 

@@ -5,8 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 
 @AllArgsConstructor
-@Getter
 @Builder
+@Getter
 public class ExceptionResponse {
 
     private Integer errorCode;
