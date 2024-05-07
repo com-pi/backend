@@ -2,7 +2,6 @@ package com.example.apigateway.filter;
 
 import com.example.apigateway.exception.NoAccessTokenException;
 import com.example.apigateway.util.CookieUtil;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
@@ -18,8 +17,11 @@ import java.nio.charset.StandardCharsets;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class ExceptionHandlerFilter extends AbstractGatewayFilterFactory<ExceptionHandlerFilter.Config> implements Ordered {
+
+    public ExceptionHandlerFilter() {
+        super(Config.class);
+    }
 
     private final String tokenReissueEndPoint = "/auth-service/token";
     private final String authFailMessageJson = "{\"message\":\"로그인이 필요합니다.\"}";

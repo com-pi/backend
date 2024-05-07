@@ -34,3 +34,15 @@ spring:
 secret:
   accessToken: test1
   refreshToken: test2
+
+springdoc:
+  webjars:
+    prefix:
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+  swagger-ui:
+    path: swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  cache:
+    disabled: true

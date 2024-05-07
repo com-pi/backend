@@ -9,3 +9,12 @@ eureka:
     register-with-eureka: true
     service-url:
       defaultZone: http://discovery-eureka:8761/eureka
+
+springdoc:
+  swagger-ui:
+    urls[0]:
+      name: 인증/인가 서비스
+      url: http://auth-service:8080/v3/api-docs
+    urls[1]:
+      name: 식물생활 서비스
+      url: http://board-service:8080/v3/api-docs
