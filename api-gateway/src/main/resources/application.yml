@@ -8,6 +8,7 @@ spring:
   cloud:
     gateway:
       default-filters:
+        - name: ExceptionHandlerFilter
         - name: LoggingFilter
 
       routes:
