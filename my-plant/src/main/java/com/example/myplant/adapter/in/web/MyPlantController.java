@@ -1,8 +1,9 @@
 package com.example.myplant.adapter.in.web;
 
-import com.example.myplant.application.PostPlantService;
 import com.example.myplant.application.port.in.RegisterPlantCommand;
 import com.example.myplant.application.port.in.PostPlantUseCase;
+import com.example.myplant.domain.PlantLocation;
+import com.example.myplant.domain.PlantStatus;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +29,10 @@ public class MyPlantController {
         @Parameter(description = "식물 생일", required = true) String plant_birthday,
         @Parameter(description = "식물 사진 Url", required = true) String plant_image_url,
         @Parameter(description = "식물 급수 주기", required = true) String plant_water_days,
+        @Parameter(description = "식물 위치", required = true) String plantLocation,
         @Parameter(description = "급수 날짜", required = true) String last_water_day,
         @Parameter(description = "식물 설명", required = true) String plant_description,
-        @Parameter(description = "상태", required = true) String status,
+        @Parameter(description = "식물 상태 ", required = true) String status,
         @Parameter(description = "친밀도", required = true) String intimacy)
     {
         RegisterPlantCommand request = RegisterPlantCommand.builder()
@@ -43,7 +45,8 @@ public class MyPlantController {
                 .plantWaterDays(plant_water_days)
                 .lastWaterDay(last_water_day)
                 .plantDescription(plant_description)
-                .status(status)
+                .plantLocation(PlantLocation.of(plantLocation))
+                .status(PlantStatus.of(status))
                 .intimacy(intimacy)
                 .buildAndValidate();
         postPlantUseCase.postRegisterPlant(request);

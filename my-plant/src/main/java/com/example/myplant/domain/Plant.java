@@ -16,7 +16,34 @@ import lombok.NoArgsConstructor;
 public class Plant {
 
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    private Plant(Long id) {
+        this.id = id;
+    }
+
+    private Long memberId;
+
+    private String plantName;
+    private String plantType;
+    private String plantAge;
+    private String plantBirthday;
+    private String plantImageUrl;
+    private String plantWaterDays;
+    private String lastWaterDay;
+    private String intimacy;
+
+
+    @Enumerated(EnumType.STRING)
+    private PlantLocation plantLocation;
+
+    @Enumerated(EnumType.STRING)
+    private PlantStatus status;
+
+
+
+    public static Plant ofId(Long authorId){
+        return new Plant(authorId);
+    }
 
 }

@@ -1,6 +1,8 @@
 package com.example.myplant.application.port.in;
 
 import com.example.myplant.common.SelfValidating;
+import com.example.myplant.domain.PlantStatus;
+import com.example.myplant.domain.PlantLocation;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -25,13 +27,14 @@ public class RegisterPlantCommand extends SelfValidating<RegisterPlantCommand> {
     @NotNull private String plantWaterDays;
     @NotNull private String lastWaterDay;
     @NotNull private String plantDescription;
-    @NotNull private String status;
+    @NotNull private PlantLocation plantLocation;
+    @NotNull private PlantStatus status;
     @NotNull private String intimacy;
 
     public RegisterPlantCommand(Long memberId, String plantName, String plantType,
                                 String plantAge, String plantBirthday, String plantImageUrl,
                                 String plantWaterDays, String lastWaterDay, String plantDescription,
-                                String status, String intimacy) {
+                                PlantLocation plantLocation, PlantStatus status,String intimacy) {
         this.memberId = memberId;
         this.plantName = plantName;
         this.plantType = plantType;
@@ -40,6 +43,7 @@ public class RegisterPlantCommand extends SelfValidating<RegisterPlantCommand> {
         this.plantImageUrl = plantImageUrl;
         this.plantWaterDays = plantWaterDays;
         this.lastWaterDay = lastWaterDay;
+        this.plantLocation = plantLocation;
         this.plantDescription = plantDescription;
         this.status = status;
         this.intimacy = intimacy;
