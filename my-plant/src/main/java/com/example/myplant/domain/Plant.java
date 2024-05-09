@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder(builderMethodName = "generate")
 
-public class RegistPlant {
+public class Plant {
 
 
     @Id
