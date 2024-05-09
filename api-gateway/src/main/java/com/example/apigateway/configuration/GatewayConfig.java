@@ -15,8 +15,7 @@ public class GatewayConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://192.168.56.20:8000");
-        config.addAllowedOrigin("http://api.com-p.site:8000");
-        config.addAllowedOrigin("https://api.com-p.site:8000");
+        config.addAllowedOrigin("https://api.com-p.site");
         config.addAllowedMethod("*");
         config.addAllowedHeader("*");
 
