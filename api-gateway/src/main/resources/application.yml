@@ -34,6 +34,14 @@ spring:
 secret:
   accessToken: test1
   refreshToken: test2
+        - id: my-plant
+          uri: lb://MY-PLANT
+          predicates:
+            - Path=/my-plant/**
+          filters:
+            - name: PathPrefixRemoveFilter
+              args:
+                prefix: /my-plant
 
 springdoc:
   webjars:
