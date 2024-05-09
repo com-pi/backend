@@ -14,7 +14,7 @@ springdoc:
   swagger-ui:
     urls[0]:
       name: 인증/인가 서비스
-      url: http://auth-service:8080/v3/api-docs
+      url: https://api.com-p.site/auth-service/v3/api-docs
     urls[1]:
       name: 식물생활 서비스
-      url: http://board-service:8080/v3/api-docs
+      url: https://api.com-p.site/board-service/v3/api-docs
