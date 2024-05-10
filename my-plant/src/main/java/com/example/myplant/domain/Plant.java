@@ -32,13 +32,13 @@ public class Plant {
     private String plantWaterDays;
     private String lastWaterDay;
     private String intimacy;
-
+    private String plandDescription;
 
     @Enumerated(EnumType.STRING)
     private PlantLocation plantLocation;
 
     @Enumerated(EnumType.STRING)
-    private PlantStatus status;
+    private PlantStatus plantStatus;
 
 
 

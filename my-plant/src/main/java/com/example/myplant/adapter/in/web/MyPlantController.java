@@ -22,7 +22,8 @@ public class MyPlantController {
     @Tag(name = "식물 등록", description = "새로운 식물을 등록합니다.")
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void registerPlant(
-        @Parameter(description = "회원ID", required = true) Long member_id,
+        @Parameter(description = "식물 ID", required = true) Long id,
+        @Parameter(description = "회원 ID", required = true) Long member_id,
         @Parameter(description = "식물명", required = true) String plant_name,
         @Parameter(description = "식물 종류", required = true) String plant_type,
         @Parameter(description = "식물 나이", required = true) String plant_age,
@@ -36,6 +37,7 @@ public class MyPlantController {
         @Parameter(description = "친밀도", required = true) String intimacy)
     {
         RegisterPlantCommand request = RegisterPlantCommand.builder()
+                .id(id)
                 .memberId(member_id)
                 .plantName(plant_name)
                 .plantType(plant_type)
@@ -46,7 +48,7 @@ public class MyPlantController {
                 .lastWaterDay(last_water_day)
                 .plantDescription(plant_description)
                 .plantLocation(PlantLocation.of(plantLocation))
-                .status(PlantStatus.of(status))
+                .plantStatus(PlantStatus.of(status))
                 .intimacy(intimacy)
                 .buildAndValidate();
         postPlantUseCase.postRegisterPlant(request);
