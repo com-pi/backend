@@ -8,6 +8,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.Duration;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -26,8 +27,9 @@ public class RedisAdapter implements RedisPort {
     }
 
     @Override
-    public String getRefreshToken(Passport passport) {
-        return redisTemplate.opsForValue().get(String.format("RefreshToken:%s", passport.memberId()));
+    public Optional<String> getRefreshToken(Passport passport) {
+            return Optional.ofNullable(redisTemplate.opsForValue()
+                    .get(String.format("RefreshToken:%s", passport.memberId())));
     }
 
 }

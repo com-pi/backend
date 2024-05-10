@@ -1,5 +1,6 @@
 package com.example.authserver.exception.handler;
 
+import com.example.authserver.exception.InvalidTokenException;
 import com.example.common.exception.NotFoundException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,6 +21,13 @@ public class GlobalExceptionHandler {
                     ResponseEntity.status(404).body(
                             new ExceptionResponse(404,  "Not Found"));
         };
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<ExceptionResponse> handleInvalidTokenException(InvalidTokenException exception) {
+        return ResponseEntity.status(400).body(
+                new ExceptionResponse(400, exception.getMessage())
+        );
     }
 
 }

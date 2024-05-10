@@ -1,15 +1,24 @@
 package com.example.authserver.exception;
 
-import com.example.authserver.util.JwtUtil;
+import com.example.authserver.domain.TokenType;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@AllArgsConstructor
+@Getter
 public class InvalidTokenException extends RuntimeException {
 
-    JwtUtil.TokenType tokenType;
-    String message;
+    private final TokenType tokenType;
+    private final String message;
 
-    public InvalidTokenException(JwtUtil.TokenType tokenType) {
+    public InvalidTokenException(TokenType tokenType) {
         this.tokenType = tokenType;
         this.message = tokenType.getInvalidMessage();
+    }
+
+    public InvalidTokenException() {
+        this.tokenType = TokenType.REFRESH_TOKEN;
+        this.message = TokenType.REFRESH_TOKEN.getInvalidMessage();
     }
 
 }

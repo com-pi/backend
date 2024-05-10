@@ -1,10 +1,10 @@
 package com.example.authserver.adapter.in;
 
 import com.example.authserver.application.TokenReissueService;
-import com.example.authserver.util.CookieUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,9 +22,11 @@ public class TokenController {
 
     @Operation(summary = "토큰 재발급")
     @GetMapping("/token")
-    public ResponseEntity<TokenReIssueResponse> tokenReissue(HttpServletRequest request){
+    public ResponseEntity<TokenReIssueResponse> tokenReissue(
+            HttpServletRequest request,
+            HttpServletResponse response){
 
-        TokenReIssueResponse reissuedToken = tokenReissueService.reissueToken(CookieUtil.getRefreshToken(request));
+        TokenReIssueResponse reissuedToken = tokenReissueService.reissueToken(request, response);
 
         return ResponseEntity.ok(reissuedToken);
     }

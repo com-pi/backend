@@ -16,8 +16,6 @@ import org.springframework.web.server.ServerWebExchange;
 
 import java.util.Optional;
 
-import static com.example.apigateway.util.JwtValidator.TokenType.ACCESS_TOKEN;
-
 
 @Slf4j
 @Component
@@ -39,7 +37,7 @@ public class TokenValidateFilter extends AbstractGatewayFilterFactory<TokenValid
             }
 
             String accessToken = getAccessToken(exchange).orElseThrow(NoAccessTokenException::new);
-            Passport passport = jwtValidator.validateToken(accessToken, ACCESS_TOKEN)
+            Passport passport = jwtValidator.validateToken(accessToken)
                     .orElseThrow(NoAccessTokenException::new);
             return chain.filter(exchangeWithPassport(exchange, passport));
         };

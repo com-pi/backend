@@ -1,28 +1,28 @@
 package com.example.authserver.domain;
 
-import jakarta.servlet.http.Cookie;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import static com.example.authserver.domain.TokenType.REFRESH_TOKEN;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class ComPToken {
 
+    private final TokenType tokenType;
     private final String token;
 
-    public static ComPToken of(String token) {
-        return new ComPToken(token);
+    public static ComPToken of(TokenType tokenType, String token) {
+        return new ComPToken(tokenType, token);
     }
 
     public String generateRefreshTokenCookie() {
-        return String.format("RefreshToken=%s; Secure; Path=/; HttpOnly;", token);
+        return String.format("RefreshToken=%s; Secure; Path=/; HttpOnly; Max-Age=%s", token, REFRESH_TOKEN.getSeconds());
     }
 
-    public Cookie removeRefreshTokenCookie() {
-        Cookie deleteCookie = new Cookie("RefreshToken", "");
-        deleteCookie.setMaxAge(0);
-        return deleteCookie;
+    public static String removeRefreshTokenCookie() {
+        return String.format("RefreshToken=; Secure; Path=/; HttpOnly; Max-Age=%s", "0");
     }
 
 }

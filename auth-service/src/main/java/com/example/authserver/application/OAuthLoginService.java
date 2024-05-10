@@ -7,6 +7,7 @@ import com.example.authserver.application.port.out.persistence.MemberPort;
 import com.example.authserver.application.port.out.persistence.RedisPort;
 import com.example.authserver.domain.ComPToken;
 import com.example.authserver.domain.Member;
+import com.example.authserver.domain.TokenType;
 import com.example.authserver.util.CookieUtil;
 import com.example.authserver.util.JwtUtil;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,6 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+
+import static com.example.authserver.domain.TokenType.ACCESS_TOKEN;
+import static com.example.authserver.domain.TokenType.REFRESH_TOKEN;
 
 @Service
 @RequiredArgsConstructor
@@ -64,11 +68,11 @@ public class OAuthLoginService implements OAuthLoginUseCase {
             kakaoMember = Optional.of(newKakaoMember);
         }
 
-        ComPToken refreshToken = jwtUtil.generateToken(kakaoMember.get(), JwtUtil.TokenType.REFRESH_TOKEN);
+        ComPToken refreshToken = jwtUtil.generateToken(kakaoMember.get(), REFRESH_TOKEN);
         redisPort.saveRefreshToken(kakaoMember.get(), refreshToken.getToken());
         CookieUtil.setRefreshCookie(refreshToken, response);
 
-        ComPToken accessToken = jwtUtil.generateToken(kakaoMember.get(), JwtUtil.TokenType.ACCESS_TOKEN);
+        ComPToken accessToken = jwtUtil.generateToken(kakaoMember.get(), ACCESS_TOKEN);
 
         return LoginResponse.of(accessToken, isNewMember);
     }
@@ -94,9 +98,9 @@ public class OAuthLoginService implements OAuthLoginUseCase {
             naverMember = Optional.of(newNaverMember);
         }
 
-        ComPToken refreshToken = jwtUtil.generateToken(naverMember.get(), JwtUtil.TokenType.REFRESH_TOKEN);
+        ComPToken refreshToken = jwtUtil.generateToken(naverMember.get(), TokenType.REFRESH_TOKEN);
         redisPort.saveRefreshToken(naverMember.get(), refreshToken.getToken());
-        ComPToken accessToken = jwtUtil.generateToken(naverMember.get(), JwtUtil.TokenType.ACCESS_TOKEN);
+        ComPToken accessToken = jwtUtil.generateToken(naverMember.get(), TokenType.ACCESS_TOKEN);
 
         return LoginResponse.of(accessToken, isNewMember);
     }
