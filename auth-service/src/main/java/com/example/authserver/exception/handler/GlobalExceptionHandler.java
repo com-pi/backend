@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<CommonResponse> handleNotFoundException(NotFoundException exception) {
 
-        return switch (exception.getResourceClass().getName()) {
+        return switch (exception.getResourceClass().getSimpleName()) {
             case "Member" -> CommonResponse.notFoundWithMessage("회원을 찾을 수 없습니다.");
             default -> CommonResponse.notFoundWithMessage("Not Found");
         };

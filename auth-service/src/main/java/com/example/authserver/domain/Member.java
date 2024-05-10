@@ -94,7 +94,7 @@ public class Member extends DeletedAtAbstractEntity {
     }
 
     public void authenticateWithPassword(String password, PasswordEncoder encoder) {
-        if(encoder.matches(password, this.password)){
+        if(!encoder.matches(password, this.password)){
             throw new NotFoundException(Member.class);
         }
     }
