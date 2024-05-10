@@ -1,5 +1,6 @@
 package com.example.apigateway.filter;
 
+import com.example.apigateway.domain.Passport;
 import com.example.apigateway.exception.NoAccessTokenException;
 import com.example.apigateway.util.JwtValidator;
 import lombok.AllArgsConstructor;
@@ -12,9 +13,8 @@ import org.springframework.core.Ordered;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Mono;
 
-import java.util.List;
+import java.util.Optional;
 
 import static com.example.apigateway.util.JwtValidator.TokenType.ACCESS_TOKEN;
 
@@ -32,41 +32,47 @@ public class TokenValidateFilter extends AbstractGatewayFilterFactory<TokenValid
 
     @Override
     public GatewayFilter apply(TokenValidateFilter.Config config) {
-        return (exchange, chain) ->
-                hasAuthorizationHeader(exchange)
-                .filter(hasHeader -> hasHeader)
+        return (exchange, chain) -> {
 
-                .then(getToken(exchange))
-                .flatMap(token -> jwtValidator.validateTokenReactive(token, ACCESS_TOKEN))
-                .switchIfEmpty(Mono.error(new NoAccessTokenException()))
+            if(isFromSwagger(exchange)) {
+                return chain.filter(exchange);
+            }
 
-                .flatMap(passport -> {
-                    ServerHttpRequest requestWithPassport = exchange.getRequest().mutate()
-                            .headers(httpHeaders -> httpHeaders.add("passport", passport.toJson()))
-                            .build();
-                    return chain.filter(exchange.mutate().request(requestWithPassport).build());
-                });
+            String accessToken = getAccessToken(exchange).orElseThrow(NoAccessTokenException::new);
+            Passport passport = jwtValidator.validateToken(accessToken, ACCESS_TOKEN)
+                    .orElseThrow(NoAccessTokenException::new);
+            return chain.filter(exchangeWithPassport(exchange, passport));
+        };
     }
 
-    private Mono<Boolean> hasAuthorizationHeader(ServerWebExchange exchange) {
-        List<String> authorizationHeader = exchange.getRequest().getHeaders().get("Authorization");
-        return Mono.just(
-                authorizationHeader != null &&
-                        authorizationHeader.size() == 1 &&
-                        authorizationHeader.get(0).startsWith("Bearer ")
-        );
+    private Boolean isFromSwagger(ServerWebExchange exchange){
+        String endPoint = exchange.getRequest().getURI().getPath();
+        String requestPath = exchange.getRequest().getPath().toString();
+        boolean isApiDocRequest = endPoint.endsWith("/v3/api-docs");
+        boolean isFromSwagger = requestPath.contains("swagger");
+        return isApiDocRequest || isFromSwagger;
     }
 
-    private Mono<String> getToken(ServerWebExchange exchange) {
-        return Mono.just(exchange.getRequest().getHeaders().get("Authorization")
-                .get(0).substring(7)); // 널체크 되어있음 정적 분석 도구 오류
+
+    private Optional<String> getAccessToken(ServerWebExchange exchange){
+        String authorization = exchange.getRequest().getHeaders().getFirst("Authorization");
+        if(authorization != null && authorization.startsWith("Bearer ")){
+            return Optional.of(authorization.substring(7));
+        }
+        return Optional.empty();
+    }
+
+    private ServerWebExchange exchangeWithPassport(ServerWebExchange exchange, Passport passport){
+        ServerHttpRequest modifiedRequest = exchange.getRequest().mutate()
+                .headers(httpHeaders -> httpHeaders.add("passport", passport.toJson()))
+                .build();
+        return exchange.mutate().request(modifiedRequest).build();
     }
 
     @Override
     public int getOrder() {
         return 10;
     }
-
 
     @Getter
     @Setter

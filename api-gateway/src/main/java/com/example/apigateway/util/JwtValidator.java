@@ -4,10 +4,8 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.apigateway.domain.Passport;
-import com.example.apigateway.exception.NoAccessTokenException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
 
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
@@ -31,17 +29,6 @@ public class JwtValidator {
         }
         return Optional.empty();
     }
-
-    public Mono<Passport> validateTokenReactive(String token, TokenType tokenType) {
-        return Mono.fromCallable(() -> {
-            DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(tokenType.getSecret(this))).build().verify(token);
-            if (decodedJWT.getExpiresAt().toInstant().isBefore(Instant.now())) {
-                return Passport.of(decodedJWT.getSubject(), decodedJWT.getClaim("rol").asString());
-            }
-            throw new NoAccessTokenException();
-        });
-    }
-
 
     public enum TokenType {
         ACCESS_TOKEN(JwtValidator -> JwtValidator.accessTokenSecret),
