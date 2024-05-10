@@ -3,6 +3,7 @@ package com.example.authserver.adapter.in;
 import com.example.authserver.application.port.in.OAuthLoginUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,9 +31,10 @@ public class OAuthController {
     public ResponseEntity<LoginResponse> OAuthLoginWithKakao(
             @RequestParam("code") String code,
             @RequestParam("redirect_url") String redirectUrl,
+            HttpServletRequest request,
             HttpServletResponse response){
 
-        LoginResponse loginResponse = oAuthLoginUseCase.kakaoLogin(code, redirectUrl, response);
+        LoginResponse loginResponse = oAuthLoginUseCase.kakaoLogin(code, redirectUrl, request, response);
 
         return ResponseEntity.ok(loginResponse);
     }
@@ -41,10 +43,11 @@ public class OAuthController {
     @PostMapping("/naver")
     public ResponseEntity<LoginResponse> OAuthLoginWithNaver (
         @RequestParam("code") String code,
-        @RequestParam("state") String state,
+        @RequestParam(value = "state", required = false) String state,
+        HttpServletRequest request,
         HttpServletResponse response) {
 
-        LoginResponse loginResponse = oAuthLoginUseCase.naverLogin(code, state, response);
+        LoginResponse loginResponse = oAuthLoginUseCase.naverLogin(code, state, request, response);
 
         return ResponseEntity.ok(loginResponse);
     }

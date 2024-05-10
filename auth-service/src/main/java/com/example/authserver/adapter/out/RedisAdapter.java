@@ -1,6 +1,7 @@
 package com.example.authserver.adapter.out;
 
 import com.example.authserver.application.port.out.persistence.RedisPort;
+import com.example.authserver.domain.ComPToken;
 import com.example.authserver.domain.Member;
 import com.example.common.domain.Passport;
 import lombok.RequiredArgsConstructor;
@@ -15,21 +16,25 @@ import java.util.Optional;
 public class RedisAdapter implements RedisPort {
 
     private final RedisTemplate<String, String> redisTemplate;
-    // Todo : 상수 관리 ...
-    private final Integer REFRESH_TOKEN_EXPIRE_DAYS = 14;
+    private final String REFRESH_TOKEN_REDIS_KEY = "RefreshToken:";
 
     @Override
-    public void saveRefreshToken(Member member, String refreshToken) {
+    public void saveRefreshToken(Member member, ComPToken refreshToken) {
         redisTemplate.opsForValue().set(
-                String.format("RefreshToken:%s", member.getId()),
-                refreshToken,
-                Duration.ofDays(REFRESH_TOKEN_EXPIRE_DAYS));
+                String.format(REFRESH_TOKEN_REDIS_KEY + member.getId()),
+                refreshToken.getToken(),
+                Duration.ofSeconds(refreshToken.getTokenType().getSeconds()));
     }
 
     @Override
     public Optional<String> getRefreshToken(Passport passport) {
             return Optional.ofNullable(redisTemplate.opsForValue()
-                    .get(String.format("RefreshToken:%s", passport.memberId())));
+                    .get(String.format(REFRESH_TOKEN_REDIS_KEY + passport.memberId())));
+    }
+
+    @Override
+    public void removeRefreshToken(Passport passport) {
+        redisTemplate.delete(REFRESH_TOKEN_REDIS_KEY + passport.memberId());
     }
 
 }

@@ -8,8 +8,12 @@ import com.example.authserver.application.port.out.persistence.RedisPort;
 import com.example.authserver.domain.ComPToken;
 import com.example.authserver.domain.Member;
 import com.example.authserver.domain.TokenType;
+import com.example.authserver.exception.AlreadyLoggedInException;
+import com.example.authserver.exception.OAuthLoginException;
 import com.example.authserver.util.CookieUtil;
 import com.example.authserver.util.JwtUtil;
+import feign.FeignException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,12 +53,16 @@ public class OAuthLoginService implements OAuthLoginUseCase {
     public LoginResponse kakaoLogin(
             String code,
             String redirectUrl,
+            HttpServletRequest request,
             HttpServletResponse response) {
 
-        KakaoTokenResponse token = kakaoAuthClient.getAccessToken(
-                kakaoAppKey, kakaoSecret, code, redirectUrl, GRANT_TYPE);
-        KakaoUserInfoResponse kakaoUserInfo = kakaoTokenClient.getUserInfo(
-                "Bearer " + token.access_token());
+        loginConflictCheck(request);
+
+        KakaoTokenResponse token = kakaoAuthClient
+                .getAccessToken(kakaoAppKey, kakaoSecret, code, redirectUrl, GRANT_TYPE);
+
+        KakaoUserInfoResponse kakaoUserInfo = kakaoTokenClient
+                .getUserInfo("Bearer " + token.access_token());
 
         Optional<Member> kakaoMember = memberPort.findByKakaoId(kakaoUserInfo.getId().toString());
         Boolean isNewMember = kakaoMember.isEmpty();
@@ -69,7 +77,7 @@ public class OAuthLoginService implements OAuthLoginUseCase {
         }
 
         ComPToken refreshToken = jwtUtil.generateToken(kakaoMember.get(), REFRESH_TOKEN);
-        redisPort.saveRefreshToken(kakaoMember.get(), refreshToken.getToken());
+        redisPort.saveRefreshToken(kakaoMember.get(), refreshToken);
         CookieUtil.setRefreshCookie(refreshToken, response);
 
         ComPToken accessToken = jwtUtil.generateToken(kakaoMember.get(), ACCESS_TOKEN);
@@ -79,12 +87,24 @@ public class OAuthLoginService implements OAuthLoginUseCase {
 
     @Override
     @Transactional
-    public LoginResponse naverLogin(String code, String state, HttpServletResponse response) {
+    public LoginResponse naverLogin(
+            String code,
+            String state,
+            HttpServletRequest request,
+            HttpServletResponse response) {
 
-        NaverTokenResponse naverResponse = naverAuthClient.getAccessToken(
-                code, state, naverAppKey, naverSecret, GRANT_TYPE);
-        NaverUserInfoResponse naverUserInfo = naverTokenClient.getUserInfo(
-                "Bearer " + naverResponse.access_token());
+        loginConflictCheck(request);
+
+        NaverUserInfoResponse naverUserInfo;
+        try {
+            NaverTokenResponse naverResponse = naverAuthClient.getAccessToken(
+                    code, state, naverAppKey, naverSecret, GRANT_TYPE);
+
+            naverUserInfo = naverTokenClient.getUserInfo(
+                    "Bearer " + naverResponse.access_token());
+        } catch (FeignException e) {
+            throw new OAuthLoginException(e);
+        }
 
         Optional<Member> naverMember = memberPort.findByNaverId(naverUserInfo.getResponse().id());
         Boolean isNewMember = naverMember.isEmpty();
@@ -99,11 +119,22 @@ public class OAuthLoginService implements OAuthLoginUseCase {
         }
 
         ComPToken refreshToken = jwtUtil.generateToken(naverMember.get(), TokenType.REFRESH_TOKEN);
-        redisPort.saveRefreshToken(naverMember.get(), refreshToken.getToken());
+        redisPort.saveRefreshToken(naverMember.get(), refreshToken);
+        CookieUtil.setRefreshCookie(refreshToken, response);
         ComPToken accessToken = jwtUtil.generateToken(naverMember.get(), TokenType.ACCESS_TOKEN);
 
         return LoginResponse.of(accessToken, isNewMember);
     }
 
+    private void loginConflictCheck(HttpServletRequest request) {
+        Optional<String> refreshToken = CookieUtil.getRefreshToken(request);
+        if(refreshToken.isPresent()) {
+            refreshToken
+                    .flatMap(token -> jwtUtil.validateToken(token, REFRESH_TOKEN))
+                    .ifPresent(passport -> {
+                        throw new AlreadyLoggedInException("이미 로그인 되어있습니다.");
+                    });
+        }
+    }
 
 }

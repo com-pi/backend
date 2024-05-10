@@ -7,6 +7,6 @@ public record TokenReIssueResponse(
         String message
 ) {
     public static TokenReIssueResponse of(ComPToken comPToken){
-        return new TokenReIssueResponse(comPToken, "엑세스 토큰이 만료되어 재발급 되었습니다.");
+        return new TokenReIssueResponse(comPToken, "엑세스 토큰이 재발급 되었습니다.");
     }
 }

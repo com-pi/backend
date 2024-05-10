@@ -1,33 +1,54 @@
 package com.example.authserver.exception.handler;
 
+import com.example.authserver.exception.AlreadyLoggedInException;
 import com.example.authserver.exception.InvalidTokenException;
+import com.example.authserver.exception.OAuthLoginException;
+import com.example.common.baseentity.CommonResponse;
 import com.example.common.exception.NotFoundException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    // Todo : 에러 로깅
+
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ExceptionResponse> handleNotFoundException(NotFoundException exception) {
+    public ResponseEntity<CommonResponse> handleNotFoundException(NotFoundException exception) {
 
         return switch (exception.getResourceClass().getName()) {
-            case "Member" ->
-                    ResponseEntity.status(404).body(
-                        new ExceptionResponse(404, "회원을 찾을 수 없습니다"));
-
-            default ->
-                    ResponseEntity.status(404).body(
-                            new ExceptionResponse(404,  "Not Found"));
+            case "Member" -> CommonResponse.notFoundWithMessage("회원을 찾을 수 없습니다.");
+            default -> CommonResponse.notFoundWithMessage("Not Found");
         };
     }
 
+    @ExceptionHandler(OAuthLoginException.class)
+    public ResponseEntity<CommonResponse> handleFeignException(OAuthLoginException exception) {
+        String message = exception.getMessage();
+        try {
+            JsonNode jsonNode = objectMapper.readTree(exception.getMessage());
+            message = jsonNode.path("message").asText();
+        } catch (JsonProcessingException ignored) {
+        }
+        return CommonResponse.unauthorizedWithMessage("소셜 로그인 중 예외 발생 : " + message);
+    }
+
     @ExceptionHandler(InvalidTokenException.class)
-    public ResponseEntity<ExceptionResponse> handleInvalidTokenException(InvalidTokenException exception) {
-        return ResponseEntity.status(400).body(
-                new ExceptionResponse(400, exception.getMessage())
-        );
+    public ResponseEntity<CommonResponse> handleInvalidTokenException(InvalidTokenException exception) {
+        return CommonResponse.badRequestWithMessage(exception.getTokenType().getInvalidMessage());
+    }
+
+    @ExceptionHandler(AlreadyLoggedInException.class)
+    public ResponseEntity<CommonResponse> handleAlreadyLoggedInException(AlreadyLoggedInException exception) {
+        return CommonResponse.conflictWithMessage(exception.getMessage());
     }
 
 }
