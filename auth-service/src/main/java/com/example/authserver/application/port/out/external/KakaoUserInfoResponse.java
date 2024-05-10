@@ -3,8 +3,8 @@ package com.example.authserver.application.port.out.external;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor
 @Getter
+@AllArgsConstructor
 public class KakaoUserInfoResponse {
     private final Long id;
     private final KakaoAccount kakao_account;

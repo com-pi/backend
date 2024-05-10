@@ -44,5 +44,7 @@ springdoc:
     path: swagger-ui.html
     tags-sorter: alpha
     operations-sorter: alpha
+    use-root-path: true
+
   cache:
     disabled: true

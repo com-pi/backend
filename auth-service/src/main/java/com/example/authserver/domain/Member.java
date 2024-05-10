@@ -66,6 +66,7 @@ public class Member extends DeletedAtAbstractEntity {
                 .nickname(
                         kakaoUserInfo.getKakao_account().profile().nickname() == null ?
                                 "새회원_" + UUID.randomUUID() : kakaoUserInfo.getKakao_account().profile().nickname())
+                .role(Role.USER)
                 .imageUrl(kakaoUserInfo.getKakao_account().profile().profile_image_url())
                 .thumbnailUrl(kakaoUserInfo.getKakao_account().profile().thumbnail_image_url())
                 .build();
@@ -78,6 +79,7 @@ public class Member extends DeletedAtAbstractEntity {
                         naverUserInfo.getResponse().nickname() == null ?
                                 "새회원_" + UUID.randomUUID() : naverUserInfo.getResponse().nickname())
                 .email(naverUserInfo.getResponse().email())
+                .role(Role.USER)
                 .imageUrl(naverUserInfo.getResponse().profile_image())
                 .build();
     }
@@ -86,6 +88,7 @@ public class Member extends DeletedAtAbstractEntity {
         return Member.builder()
                 .email(joinRequest.email())
                 .password(encoder.encode(joinRequest.password()))
+                .role(Role.USER)
                 .nickname(joinRequest.nickname())
                 .build();
     }

@@ -16,7 +16,7 @@ management:
   endpoint:
     web:
       exposure:
-        include: health
+        include: health, info  # IDE 정적 분석 Error
 
 springdoc:
   swagger-ui:
