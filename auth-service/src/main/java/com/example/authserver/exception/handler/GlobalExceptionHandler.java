@@ -1,6 +1,8 @@
 package com.example.authserver.exception.handler;
 
-import com.example.authserver.exception.*;
+import com.example.authserver.exception.AlreadyLoggedInException;
+import com.example.authserver.exception.InvalidTokenException;
+import com.example.authserver.exception.OAuthLoginException;
 import com.example.common.baseentity.CommonResponse;
 import com.example.common.exception.NotFoundException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,9 +24,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<CommonResponse> handleNotFoundException(NotFoundException exception) {
 
-        return switch (exception.getMissingElement()) {
+        return switch (exception.getResourceClass().getName()) {
             case "Member" -> CommonResponse.notFoundWithMessage("회원을 찾을 수 없습니다.");
-            case "인증코드" -> CommonResponse.notFoundWithMessage("인증코드가 없거나 만료되었습니다.");
             default -> CommonResponse.notFoundWithMessage("Not Found");
         };
     }
@@ -49,16 +50,5 @@ public class GlobalExceptionHandler {
     public ResponseEntity<CommonResponse> handleAlreadyLoggedInException(AlreadyLoggedInException exception) {
         return CommonResponse.conflictWithMessage(exception.getMessage());
     }
-
-    @ExceptionHandler(VerificationFailException.class)
-    public ResponseEntity<CommonResponse> handleSimpleMessageException(VerificationFailException exception) {
-        return CommonResponse.badRequestWithMessage(exception.getMessage());
-    }
-
-    @ExceptionHandler(SendSMSFailException.class)
-    public ResponseEntity<CommonResponse> handleSimpleMessageException(SendSMSFailException exception) {
-        return CommonResponse.badRequestWithMessage(exception.getMessage());
-    }
-
 
 }
