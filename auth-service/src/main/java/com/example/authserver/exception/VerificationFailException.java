@@ -1,10 +1,12 @@
 package com.example.authserver.exception;
 
+
 import com.example.common.exception.SimpleMessageException;
 
-public class AlreadyLoggedInException extends SimpleMessageException {
 
-    public AlreadyLoggedInException(String message) {
+public class VerificationFailException extends SimpleMessageException {
+
+    public VerificationFailException(String message) {
         super(message);
     }
 
