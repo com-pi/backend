@@ -16,7 +16,6 @@ import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +23,7 @@ import java.util.Optional;
 
 import static com.example.authserver.domain.TokenType.ACCESS_TOKEN;
 import static com.example.authserver.domain.TokenType.REFRESH_TOKEN;
+import static com.example.authserver.util.Secret.*;
 
 @Service
 @RequiredArgsConstructor
@@ -38,16 +38,6 @@ public class OAuthLoginService implements OAuthLoginUseCase {
     private final RedisPort redisPort;
     private static final String GRANT_TYPE = "authorization_code";
 
-    @Value("${oauth.kakao.app-key}")
-    private String kakaoAppKey;
-    @Value("${oauth.kakao.secret}")
-    private String kakaoSecret;
-    @Value("${oauth.naver.app-key}")
-    private String naverAppKey;
-    @Value("${oauth.naver.secret}")
-    private String naverSecret;
-
-
     @Override
     @Transactional
     public LoginResponse kakaoLogin(
@@ -59,7 +49,7 @@ public class OAuthLoginService implements OAuthLoginUseCase {
         loginConflictCheck(request);
 
         KakaoTokenResponse token = kakaoAuthClient
-                .getAccessToken(kakaoAppKey, kakaoSecret, code, redirectUrl, GRANT_TYPE);
+                .getAccessToken(KAKAO_APP_KEY, KAKAO_SECRET, code, redirectUrl, GRANT_TYPE);
 
         KakaoUserInfoResponse kakaoUserInfo = kakaoTokenClient
                 .getUserInfo("Bearer " + token.access_token());
@@ -98,7 +88,7 @@ public class OAuthLoginService implements OAuthLoginUseCase {
         NaverUserInfoResponse naverUserInfo;
         try {
             NaverTokenResponse naverResponse = naverAuthClient.getAccessToken(
-                    code, state, naverAppKey, naverSecret, GRANT_TYPE);
+                    code, state, NAVER_APP_KEY, NAVER_SECRET, GRANT_TYPE);
 
             naverUserInfo = naverTokenClient.getUserInfo(
                     "Bearer " + naverResponse.access_token());
