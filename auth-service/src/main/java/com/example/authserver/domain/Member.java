@@ -41,7 +41,7 @@ public class Member extends DeletedAtAbstractEntity {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String nickname;
     private String imageUrl;
     private String thumbnailUrl;
@@ -75,8 +75,7 @@ public class Member extends DeletedAtAbstractEntity {
     public static Member newMemberForNaverUser(NaverUserInfoResponse naverUserInfo) {
         return Member.builder()
                 .naverId(naverUserInfo.getResponse().id())
-                .nickname(
-                        naverUserInfo.getResponse().nickname() == null ?
+                .nickname(naverUserInfo.getResponse().nickname() == null ?
                                 "새회원_" + UUID.randomUUID() : naverUserInfo.getResponse().nickname())
                 .email(naverUserInfo.getResponse().email())
                 .role(Role.USER)

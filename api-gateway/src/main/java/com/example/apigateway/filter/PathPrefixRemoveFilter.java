@@ -5,8 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
+import org.springframework.cloud.gateway.filter.OrderedGatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
-import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 
@@ -21,7 +21,7 @@ import org.springframework.web.server.ServerWebExchange;
  */
 @Component
 @Slf4j
-public class PathPrefixRemoveFilter extends AbstractGatewayFilterFactory<PathPrefixRemoveFilter.Config> implements Ordered {
+public class PathPrefixRemoveFilter extends AbstractGatewayFilterFactory<PathPrefixRemoveFilter.Config> {
 
     public PathPrefixRemoveFilter() {
         super(Config.class); // Config 클래스 타입을 생성자에 전달
@@ -29,34 +29,31 @@ public class PathPrefixRemoveFilter extends AbstractGatewayFilterFactory<PathPre
 
     @Override
     public GatewayFilter apply(Config config) {
-        return (exchange, chain) -> {
-            String originalPath = exchange.getRequest().getPath().toString();
+        return new OrderedGatewayFilter(
+                (exchange, chain) -> {
+                    String originalPath = exchange.getRequest().getPath().toString();
+                    String modifiedPath = removePrefix(originalPath);
 
-            if(originalPath.startsWith(config.getPrefix())) {
-                String pathWithPrefixRemoved = originalPath.replace(config.prefix, "");
-
-                ServerWebExchange newExchange = exchange.mutate()
-                        .request(exchange.getRequest().mutate().path(pathWithPrefixRemoved).build())
-                        .build();
-
-                return chain.filter(newExchange);
-            }
-
-            return chain.filter(exchange);
-        };
+                    ServerWebExchange newExchange = exchange.mutate()
+                            .request(exchange.getRequest().mutate().path(modifiedPath).build())
+                            .build();
+                    return chain.filter(newExchange);
+                },
+                100);
     }
 
-    @Override
-    public int getOrder() {
-        return 100;
+    private String removePrefix(String originalPath) {
+        String[] segments = originalPath.split("/");
+        if (segments.length <= 2) {
+            return "/";
+        }
+        return originalPath.replace("/" + segments[1], "");
     }
 
     @Getter
     @Setter
     @AllArgsConstructor
     public static class Config {
-        // Filter 에 Configuration 정보를 전달 합니다.
-        private String prefix;
     }
 
 }

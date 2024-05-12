@@ -1,10 +1,11 @@
 package com.example.boardservice.domain;
 
+import com.example.common.domain.Passport;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "member_board")
+@Table(name = "member")
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
@@ -14,7 +15,7 @@ public class Member {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String member_id;
+    private Long memberId;
     private String nickname;
     private String imageUrl;
 
@@ -24,6 +25,19 @@ public class Member {
 
     public static Member ofId(Long authorId){
         return new Member(authorId);
+    }
+
+    public static Member fromPassport(Passport passport){
+        return Member.builder()
+                .memberId(passport.memberId())
+                .nickname(passport.nickName())
+                .imageUrl(passport.imageUrl())
+                .build();
+    }
+
+    public void update(Passport passport){
+        this.nickname = passport.nickName();
+        this.imageUrl = passport.imageUrl();
     }
 
 }
