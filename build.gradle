@@ -156,6 +156,9 @@ project(':common') {
 		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 		implementation 'org.springframework.boot:spring-boot-starter-validation'
 	}
+	bootJar {
+		enabled = false
+	}
 	jar {
 		enabled = true
 	}
@@ -164,6 +167,9 @@ project(':common') {
 project(':image-module') {
 	dependencies {
 		implementation 'io.minio:minio:8.5.10'
+	}
+	bootJar {
+		enabled = false
 	}
 	jar {
 		enabled = true
