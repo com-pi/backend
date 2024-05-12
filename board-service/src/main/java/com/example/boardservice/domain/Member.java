@@ -4,25 +4,26 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "users")
+@Table(name = "member_board")
 @Getter
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
 @Builder
-public class User {
+public class Member {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String name;
+    private String member_id;
+    private String nickname;
     private String imageUrl;
 
-    private User(Long id) {
+    private Member(Long id) {
         this.id = id;
     }
 
-    public static User ofId(Long authorId){
-        return new User(authorId);
+    public static Member ofId(Long authorId){
+        return new Member(authorId);
     }
 
 }

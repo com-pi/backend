@@ -31,12 +31,13 @@ public class TokenValidateFilter extends AbstractGatewayFilterFactory<TokenValid
     @Override
     public GatewayFilter apply(TokenValidateFilter.Config config) {
         return (exchange, chain) -> {
+            Optional<String> accessTokenHeader = getAccessToken(exchange);
 
-            if(isFromSwagger(exchange)) {
+            if(accessTokenHeader.isEmpty() && isFromSwagger(exchange)) {
                 return chain.filter(exchange);
             }
 
-            String accessToken = getAccessToken(exchange).orElseThrow(NoAccessTokenException::new);
+            String accessToken = accessTokenHeader.orElseThrow(NoAccessTokenException::new);
             Passport passport = jwtValidator.validateToken(accessToken)
                     .orElseThrow(NoAccessTokenException::new);
             return chain.filter(exchangeWithPassport(exchange, passport));
@@ -44,17 +45,17 @@ public class TokenValidateFilter extends AbstractGatewayFilterFactory<TokenValid
     }
 
     private Boolean isFromSwagger(ServerWebExchange exchange){
-        String endPoint = exchange.getRequest().getURI().getPath();
         String requestPath = exchange.getRequest().getPath().toString();
-        boolean isApiDocRequest = endPoint.endsWith("/v3/api-docs");
-        boolean isFromSwagger = requestPath.contains("swagger");
+        String referer = exchange.getRequest().getHeaders().getFirst("referer");
+        boolean isApiDocRequest = requestPath.endsWith("/v3/api-docs");
+        boolean isFromSwagger = referer != null && referer.contains("swagger");
         return isApiDocRequest || isFromSwagger;
     }
 
 
     private Optional<String> getAccessToken(ServerWebExchange exchange){
         String authorization = exchange.getRequest().getHeaders().getFirst("Authorization");
-        if(authorization != null && authorization.startsWith("Bearer ")){
+        if(authorization != null && authorization.substring(0, 7).equalsIgnoreCase("Bearer ")){
             return Optional.of(authorization.substring(7));
         }
         return Optional.empty();

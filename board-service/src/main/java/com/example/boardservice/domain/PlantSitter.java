@@ -16,7 +16,7 @@ public class PlantSitter {
     private String content;
     private CareInstruction careInstruction;
     private Integer price;
-    private Area meetingArea;
+    private Address meetingArea;
     private List<String> imageUrls;
 
 }

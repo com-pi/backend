@@ -20,7 +20,7 @@ public class JwtValidator {
     @SuppressWarnings("unused")
     public Optional<Passport> validateToken(String token) {
         DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(accessTokenSecret)).build().verify(token);
-        if (decodedJWT.getExpiresAt().toInstant().isBefore(Instant.now())) {
+        if (decodedJWT.getExpiresAt().toInstant().isAfter(Instant.now())) {
             return Optional.ofNullable(Passport.of(decodedJWT.getSubject(), decodedJWT.getClaim("rol").asString()));
         }
         return Optional.empty();

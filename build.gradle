@@ -93,12 +93,22 @@ project(':discovery-eureka') {
 
 project(':board-service') {
 	dependencies {
+		implementation project(":image-module")
+		implementation project(":common")
 		implementation 'org.springframework.boot:spring-boot-starter'
 		implementation 'org.springframework.boot:spring-boot-starter-web'
 		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 		implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+		// Discovery 클라이언트
 		implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+		// Geometry data 의존성
+		implementation 'org.locationtech.jts:jts-core:1.19.0'
+
+
+		// minio
+		implementation 'io.minio:minio:8.5.10'
 
 		// swagger 3.0
 		implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
@@ -117,10 +127,7 @@ project(':auth-service'){
 		implementation 'org.springframework.boot:spring-boot-starter-web'
 		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 		implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-
 		implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-
-
 
 		// feign
 		implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
@@ -147,9 +154,16 @@ project(':common') {
 	dependencies {
 		implementation 'org.springframework.boot:spring-boot-starter-web'
 		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+		implementation 'org.springframework.boot:spring-boot-starter-validation'
 	}
-	bootJar {
-		enabled = false
+	jar {
+		enabled = true
+	}
+}
+
+project(':image-module') {
+	dependencies {
+		implementation 'io.minio:minio:8.5.10'
 	}
 	jar {
 		enabled = true

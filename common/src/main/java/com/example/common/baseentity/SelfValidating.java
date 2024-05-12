@@ -1,4 +1,4 @@
-package com.example.boardservice.common;
+package com.example.common.baseentity;
 
 import jakarta.validation.*;
 
