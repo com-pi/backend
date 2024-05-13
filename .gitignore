@@ -2,3 +2,4 @@
 /.gradle/
 /.idea/
 /common/build/
+/common/out/
