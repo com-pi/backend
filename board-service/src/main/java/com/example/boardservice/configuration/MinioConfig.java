@@ -19,8 +19,6 @@ public class MinioConfig {
 
     // Todo endpoint application 상수로
 
-    private final String classPath= "board-service/src/main/java/com/example/boardservice/configuration/";
-
     @Bean
     @Profile("dev")
     public MinioClient minioClientDev(){
@@ -45,9 +43,11 @@ public class MinioConfig {
 
     private void bucketInitialize(MinioClient minioClient) {
         try {
-            for(MinioBucket bucket : MinioBucket.values()){
+            for (MinioBucket bucket : MinioBucket.values()) {
                 makeBucketIfAbsent(bucket, minioClient);
             }
+        } catch (InternalServerException e) {
+            throw e;
         } catch (Exception e){
             throw new InternalServerException("이미지 버킷 초기화에 실패했습니다.", e);
         }
