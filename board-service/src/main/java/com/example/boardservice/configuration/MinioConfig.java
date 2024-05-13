@@ -6,13 +6,16 @@ import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.SetBucketPolicyArgs;
+import io.minio.errors.MinioException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
 @Configuration
 public class MinioConfig {
@@ -46,14 +49,15 @@ public class MinioConfig {
             for (MinioBucket bucket : MinioBucket.values()) {
                 makeBucketIfAbsent(bucket, minioClient);
             }
-        } catch (InternalServerException e) {
-            throw e;
-        } catch (Exception e){
+        } catch (MinioException e){
             throw new InternalServerException("이미지 버킷 초기화에 실패했습니다.", e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private void makeBucketIfAbsent(MinioBucket bucket, MinioClient minioClient) throws Exception {
+    private void makeBucketIfAbsent(MinioBucket bucket, MinioClient minioClient)
+            throws MinioException, IOException, NoSuchAlgorithmException, InvalidKeyException {
         boolean isExist = minioClient.bucketExists(
                 BucketExistsArgs.builder()
                         .bucket(bucket.getBucketName())
@@ -75,11 +79,13 @@ public class MinioConfig {
     }
 
     private String loadPolicyFile() {
-        Path jsonFilePath = Path.of("board-service/src/main/java/com/example/boardservice/configuration/BucketPolicy.json");
-        try {
-            return Files.readString(jsonFilePath);
+        try (InputStream inputStream = getClass().getResourceAsStream("/com/example/boardservice/configuration/BucketPolicy.json")) {
+            if (inputStream == null) {
+                throw new InternalServerException("정책 파일을 찾을 수 없습니다.", null);
+            }
+            return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException e) {
-            throw new InternalServerException("이미지 버킷 정책파일을 읽어오는데 실패 했습니다.", e);
+            throw new InternalServerException("정책 파일을 읽어오는데 실패했습니다.", e);
         }
     }
 
