@@ -37,7 +37,7 @@ public class MinioConfig {
     public MinioClient minioClientLocal(){
         MinioClient minioClient = MinioClient.builder()
                 .endpoint("http://localhost:9000")
-                .credentials("ADMIN", "compcomp")
+                .credentials("ADMIN", "compcomp!!")
                 .build();
         bucketInitialize(minioClient);
         return minioClient;
@@ -62,19 +62,20 @@ public class MinioConfig {
             minioClient.makeBucket(
                     MakeBucketArgs.builder()
                             .bucket(bucket.getBucketName())
+                            .objectLock(false)
                             .build()
             );
             minioClient.setBucketPolicy(
                     SetBucketPolicyArgs.builder()
                             .bucket(bucket.getBucketName())
-                            .config(loadPolicyFile(classPath + "BucketPolicy.json"))
+                            .config(loadPolicyFile())
                             .build()
             );
         }
     }
 
-    private String loadPolicyFile(String filePath) {
-        Path jsonFilePath = Path.of(filePath);
+    private String loadPolicyFile() {
+        Path jsonFilePath = Path.of("board-service/src/main/java/com/example/boardservice/configuration/BucketPolicy.json");
         try {
             return Files.readString(jsonFilePath);
         } catch (IOException e) {
