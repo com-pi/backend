@@ -1,8 +1,8 @@
 package com.example.myplant.application;
 
-import com.example.myplant.application.port.in.RegisterPlantCommand;
-import com.example.myplant.application.port.in.PostPlantUseCase;
-import com.example.myplant.application.port.out.PostRegistPlantPort;
+import com.example.myplant.application.port.in.RegistPlantCommand;
+import com.example.myplant.application.port.in.RegistPlantUseCase;
+import com.example.myplant.application.port.out.RegistPlantPort;
 import com.example.myplant.domain.Plant;
 import com.example.myplant.domain.PlantLocation;
 import com.example.myplant.domain.PlantStatus;
@@ -16,13 +16,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class PostRegisterPlantService implements PostPlantUseCase {
+public class RegistPlantService implements RegistPlantUseCase {
 
-    private final PostRegistPlantPort postRegistPlantPort;
+    private final RegistPlantPort registPlantPort;
 
     @Override
     @Transactional
-    public void postRegisterPlant(RegisterPlantCommand command) {
+    public void registPlant(RegistPlantCommand command) {
         Plant newPlant = Plant.generate()
                 .id(command.getId())
                 .memberId(command.getMemberId())
@@ -37,7 +37,7 @@ public class PostRegisterPlantService implements PostPlantUseCase {
                 .plantStatus(PlantStatus.Alive)
                 .build();
 
-        postRegistPlantPort.postRegistPlant(newPlant);
+        registPlantPort.registPlant(newPlant);
     }
 
 }

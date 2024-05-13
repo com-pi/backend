@@ -118,6 +118,8 @@ project(':my-plant'){
 		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 		implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+		// swagger 3.0
+		implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
 		implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 		compileOnly 'org.projectlombok:lombok'
 		annotationProcessor 'org.projectlombok:lombok'

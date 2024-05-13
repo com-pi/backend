@@ -2,8 +2,8 @@ package com.example.myplant.application.port.out;
 
 import com.example.myplant.domain.Plant;
 
-public interface PostRegistPlantPort {
+public interface RegistPlantPort {
 
-    void postRegistPlant(Plant plant);
+    void registPlant(Plant plant);
 
 }

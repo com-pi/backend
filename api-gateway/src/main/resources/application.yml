@@ -31,9 +31,6 @@ spring:
               args:
                 prefix: /auth-service
 
-secret:
-  accessToken: test1
-  refreshToken: test2
         - id: my-plant
           uri: lb://MY-PLANT
           predicates:
@@ -42,6 +39,11 @@ secret:
             - name: PathPrefixRemoveFilter
               args:
                 prefix: /my-plant
+
+secret:
+  accessToken: test1
+  refreshToken: test2
+
 
 springdoc:
   webjars:

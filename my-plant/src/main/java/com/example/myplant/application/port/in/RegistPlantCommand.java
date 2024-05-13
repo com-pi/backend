@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @Builder(buildMethodName = "buildAndValidate")
-public class RegisterPlantCommand extends SelfValidating<RegisterPlantCommand> {
+public class RegistPlantCommand extends SelfValidating<RegistPlantCommand> {
     @NotNull @NotBlank private Long id;
     @NotNull @NotBlank private Long memberId;
     @NotNull @NotBlank private String plantName;
@@ -32,7 +32,7 @@ public class RegisterPlantCommand extends SelfValidating<RegisterPlantCommand> {
     @NotNull private PlantStatus plantStatus;
     @NotNull private String intimacy;
 
-    public RegisterPlantCommand(Long id,Long memberId, String plantName, String plantType,
+    public RegistPlantCommand(Long id,Long memberId, String plantName, String plantType,
                                 String plantAge, String plantBirthday, String plantImageUrl,
                                 String plantWaterDays, String lastWaterDay, String plantDescription,
                                 PlantLocation plantLocation, PlantStatus plantStatus,String intimacy) {
