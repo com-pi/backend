@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/join")
-@Tag(name = "회원가입 / 회원 및 비밀번호 찾기", description = "이메일, 비밀번호 및 휴대 전화번호 인증으로 회원가입을 진행합니다. <br>" +
+@Tag(name = "회원가입", description = "이메일, 비밀번호 및 휴대 전화번호 인증으로 회원가입을 진행합니다. <br>" +
         "인증된 번호를 통해 가입 이메일을 찾거나 비밀번호를 찾을 수 있습니다")
 public class JoinController {
 
