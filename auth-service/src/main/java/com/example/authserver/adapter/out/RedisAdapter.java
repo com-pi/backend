@@ -17,6 +17,7 @@ public class RedisAdapter implements RedisPort {
 
     private final RedisTemplate<String, String> redisTemplate;
     private final String REFRESH_TOKEN_REDIS_KEY = "RefreshToken:";
+    private final String VERIFICATION_CODE_REDIS_KEY = "RefreshToken:";
 
     @Override
     public void saveRefreshToken(Member member, ComPToken refreshToken) {
@@ -28,8 +29,8 @@ public class RedisAdapter implements RedisPort {
 
     @Override
     public Optional<String> getRefreshToken(Passport passport) {
-            return Optional.ofNullable(redisTemplate.opsForValue()
-                    .get(String.format(REFRESH_TOKEN_REDIS_KEY + passport.memberId())));
+        return Optional.ofNullable(redisTemplate.opsForValue()
+                .get(String.format(REFRESH_TOKEN_REDIS_KEY + passport.memberId())));
     }
 
     @Override
@@ -37,4 +38,32 @@ public class RedisAdapter implements RedisPort {
         redisTemplate.delete(REFRESH_TOKEN_REDIS_KEY + passport.memberId());
     }
 
+    @Override
+    public void saveVerificationCode(String email, String verificationCode) {
+        redisTemplate.opsForValue().set(
+                VERIFICATION_CODE_REDIS_KEY + email,
+                verificationCode,
+                Duration.ofSeconds(180));
+    }
+
+    @Override
+    public Optional<String> getVerificationCode(String phoneNumber) {
+        return Optional.ofNullable(
+                redisTemplate.opsForValue().get(VERIFICATION_CODE_REDIS_KEY + phoneNumber)
+        );
+    }
+
+    @Override
+    public void verifyNumber(String phoneNumber, String email) {
+        redisTemplate.opsForValue().set(
+                VERIFICATION_CODE_REDIS_KEY + phoneNumber,
+                email,
+                Duration.ofHours(1));
+    }
+
+    @Override
+    public boolean checkVerification(String phoneNumber, String email) {
+        return email.equals(
+                redisTemplate.opsForValue().get(VERIFICATION_CODE_REDIS_KEY + phoneNumber));
+    }
 }

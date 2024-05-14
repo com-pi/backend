@@ -12,4 +12,9 @@ public interface RedisPort {
     Optional<String> getRefreshToken(Passport passport);
     void removeRefreshToken(Passport passport);
 
+    void saveVerificationCode(String email, String verificationCode);
+    Optional<String> getVerificationCode(String phoneNumber);
+    void verifyNumber(String phoneNumber, String email);
+    boolean checkVerification(String phoneNumber, String email);
+
 }

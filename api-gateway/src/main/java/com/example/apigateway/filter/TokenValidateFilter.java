@@ -1,15 +1,15 @@
 package com.example.apigateway.filter;
 
 import com.example.apigateway.domain.Passport;
-import com.example.apigateway.exception.NoAccessTokenException;
+import com.example.apigateway.exception.InvalidAccessTokenException;
 import com.example.apigateway.util.JwtValidator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
+import org.springframework.cloud.gateway.filter.OrderedGatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
-import org.springframework.core.Ordered;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @Slf4j
 @Component
-public class TokenValidateFilter extends AbstractGatewayFilterFactory<TokenValidateFilter.Config> implements Ordered {
+public class TokenValidateFilter extends AbstractGatewayFilterFactory<TokenValidateFilter.Config> {
 
     private final JwtValidator jwtValidator;
 
@@ -30,31 +30,39 @@ public class TokenValidateFilter extends AbstractGatewayFilterFactory<TokenValid
 
     @Override
     public GatewayFilter apply(TokenValidateFilter.Config config) {
-        return (exchange, chain) -> {
+        return new OrderedGatewayFilter(
+                (exchange, chain) -> {
+                    if(isAuthRequest(exchange)) {
+                        return chain.filter(exchange);
+                    }
 
-            if(isFromSwagger(exchange)) {
-                return chain.filter(exchange);
-            }
+                    Optional<String> accessTokenHeader = getAccessToken(exchange);
 
-            String accessToken = getAccessToken(exchange).orElseThrow(NoAccessTokenException::new);
-            Passport passport = jwtValidator.validateToken(accessToken)
-                    .orElseThrow(NoAccessTokenException::new);
-            return chain.filter(exchangeWithPassport(exchange, passport));
-        };
+                    if(isSwaggerRequest(exchange)) {
+                        return chain.filter(exchange);
+                    }
+
+                    String accessToken = accessTokenHeader.orElseThrow(InvalidAccessTokenException::new);
+                    Passport passport = jwtValidator.validateToken(accessToken);
+                    return chain.filter(exchangeWithPassport(exchange, passport));
+                },
+                10);
     }
 
-    private Boolean isFromSwagger(ServerWebExchange exchange){
-        String endPoint = exchange.getRequest().getURI().getPath();
+    private boolean isAuthRequest(ServerWebExchange exchange) {
         String requestPath = exchange.getRequest().getPath().toString();
-        boolean isApiDocRequest = endPoint.endsWith("/v3/api-docs");
-        boolean isFromSwagger = requestPath.contains("swagger");
-        return isApiDocRequest || isFromSwagger;
+        return requestPath.startsWith("/auth-service");
+    }
+
+    private Boolean isSwaggerRequest(ServerWebExchange exchange){
+        String requestPath = exchange.getRequest().getPath().toString();
+        return requestPath.endsWith("/v3/api-docs");
     }
 
 
     private Optional<String> getAccessToken(ServerWebExchange exchange){
         String authorization = exchange.getRequest().getHeaders().getFirst("Authorization");
-        if(authorization != null && authorization.startsWith("Bearer ")){
+        if(authorization != null && authorization.substring(0, 7).equalsIgnoreCase("Bearer ")){
             return Optional.of(authorization.substring(7));
         }
         return Optional.empty();
@@ -65,11 +73,6 @@ public class TokenValidateFilter extends AbstractGatewayFilterFactory<TokenValid
                 .headers(httpHeaders -> httpHeaders.add("passport", passport.toJson()))
                 .build();
         return exchange.mutate().request(modifiedRequest).build();
-    }
-
-    @Override
-    public int getOrder() {
-        return 10;
     }
 
     @Getter

@@ -30,4 +30,8 @@ public record CommonResponse (
         return ResponseEntity.status(400).body(new CommonResponse(message));
     }
 
+    public static ResponseEntity<CommonResponse> internalServerErrorWithMessage(String message) {
+        return ResponseEntity.status(500).body(new CommonResponse(message));
+    }
+
 }

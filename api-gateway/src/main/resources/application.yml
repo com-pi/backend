@@ -18,8 +18,6 @@ spring:
             - Path=/board-service/**
           filters:
             - name: PathPrefixRemoveFilter
-              args:
-                prefix: /board-service
             - name: TokenValidateFilter
 
         - id: auth-service
@@ -28,8 +26,6 @@ spring:
             - Path=/auth-service/**
           filters:
             - name: PathPrefixRemoveFilter
-              args:
-                prefix: /auth-service
 
         - id: my-plant
           uri: lb://MY-PLANT

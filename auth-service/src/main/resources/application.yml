@@ -40,3 +40,6 @@ oauth:
 secret:
   accessToken: test1
   refreshToken: test2
+
+sms:
+  app-key: 4ba4ea3ab3b400866466c98fb879421e

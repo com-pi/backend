@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.locationtech.jts.geom.Point;
 
 import java.util.List;
 
@@ -14,15 +15,15 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder(builderMethodName = "generate")
+@Builder
 public class BuyAndSell {
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @Enumerated(EnumType.STRING)
     private ArticleType articleType;
@@ -31,8 +32,12 @@ public class BuyAndSell {
     private String content;
     private Integer price;
 
+    // 평면 좌표계 지리데이터
+    @Column(columnDefinition = "Geometry(Point, 4326)")
+    private Point location;
+
     @Embedded
-    private Area area;
+    private Address area;
 
     @Convert(converter = JsonToStringListConverter.class)
     private List<String> imageUrls;

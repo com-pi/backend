@@ -2,14 +2,15 @@ package com.example.common.domain;
 
 public record Passport(
     Long memberId,
-    Role role
+    Role role,
+    String nickName,
+    String imageUrl
 ) {
-
-    public static Passport of(String id, String role) {
+    public static Passport of(String id, String role, String nickName, String imageUrl) {
         try {
             long memberId = Long.parseLong(id);
             Role memberRole = Role.of(role);
-            return new Passport(memberId, memberRole);
+            return new Passport(memberId, memberRole, nickName, imageUrl);
         } catch (NumberFormatException e) {
             // 멤버 아이디 파싱 오류
             return null;

@@ -1,14 +1,11 @@
 package com.example.authserver.exception;
 
-import lombok.Getter;
+import com.example.common.exception.SimpleMessageException;
 
-@Getter
-public class AlreadyLoggedInException extends RuntimeException {
-
-    private final String message;
+public class AlreadyLoggedInException extends SimpleMessageException {
 
     public AlreadyLoggedInException(String message) {
         super(message);
-        this.message = message;
     }
+
 }

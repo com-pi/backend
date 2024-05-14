@@ -33,6 +33,8 @@ public class JwtUtil {
                 .withExpiresAt(tokenType.getInstant())
                 .withSubject(member.getId().toString())
                 .withClaim("rol", member.getRole().name())
+                .withClaim("nik", member.getNickname())
+                .withClaim("img", member.getImageUrl())
                 .sign(Algorithm.HMAC256(
                         tokenType == TokenType.REFRESH_TOKEN ? refreshTokenSecret : accessTokenSecret
                 ));
@@ -46,6 +48,8 @@ public class JwtUtil {
                 .withExpiresAt(tokenType.getInstant())
                 .withSubject(passPort.memberId().toString())
                 .withClaim("rol", passPort.role().name())
+                .withClaim("nik", passPort.nickName())
+                .withClaim("img", passPort.imageUrl())
                 .sign(Algorithm.HMAC256(
                         tokenType == TokenType.REFRESH_TOKEN ? refreshTokenSecret : accessTokenSecret
                 ));
@@ -58,8 +62,11 @@ public class JwtUtil {
             DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(
                     tokenType == TokenType.REFRESH_TOKEN ? refreshTokenSecret : accessTokenSecret
             )).build().verify(token);
-
-            return Optional.ofNullable(Passport.of(decodedJWT.getSubject(), decodedJWT.getClaim("rol").asString()));
+            return Optional.ofNullable(Passport.of(
+                    decodedJWT.getSubject(),
+                    decodedJWT.getClaim("rol").asString(),
+                    decodedJWT.getClaim("nik").asString(),
+                    decodedJWT.getClaim("img").asString()));
         } catch (JWTVerificationException e) {
             return Optional.empty();
         }

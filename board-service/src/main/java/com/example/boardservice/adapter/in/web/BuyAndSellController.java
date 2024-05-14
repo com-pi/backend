@@ -1,12 +1,15 @@
 package com.example.boardservice.adapter.in.web;
 
 import com.example.boardservice.application.port.in.PostArticleUseCase;
-import com.example.boardservice.application.port.in.PostBuyAndSellCommand;
-import com.example.boardservice.domain.ArticleStatusType;
-import io.swagger.v3.oas.annotations.Parameter;
+import com.example.boardservice.security.PassportHolder;
+import com.example.common.baseentity.CommonResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,33 +22,29 @@ import java.util.List;
 public class BuyAndSellController {
 
     private final PostArticleUseCase postArticleUseCase;
+    private final ObjectMapper objectMapper;
 
     @Tag(name = "식물거래 게시글 작성", description = "새로운 식물거래 게시글을 작성합니다.")
     @PostMapping(value = "/buy-and-sell", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void postBuyAndSell(
-            @Parameter(description = "제목", required = true) String title,
-            @Parameter(description = "내용", required = true) String content,
-            @Parameter(description = "가격", required = true) Integer price,
-            @Parameter(description = "시도 행정지역 id", required = true) Long sidoId,
-            @Parameter(description = "시군구 행정지역 id", required = true) Long sigunguId,
-            @Parameter(description = "읍면동 행정지역 id", required = true) Long eupmyundongId,
-            @Parameter(description = "상태 (임시저장 여부)", required = true) String articleStatus,
-            @Parameter(description = "이미지 배열") @RequestPart("imageFiles") List<MultipartFile> imageFiles,
-            @Parameter(description = "해시태그 배열") String[] hashtags) {
+    public ResponseEntity<CommonResponse> postBuyAndSellArticle(
+            @Schema(
+                    description = "json 데이터",
+                    example = "{\"title\":\"안녕하세요\",\"content\":\"반갑습니다\"," +
+                            "\"price\":\"10000\",\"location\":{\"latitude\":\"37.29\"," +
+                            "\"longitude\":\"127.14\"},\"sido\":\"서울시\",\"sigungu\":\"강남구\"," +
+                            "\"eupmyundong\":\"역삼동\",\"hashTags\":[\"선인장\",\"다육이\"]," +
+                            "\"articleStatus\":\"saved\"}"
+            )
+            @RequestPart("data") String jsonData,
+            @RequestPart("imageFiles") List<MultipartFile> imageFiles) throws JsonProcessingException {
 
-        PostBuyAndSellCommand request = PostBuyAndSellCommand.builder()
-                .title(title)
-                .content(content)
-                .price(price)
-                .sidoId(sidoId)
-                .sigunguId(sigunguId)
-                .eupmyundongId(eupmyundongId)
-                .articleStatus(ArticleStatusType.of(articleStatus))
-                .imageFiles(imageFiles)
-                .hashtags(List.of(hashtags))
-                .buildAndValidate();
+        PostBuyAndSellCommand command = objectMapper.readValue(jsonData, PostBuyAndSellCommand.class);
+        command.setMemberId(PassportHolder.getPassport().memberId());
+        command.setImageFiles(imageFiles);
 
-        postArticleUseCase.postBuyAndSell(request);
+        postArticleUseCase.postBuyAndSell(command);
+
+        return CommonResponse.okWithMessage("게시글 작성에 성공하였습니다.");
     }
 
 }

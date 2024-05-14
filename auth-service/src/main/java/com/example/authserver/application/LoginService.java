@@ -30,6 +30,7 @@ public class LoginService implements LoginUseCase {
 
         Member member = memberPort.findByEmail(loginRequest.email()).orElseThrow(() ->
                 new NotFoundException(Member.class));
+
         member.authenticateWithPassword(loginRequest.password(), passwordEncoder);
 
         ComPToken refreshToken = jwtUtil.generateToken(member, TokenType.REFRESH_TOKEN);
