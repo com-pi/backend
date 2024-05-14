@@ -1,10 +1,13 @@
 package com.example.myplant.domain;
 
+import com.example.myplant.adapter.out.persistence.JsonToStringListConverter;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Table(name = "my_plant")
@@ -28,11 +31,15 @@ public class Plant {
     private String plantType;
     private String plantAge;
     private String plantBirthday;
-    private String plantImageUrl;
+
+    @Convert(converter = JsonToStringListConverter.class)
+    private List<String> plantImageUrl;
+
+
     private String plantWaterDays;
     private String lastWaterDay;
     private String intimacy;
-    private String plandDescription;
+    private String plantDescription;
 
     @Enumerated(EnumType.STRING)
     private PlantLocation plantLocation;

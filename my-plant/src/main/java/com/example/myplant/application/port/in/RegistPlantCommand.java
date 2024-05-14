@@ -24,7 +24,7 @@ public class RegistPlantCommand extends SelfValidating<RegistPlantCommand> {
     @NotNull @Min(0) private String plantType;
     @NotNull private String plantAge;
     @NotNull private String plantBirthday;
-    @NotNull private String plantImageUrl;
+    @NotNull private List<MultipartFile> plantImageUrl;
     @NotNull private String plantWaterDays;
     @NotNull private String lastWaterDay;
     @NotNull private String plantDescription;
@@ -33,7 +33,7 @@ public class RegistPlantCommand extends SelfValidating<RegistPlantCommand> {
     @NotNull private String intimacy;
 
     public RegistPlantCommand(Long id,Long memberId, String plantName, String plantType,
-                                String plantAge, String plantBirthday, String plantImageUrl,
+                                String plantAge, String plantBirthday, List<MultipartFile> plantImageUrl,
                                 String plantWaterDays, String lastWaterDay, String plantDescription,
                                 PlantLocation plantLocation, PlantStatus plantStatus,String intimacy) {
         this.id = id;

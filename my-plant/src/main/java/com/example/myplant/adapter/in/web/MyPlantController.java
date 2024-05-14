@@ -10,7 +10,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,7 +32,7 @@ public class MyPlantController {
         @Parameter(description = "식물 종류", required = true) String plant_type,
         @Parameter(description = "식물 나이", required = true) String plant_age,
         @Parameter(description = "식물 생일", required = true) String plant_birthday,
-        @Parameter(description = "식물 사진 Url", required = true) String plant_image_url,
+        @Parameter(description = "식물 사진 Url") @RequestPart("imageFiles") List<MultipartFile> plant_image_url,
         @Parameter(description = "식물 급수 주기", required = true) String plant_water_days,
         @Parameter(description = "식물 위치", required = true) String plantLocation,
         @Parameter(description = "급수 날짜", required = true) String last_water_day,
