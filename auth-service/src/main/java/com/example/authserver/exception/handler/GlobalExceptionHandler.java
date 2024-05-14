@@ -22,7 +22,7 @@ public class GlobalExceptionHandler {
     // Todo : 에러 로깅
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<CommonResponse> handleNotFoundException(NotFoundException exception) {
+    public ResponseEntity<CommonResponse<Void>> handleNotFoundException(NotFoundException exception) {
 
         return switch (exception.getResourceClass().getName()) {
             case "Member" -> CommonResponse.notFoundWithMessage("회원을 찾을 수 없습니다.");
@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(OAuthLoginException.class)
-    public ResponseEntity<CommonResponse> handleFeignException(OAuthLoginException exception) {
+    public ResponseEntity<CommonResponse<Void>> handleFeignException(OAuthLoginException exception) {
         String message = exception.getMessage();
         try {
             JsonNode jsonNode = objectMapper.readTree(exception.getMessage());
@@ -42,12 +42,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(InvalidTokenException.class)
-    public ResponseEntity<CommonResponse> handleInvalidTokenException(InvalidTokenException exception) {
+    public ResponseEntity<CommonResponse<Void>> handleInvalidTokenException(InvalidTokenException exception) {
         return CommonResponse.badRequestWithMessage(exception.getTokenType().getInvalidMessage());
     }
 
     @ExceptionHandler(AlreadyLoggedInException.class)
-    public ResponseEntity<CommonResponse> handleAlreadyLoggedInException(AlreadyLoggedInException exception) {
+    public ResponseEntity<CommonResponse<Void>> handleAlreadyLoggedInException(AlreadyLoggedInException exception) {
         return CommonResponse.conflictWithMessage(exception.getMessage());
     }
 

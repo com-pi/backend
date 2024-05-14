@@ -19,4 +19,6 @@ public interface MemberPort extends JpaRepository<Member, Long> {
 
     @Query("SELECT m FROM Member m WHERE m.email = :email AND m.deletionYn = 'Y'")
     Optional<Member> findByEmail(@Param("email") String email);
+
+    Optional<Member> findByPhoneNumber(String phoneNumber);
 }

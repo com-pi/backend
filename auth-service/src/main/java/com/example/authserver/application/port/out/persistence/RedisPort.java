@@ -17,4 +17,7 @@ public interface RedisPort {
     void verifyNumber(String phoneNumber, String email);
     boolean checkVerification(String phoneNumber, String email);
 
+    void setFindIdValidationCode(String phoneNumber, String verificationCode);
+    boolean verifyFindIdCode(String phoneNumber, String verificationCode);
+
 }

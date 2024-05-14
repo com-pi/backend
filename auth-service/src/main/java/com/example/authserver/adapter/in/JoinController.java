@@ -26,7 +26,7 @@ public class JoinController {
     @Operation(summary = "회원가입", description = "회원 가입을 진행합니다. <br>" +
             "인증되지 않은 번호를 입력하면 예외를 반환합니다.")
     @PostMapping()
-    public ResponseEntity<CommonResponse> join(JoinRequest joinRequest) {
+    public ResponseEntity<CommonResponse<Void>> join(JoinRequest joinRequest) {
 
         joinUseCase.join(joinRequest);
 
@@ -35,7 +35,7 @@ public class JoinController {
 
     @Operation(summary = "이메일 중복 검사", description = "이메일 중복검사를 진행합니다.")
     @GetMapping("/is_duplicate")
-    public ResponseEntity<CommonResponse> joinNumber(
+    public ResponseEntity<CommonResponse<Void>> joinNumber(
             @RequestParam("email") String email) {
 
         boolean isDuplicated = joinUseCase.isDuplicateEmail(email);
@@ -47,17 +47,17 @@ public class JoinController {
 
     @Operation(summary = "전화번호 sms 인증", description = "휴대 전화번호를 인증을 요청 합니다.")
     @GetMapping(value = "/phone_number_verification")
-    public ResponseEntity<CommonResponse> requestPhoneNumberVerification(
+    public ResponseEntity<CommonResponse<String>> requestPhoneNumberVerification(
             @ParameterObject VerifyPhoneNumberRequest request){
 
         String code = joinUseCase.requestNumberVerification(request);
 
-        return CommonResponse.okWithMessage("인증번호가 발송되었습니다. 인증번호는 3분간 유효합니다. : " + code);
+        return CommonResponse.okWithMessage("인증번호가 발송되었습니다. 인증번호는 3분간 유효합니다.", code);
     }
 
     @Operation(summary = "인증 코드 등록", description = "문자로 발송된 인증 코드를 등록합니다.")
     @PostMapping("/verification_code")
-    public ResponseEntity<CommonResponse> verifyCode(
+    public ResponseEntity<CommonResponse<Void>> verifyCode(
             @RequestParam(name = "이메일 주소") String email,
             @RequestParam(name = "핸드폰 번호") String phoneNumber,
             @RequestParam(name = "인증 코드") String verificationCode){

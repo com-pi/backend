@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
     // Todo : 에러 로깅
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<CommonResponse> handleNotFoundException(NotFoundException exception) {
+    public ResponseEntity<CommonResponse<Void>> handleNotFoundException(NotFoundException exception) {
         return switch (exception.getMissingElement()) {
             case "Member" -> CommonResponse.notFoundWithMessage("회원을 찾을 수 없습니다.");
             default -> CommonResponse.notFoundWithMessage(exception.getMessage());
@@ -24,12 +24,12 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(FileUploadException.class)
-    public ResponseEntity<CommonResponse> handleInvalidTokenException(FileUploadException exception) {
+    public ResponseEntity<CommonResponse<Void>> handleInvalidTokenException(FileUploadException exception) {
         return CommonResponse.badRequestWithMessage(exception.getMessage());
     }
 
     @ExceptionHandler(InternalServerException.class)
-    public ResponseEntity<CommonResponse> handleInternalServerException(InternalServerException exception) {
+    public ResponseEntity<CommonResponse<Void>> handleInternalServerException(InternalServerException exception) {
         return CommonResponse.internalServerErrorWithMessage(exception.getMessage());
     }
 

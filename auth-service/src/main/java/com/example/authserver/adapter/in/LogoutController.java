@@ -2,6 +2,7 @@ package com.example.authserver.adapter.in;
 
 import com.example.authserver.application.LogoutService;
 import com.example.common.baseentity.CommonResponse;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,8 +20,9 @@ public class LogoutController {
 
     private final LogoutService logoutService;
 
+    @Operation(summary = "로그아웃")
     @DeleteMapping()
-    public ResponseEntity<CommonResponse> logout(
+    public ResponseEntity<CommonResponse<Void>> logout(
             HttpServletRequest request,
             HttpServletResponse response){
 

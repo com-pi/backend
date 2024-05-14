@@ -87,6 +87,7 @@ public class Member extends DeletedAtAbstractEntity {
         return Member.builder()
                 .email(joinRequest.email())
                 .password(encoder.encode(joinRequest.password()))
+                .nickname("새회원_" + UUID.randomUUID())
                 .phoneNumber(joinRequest.phoneNumber())
                 .role(Role.USER)
                 .build();
