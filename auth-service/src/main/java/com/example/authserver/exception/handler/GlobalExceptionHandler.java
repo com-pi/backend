@@ -3,6 +3,7 @@ package com.example.authserver.exception.handler;
 import com.example.authserver.exception.AlreadyLoggedInException;
 import com.example.authserver.exception.InvalidTokenException;
 import com.example.authserver.exception.OAuthLoginException;
+import com.example.authserver.exception.VerificationFailException;
 import com.example.common.baseentity.CommonResponse;
 import com.example.common.exception.NotFoundException;
 import com.example.common.exception.UnauthorizedException;
@@ -12,9 +13,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.ws.rs.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
@@ -45,6 +52,22 @@ public class GlobalExceptionHandler {
         return CommonResponse.unauthorizedWithMessage("소셜 로그인 중 예외 발생 : " + message);
     }
 
+    @ExceptionHandler(BindException.class)
+    public ResponseEntity<CommonResponse<List<String>>> handleBindException(BindException exception) {
+        List<String> errors = exception.getBindingResult().getAllErrors().stream()
+                .map(e -> {
+                    if (e instanceof FieldError) {
+                        return ((FieldError) e).getField() + ": " + e.getDefaultMessage();
+                    } else {
+                        return e.getObjectName() + ": " + e.getDefaultMessage();
+                    }
+                })
+                .collect(Collectors.toList());
+
+        CommonResponse<List<String>> response = new CommonResponse<>("Validation failed", errors);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<CommonResponse<Void>> handleInvalidTokenException(InvalidTokenException exception) {
         return CommonResponse.badRequestWithMessage(exception.getTokenType().getInvalidMessage());
@@ -62,6 +85,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ForbiddenException.class)
     public ResponseEntity<CommonResponse<Void>> handleForbiddenException(ForbiddenException exception) {
+        return CommonResponse.forbiddenWithMessage(exception.getMessage());
+    }
+
+    @ExceptionHandler(VerificationFailException.class)
+    public ResponseEntity<CommonResponse<Void>> handleVerificationFailException(VerificationFailException exception) {
         return CommonResponse.forbiddenWithMessage(exception.getMessage());
     }
 

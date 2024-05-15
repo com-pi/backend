@@ -4,6 +4,7 @@ import com.example.authserver.application.ForgetService;
 import com.example.common.baseentity.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,7 @@ public class ForgetController {
     @Operation(summary = "이메일 찾기 - 인증번호 발송", description = "회원가입시 등록한 핸드폰번호로 인증코드를 전송합니다.")
     @PostMapping("/email")
     public ResponseEntity<CommonResponse<String>> findId(
-            @RequestBody FindIdRequest request
+            @RequestBody @Valid FindIdRequest request
     ){
         String verificationCode = forgetService.findId(request);
 
