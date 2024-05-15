@@ -1,10 +1,13 @@
-package com.example.boardservice.adapter.out.external;
+package com.example.imagemodule.adapter;
 
-import com.example.boardservice.application.port.out.ImageCommandPort;
-import com.example.boardservice.application.port.out.SaveImagesCommand;
-import com.example.boardservice.domain.ArticleType;
-import com.example.boardservice.exception.FileUploadException;
 import com.example.common.exception.InternalServerException;
+import com.example.imagemodule.application.port.ImageCommandPort;
+import com.example.imagemodule.application.port.SaveImagesCommand;
+import com.example.imagemodule.domain.ImageAndThumbnail;
+import com.example.imagemodule.domain.MinioBucket;
+import com.example.imagemodule.exception.FileUploadException;
+import com.example.imagemodule.util.ObjectUrlMapper;
+import com.example.imagemodule.util.ThumbnailGenerator;
 import io.minio.*;
 import io.minio.errors.MinioException;
 import io.minio.messages.DeleteError;
@@ -14,11 +17,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.imagemodule.MinioBucket.TEMPORAL;
+import static com.example.imagemodule.domain.MinioBucket.PROFILE_IMAGE;
+import static com.example.imagemodule.domain.MinioBucket.TEMPORAL;
 
 @Slf4j
 @Component
@@ -26,17 +31,39 @@ import static com.example.imagemodule.MinioBucket.TEMPORAL;
 public class ImageCommandAdapter implements ImageCommandPort {
 
     private final MinioClient minioClient;
+    private final ObjectUrlMapper objectUrlMapper;
 
     @Override
     public List<String> saveImages(SaveImagesCommand command) {
         List<String> uploadedObjectName = new ArrayList<>();
         try {
             uploadedObjectName = uploadFilesTemporally(command.imageFiles());
-            moveToFinalLocation(uploadedObjectName, command.articleType());
+            moveToFinalLocation(uploadedObjectName, command.bucket());
         } finally {
             rollbackFiles(uploadedObjectName);
         }
         return uploadedObjectName;
+    }
+
+    @Override
+    public ImageAndThumbnail saveProfileImage(MultipartFile image){
+        List<String> uploadedObjectName = new ArrayList<>();
+        try {
+            uploadedObjectName = uploadFilesTemporally(image, ThumbnailGenerator.createThumbnail(image));
+            moveToFinalLocation(uploadedObjectName, MinioBucket.PROFILE_IMAGE);
+        } catch (IOException e) {
+            throw new RuntimeException("썸네일 이미지 생성중 에러 발생");
+        } finally {
+            rollbackFiles(uploadedObjectName);
+        }
+        List<String> urls = uploadedObjectName.stream()
+                .map(object -> objectUrlMapper.toUrl(object, PROFILE_IMAGE))
+                .toList();
+        return ImageAndThumbnail.of(urls);
+    }
+
+    private List<String> uploadFilesTemporally(MultipartFile... imageFiles) {
+        return uploadFilesTemporally(List.of(imageFiles));
     }
 
     private List<String> uploadFilesTemporally(List<MultipartFile> imageFiles) {
@@ -58,12 +85,12 @@ public class ImageCommandAdapter implements ImageCommandPort {
         }).toList();
     }
 
-    private void moveToFinalLocation(List<String> tempObjectNames, ArticleType articleType) {
+    private void moveToFinalLocation(List<String> tempObjectNames, MinioBucket bucket) {
         tempObjectNames.forEach(objectName -> {
             try {
                 minioClient.copyObject(
                         CopyObjectArgs.builder()
-                                .bucket(articleType.getBucket().getBucketName())
+                                .bucket(bucket.getBucketName())
                                 .object(objectName)
                                 .source(
                                         CopySource.builder()

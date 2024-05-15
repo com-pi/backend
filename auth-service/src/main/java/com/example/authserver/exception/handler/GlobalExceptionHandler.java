@@ -1,16 +1,12 @@
 package com.example.authserver.exception.handler;
 
-import com.example.authserver.exception.AlreadyLoggedInException;
-import com.example.authserver.exception.InvalidTokenException;
-import com.example.authserver.exception.OAuthLoginException;
-import com.example.authserver.exception.VerificationFailException;
+import com.example.authserver.exception.*;
 import com.example.common.baseentity.CommonResponse;
 import com.example.common.exception.NotFoundException;
 import com.example.common.exception.UnauthorizedException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.ws.rs.ForbiddenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -91,6 +87,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(VerificationFailException.class)
     public ResponseEntity<CommonResponse<Void>> handleVerificationFailException(VerificationFailException exception) {
         return CommonResponse.forbiddenWithMessage(exception.getMessage());
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<CommonResponse<Void>> handleBadRequestException(BadRequestException exception) {
+        return CommonResponse.badRequestWithMessage(exception.getMessage());
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<CommonResponse<Void>> handleRuntimeException(RuntimeException exception) {
+        return CommonResponse.internalServerErrorWithMessage(exception.getMessage());
     }
 
 }

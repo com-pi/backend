@@ -7,16 +7,16 @@ public record Passport(
     Long memberId,
     Role role,
     String nickName,
-    String imageUrl
+    String thumbnail
 ) {
     public static Passport of(@Nonnull String id,
                               @Nonnull String role,
                               @Nonnull String nickName,
-                              @Nullable String imageUrl) {
+                              @Nullable String thumbnail) {
         try {
             long memberId = Long.parseLong(id);
             Role memberRole = Role.of(role);
-            return new Passport(memberId, memberRole, nickName, imageUrl);
+            return new Passport(memberId, memberRole, nickName, thumbnail);
         } catch (NumberFormatException e) {
             // 멤버 아이디 파싱 오류
             return null;

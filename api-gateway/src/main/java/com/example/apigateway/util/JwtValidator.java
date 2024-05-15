@@ -18,7 +18,11 @@ public class JwtValidator {
     public Passport validateToken(String token) {
         try {
             DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(accessTokenSecret)).build().verify(token);
-            return Passport.of(decodedJWT.getSubject(), decodedJWT.getClaim("rol").asString());
+            String subject = decodedJWT.getSubject();
+            String memberId = decodedJWT.getClaim("rol").asString();
+            String nickName = decodedJWT.getClaim("nik").asString();
+            String thumbnail = decodedJWT.getClaim("img").asString();
+            return Passport.of(subject, memberId, nickName, thumbnail);
         } catch (JWTVerificationException e) {
             throw new InvalidAccessTokenException("토큰 검증에 실패했습니다.", e);
         }

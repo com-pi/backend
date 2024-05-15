@@ -1,4 +1,4 @@
-package com.example.boardservice.exception;
+package com.example.imagemodule.exception;
 
 import io.minio.errors.MinioException;
 import lombok.Getter;

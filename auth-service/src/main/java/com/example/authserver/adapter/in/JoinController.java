@@ -6,8 +6,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.MediaType;
@@ -39,11 +37,9 @@ public class JoinController {
     @Operation(summary = "인증 코드 등록", description = "문자로 발송된 인증 코드를 등록합니다.")
     @PostMapping(value = "/verification_code", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public ResponseEntity<CommonResponse<Void>> verifyCode(
-            @RequestParam(name = "이메일 주소") String email,
-            @RequestParam(name = "핸드폰 번호") String phoneNumber,
-            @RequestParam(name = "인증 코드") @NotNull @NotBlank String verificationCode){
-
-        joinUseCase.verifyCode(email, phoneNumber, verificationCode);
+            @RequestBody @Valid VerifyCodeForJoinRequest request
+    ){
+        joinUseCase.verifyCode(request);
 
         return CommonResponse.okWithMessage("인증이 완료되었습니다.");
     }

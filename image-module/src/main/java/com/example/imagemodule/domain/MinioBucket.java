@@ -1,4 +1,4 @@
-package com.example.imagemodule;
+package com.example.imagemodule.domain;
 
 import lombok.Getter;
 
@@ -7,6 +7,7 @@ public enum MinioBucket {
 
     ARTICLE_PLANT_LIFE("plant-life"),
     ARTICLE_TRADE("article-trade"),
+    PROFILE_IMAGE("profile-image"),
     TEMPORAL("temp");
 
     private final String bucketName;

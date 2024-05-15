@@ -31,7 +31,7 @@ public class ForgetController {
     @Operation(summary = "이메일 찾기 - 인증번호 인증", description = "전송된 번호를 입력하여 아이디를 찾아옵니다.")
     @GetMapping("/email")
     public ResponseEntity<CommonResponse<String>> verifyCode(
-            @ParameterObject VerifyCodeRequest request
+            @ParameterObject @Valid VerifyCodeForEmailRequest request
     ) {
         String email = forgetService.verifyCode(request);
 
@@ -45,7 +45,7 @@ public class ForgetController {
     @Operation(summary = "비밀번호 찾기", description = "이메일, 전화번호를 입력하면 이메일로 임시 비밀번호를 전달합니다.")
     @GetMapping("/password")
     public ResponseEntity<CommonResponse<Void>> verifyPassword(
-            @ParameterObject FindPwdRequest request
+            @ParameterObject @Valid FindPwdRequest request
     ){
         forgetService.findPassword(request);
 

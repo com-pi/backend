@@ -1,7 +1,7 @@
-package com.example.boardservice.configuration;
+package com.example.imagemodule.configuration;
 
 import com.example.common.exception.InternalServerException;
-import com.example.imagemodule.MinioBucket;
+import com.example.imagemodule.domain.MinioBucket;
 import io.minio.BucketExistsArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
@@ -9,7 +9,7 @@ import io.minio.SetBucketPolicyArgs;
 import io.minio.errors.MinioException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import org.springframework.core.env.Environment;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,25 +20,31 @@ import java.security.NoSuchAlgorithmException;
 @Configuration
 public class MinioConfig {
 
-    // Todo endpoint application 상수로
+    private final String endpoint;
+    private final String credential;
 
-    @Bean
-    @Profile("dev")
-    public MinioClient minioClientDev(){
-        MinioClient minioClient = MinioClient.builder()
-                .endpoint("https://bucket.com-p.site")
-                .credentials("ADMIN", "compcomp!!")
-                .build();
-        bucketInitialize(minioClient);
-        return minioClient;
+    public MinioConfig(Environment env) {
+        String activeProfile;
+        String[] activeProfiles = env.getActiveProfiles();
+        if (activeProfiles.length == 0) {
+            activeProfile = "dev";
+        } else {
+            activeProfile = activeProfiles[0];
+        }
+        if (activeProfile.equals("local")) {
+            endpoint = "http://localhost:9000";
+            credential = "compcomp!!";
+        } else {
+            endpoint = "https://bucket.com-p.site";
+            credential = "compcomp!!";
+        }
     }
 
     @Bean
-    @Profile("local")
-    public MinioClient minioClientLocal(){
+    public MinioClient minioClientDev(){
         MinioClient minioClient = MinioClient.builder()
-                .endpoint("http://localhost:9000")
-                .credentials("ADMIN", "compcomp!!")
+                .endpoint(endpoint)
+                .credentials("ADMIN", credential)
                 .build();
         bucketInitialize(minioClient);
         return minioClient;
@@ -50,7 +56,7 @@ public class MinioConfig {
                 makeBucketIfAbsent(bucket, minioClient);
             }
         } catch (MinioException e){
-            throw new InternalServerException("이미지 버킷 초기화에 실패했습니다.", e);
+            throw new RuntimeException("이미지 버킷 초기화에 실패했습니다.", e);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -79,7 +85,7 @@ public class MinioConfig {
     }
 
     private String loadPolicyFile() {
-        try (InputStream inputStream = getClass().getResourceAsStream("/com/example/boardservice/configuration/BucketPolicy.json")) {
+        try (InputStream inputStream = getClass().getResourceAsStream("/BucketPolicy.json")) {
             if (inputStream == null) {
                 throw new InternalServerException("정책 파일을 찾을 수 없습니다.", null);
             }

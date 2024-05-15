@@ -1,4 +1,4 @@
-package com.example.common.domain;
+package com.example.apigateway.domain;
 
 public enum Role {
     ANONYMOUS(0),
@@ -19,10 +19,5 @@ public enum Role {
         }
         throw new IllegalArgumentException();
     }
-
-    public boolean hasPermission(Role role) {
-        return this.rank >= role.rank;
-    }
-
 
 }

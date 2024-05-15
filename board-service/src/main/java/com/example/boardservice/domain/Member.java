@@ -31,13 +31,13 @@ public class Member {
         return Member.builder()
                 .memberId(passport.memberId())
                 .nickname(passport.nickName())
-                .imageUrl(passport.imageUrl())
+                .imageUrl(passport.thumbnail())
                 .build();
     }
 
     public void update(Passport passport){
         this.nickname = passport.nickName();
-        this.imageUrl = passport.imageUrl();
+        this.imageUrl = passport.thumbnail();
     }
 
 }

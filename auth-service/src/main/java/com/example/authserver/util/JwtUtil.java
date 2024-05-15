@@ -35,6 +35,7 @@ public class JwtUtil {
                 .withClaim("rol", member.getRole().name())
                 .withClaim("nik", member.getNickname())
                 .withClaim("img", member.getImageUrl())
+                .withClaim("thm", member.getThumbnailUrl())
                 .sign(Algorithm.HMAC256(
                         tokenType == TokenType.REFRESH_TOKEN ? refreshTokenSecret : accessTokenSecret
                 ));
@@ -49,7 +50,7 @@ public class JwtUtil {
                 .withSubject(passPort.memberId().toString())
                 .withClaim("rol", passPort.role().name())
                 .withClaim("nik", passPort.nickName())
-                .withClaim("img", passPort.imageUrl())
+                .withClaim("img", passPort.thumbnail())
                 .sign(Algorithm.HMAC256(
                         tokenType == TokenType.REFRESH_TOKEN ? refreshTokenSecret : accessTokenSecret
                 ));

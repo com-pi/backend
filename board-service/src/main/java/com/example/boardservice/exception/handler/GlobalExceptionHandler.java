@@ -1,6 +1,6 @@
 package com.example.boardservice.exception.handler;
 
-import com.example.boardservice.exception.FileUploadException;
+import com.example.imagemodule.exception.FileUploadException;
 import com.example.common.baseentity.CommonResponse;
 import com.example.common.exception.InternalServerException;
 import com.example.common.exception.NotFoundException;

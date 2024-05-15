@@ -1,11 +1,11 @@
 package com.example.authserver.aop;
 
 import com.example.authserver.aop.filter.PassportHolder;
+import com.example.authserver.exception.ForbiddenException;
 import com.example.common.annotation.Authenticate;
 import com.example.common.domain.Passport;
 import com.example.common.domain.Role;
 import com.example.common.exception.UnauthorizedException;
-import jakarta.ws.rs.ForbiddenException;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;

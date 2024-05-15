@@ -1,6 +1,6 @@
 package com.example.boardservice.domain;
 
-import com.example.imagemodule.MinioBucket;
+import com.example.imagemodule.domain.MinioBucket;
 import lombok.Getter;
 
 @Getter

@@ -30,7 +30,7 @@ class MemberPortTest {
                 .nickname("테스트 회원")
                 .phoneNumber("01094862225")
                 .location(geometryFactory.createPoint(new Coordinate(127.01, 38.04)))
-                .role(Role.USER)
+                .role(Role.MEMBER)
                 .build();
 
         memberPort.saveAndFlush(test_member);

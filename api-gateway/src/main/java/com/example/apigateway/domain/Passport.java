@@ -1,15 +1,22 @@
 package com.example.apigateway.domain;
 
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
+
 public record Passport(
     Long memberId,
-    Role role
+    Role role,
+    String nickName,
+    String thumbnail
 ) {
-
-    public static Passport of(String id, String role) {
+    public static Passport of(@Nonnull String id,
+                              @Nonnull String role,
+                              @Nonnull String nickName,
+                              @Nullable String thumbnail) {
         try {
             long memberId = Long.parseLong(id);
             Role memberRole = Role.of(role);
-            return new Passport(memberId, memberRole);
+            return new Passport(memberId, memberRole, nickName, thumbnail);
         } catch (NumberFormatException e) {
             // 멤버 아이디 파싱 오류
             return null;
@@ -21,21 +28,12 @@ public record Passport(
 
     public String toJson() {
         return String.format(
-                "{\"memberId\":\"%s\",\"role\":\"%s\"}", this.memberId, this.role
+                "{\"memberId\":\"%s\"," +
+                "\"role\":\"%s\"," +
+                "\"nickName\":\"%s\"," +
+                "\"thumbnail\":\"%s\"}",
+                this.memberId, this.role, this.nickName, this.thumbnail
         );
-    }
-
-    public enum Role {
-        USER, ADMIN;
-
-        public static Role of(String name) {
-            for (Role role : Role.values()) {
-                if(role.name().equalsIgnoreCase(name)) {
-                    return role;
-                }
-            }
-            throw new IllegalArgumentException();
-        }
     }
 
 }

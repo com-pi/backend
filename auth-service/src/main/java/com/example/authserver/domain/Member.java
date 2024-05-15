@@ -7,6 +7,7 @@ import com.example.common.baseentity.DeletedAtAbstractEntity;
 import com.example.common.domain.Address;
 import com.example.common.domain.Role;
 import com.example.common.exception.NotFoundException;
+import com.example.imagemodule.domain.ImageAndThumbnail;
 import jakarta.persistence.*;
 import lombok.*;
 import org.locationtech.jts.geom.Point;
@@ -48,6 +49,7 @@ public class Member extends DeletedAtAbstractEntity {
     private String imageUrl;
     private String thumbnailUrl;
     private Point location;
+
     @Embedded
     private Address address;
     private LocalDateTime lastLogin;
@@ -61,13 +63,17 @@ public class Member extends DeletedAtAbstractEntity {
         this.imageUrl = naverProfile.profile_image();
     }
 
+    public boolean isSocialAccount() {
+        return this.kakaoId != null || this.naverId != null;
+    }
+
     public static Member newMemberForKakaoUser(KakaoUserInfoResponse kakaoUserInfo) {
         return Member.builder()
                 .kakaoId(kakaoUserInfo.getId().toString())
                 .nickname(
                         kakaoUserInfo.getKakao_account().profile().nickname() == null ?
                                 "새회원_" + UUID.randomUUID() : kakaoUserInfo.getKakao_account().profile().nickname())
-                .role(Role.USER)
+                .role(Role.MEMBER)
                 .imageUrl(kakaoUserInfo.getKakao_account().profile().profile_image_url())
                 .thumbnailUrl(kakaoUserInfo.getKakao_account().profile().thumbnail_image_url())
                 .build();
@@ -79,7 +85,7 @@ public class Member extends DeletedAtAbstractEntity {
                 .nickname(naverUserInfo.getResponse().nickname() == null ?
                                 "새회원_" + UUID.randomUUID() : naverUserInfo.getResponse().nickname())
                 .email(naverUserInfo.getResponse().email())
-                .role(Role.USER)
+                .role(Role.MEMBER)
                 .imageUrl(naverUserInfo.getResponse().profile_image())
                 .build();
     }
@@ -90,7 +96,7 @@ public class Member extends DeletedAtAbstractEntity {
                 .password(encoder.encode(joinRequest.password()))
                 .nickname("새회원_" + UUID.randomUUID())
                 .phoneNumber(joinRequest.phoneNumber())
-                .role(Role.USER)
+                .role(Role.MEMBER)
                 .build();
     }
 
@@ -123,5 +129,8 @@ public class Member extends DeletedAtAbstractEntity {
     }
 
 
-
+    public void updateProfileImage(ImageAndThumbnail imageAndThumbnail) {
+        this.imageUrl = imageAndThumbnail.imageUrl();
+        this.thumbnailUrl = imageAndThumbnail.thumbnailUrl();
+    }
 }

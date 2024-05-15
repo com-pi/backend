@@ -2,13 +2,14 @@ package com.example.boardservice.application;
 
 import com.example.boardservice.adapter.in.web.PostBuyAndSellCommand;
 import com.example.boardservice.application.port.in.PostArticleUseCase;
-import com.example.boardservice.application.port.out.ImageCommandPort;
+import com.example.imagemodule.application.port.ImageCommandPort;
 import com.example.boardservice.application.port.out.PostArticlePort;
-import com.example.boardservice.application.port.out.SaveImagesCommand;
+import com.example.imagemodule.application.port.SaveImagesCommand;
 import com.example.common.domain.Address;
 import com.example.boardservice.domain.BuyAndSell;
 import com.example.boardservice.domain.Member;
-import com.example.boardservice.util.ObjectUrlMapper;
+import com.example.imagemodule.domain.MinioBucket;
+import com.example.imagemodule.util.ObjectUrlMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +34,7 @@ public class PostArticleService implements PostArticleUseCase {
         // Todo 이미지 순서 관련 기획 논의
         // Todo 임시저장 관련 기획
         List<String> objectNames = imageCommandPort.saveImages(
-                new SaveImagesCommand(command.getImageFiles(), BUY_AND_SELL)
+                new SaveImagesCommand(command.getImageFiles(), BUY_AND_SELL.getBucket())
         );
 
         BuyAndSell newPost = BuyAndSell.builder()
@@ -42,7 +43,7 @@ public class PostArticleService implements PostArticleUseCase {
                 .content(command.getContent())
                 .price(command.getPrice())
                 .area(Address.of(command.getSido(), command.getSigungu(), command.getEupmyundong()))
-                .imageUrls(objectUrlMapper.toUrl(objectNames))
+                .imageUrls(objectUrlMapper.toUrl(objectNames, MinioBucket.ARTICLE_TRADE))
                 .hashtags(command.getHashTags())
                 .articleType(BUY_AND_SELL)
                 .build();

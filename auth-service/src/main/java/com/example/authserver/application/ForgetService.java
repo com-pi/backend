@@ -2,11 +2,12 @@ package com.example.authserver.application;
 
 import com.example.authserver.adapter.in.FindIdRequest;
 import com.example.authserver.adapter.in.FindPwdRequest;
-import com.example.authserver.adapter.in.VerifyCodeRequest;
+import com.example.authserver.adapter.in.VerifyCodeForEmailRequest;
 import com.example.authserver.application.port.out.external.EmailPort;
 import com.example.authserver.application.port.out.persistence.MemberPort;
 import com.example.authserver.application.port.out.persistence.RedisPort;
 import com.example.authserver.domain.Member;
+import com.example.authserver.exception.BadRequestException;
 import com.example.common.exception.NotFoundException;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
@@ -25,8 +26,12 @@ public class ForgetService {
     private final Random random = new Random();
 
     public String findId(FindIdRequest request){
-        memberPort.findByPhoneNumber(request.phoneNumber())
+        Member foundMember = memberPort.findByPhoneNumber(request.phoneNumber())
                 .orElseThrow(() -> new NotFoundException(Member.class));
+
+        if(foundMember.isSocialAccount()) {
+            throw new BadRequestException("소셜 로그인 계정입니다. 로셜 로그인을 이용해 주세요");
+        }
 
         String verificationCode = String.valueOf(random.nextInt(900000) + 100000);
 
@@ -36,7 +41,7 @@ public class ForgetService {
     }
 
     @Nullable
-    public String verifyCode(VerifyCodeRequest request){
+    public String verifyCode(VerifyCodeForEmailRequest request){
         boolean isMatch = redisPort.verifyFindIdCode(request.phoneNumber(), request.verifyCode());
 
         if(isMatch) {

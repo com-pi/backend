@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Authenticate {
 
-    Role value() default Role.USER;
+    Role value() default Role.MEMBER;
 
 }

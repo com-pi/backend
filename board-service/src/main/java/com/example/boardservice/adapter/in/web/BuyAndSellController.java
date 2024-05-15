@@ -27,7 +27,7 @@ public class BuyAndSellController {
     private final ObjectMapper objectMapper;
 
     @Tag(name = "식물거래 게시글 작성", description = "새로운 식물거래 게시글을 작성합니다.")
-    @Authenticate(Role.USER)
+    @Authenticate(Role.MEMBER)
     @PostMapping(value = "/buy-and-sell", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CommonResponse<Long>> postBuyAndSellArticle(
             @Schema(

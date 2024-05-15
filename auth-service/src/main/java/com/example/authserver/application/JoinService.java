@@ -1,6 +1,7 @@
 package com.example.authserver.application;
 
 import com.example.authserver.adapter.in.JoinRequest;
+import com.example.authserver.adapter.in.VerifyCodeForJoinRequest;
 import com.example.authserver.adapter.in.VerifyPhoneNumberRequest;
 import com.example.authserver.application.port.in.JoinUseCase;
 import com.example.authserver.application.port.out.external.SMSPort;
@@ -62,15 +63,15 @@ public class JoinService implements JoinUseCase {
     }
 
     @Override
-    public void verifyCode(String email, String phoneNumber, String verificationCode) {
+    public void verifyCode(VerifyCodeForJoinRequest request) {
 
-        String storedCode = redisPort.getVerificationCode(phoneNumber)
+        String storedCode = redisPort.getVerificationCode(request.phoneNumber())
                 .orElseThrow(() -> new NotFoundException("인증 코드"));
 
-        if(!storedCode.equals(verificationCode)) {
+        if(!storedCode.equals(request.verificationCode())) {
             throw new VerificationFailException("인증에 실패했습니다.");
         }
 
-        redisPort.verifyNumber(phoneNumber, email);
+        redisPort.verifyNumber(request.phoneNumber(), request.email());
     }
 }
