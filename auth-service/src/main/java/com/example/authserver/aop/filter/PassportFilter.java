@@ -1,6 +1,5 @@
-package com.example.boardservice.security;
+package com.example.authserver.aop.filter;
 
-import com.example.boardservice.application.MemberService;
 import com.example.common.domain.Passport;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Component;
 public class PassportFilter implements Filter {
 
     private final ObjectMapper objectMapper;
-    private final MemberService memberService;
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) {
@@ -34,7 +32,6 @@ public class PassportFilter implements Filter {
 
             if( passportJson != null ) {
                 Passport passport = objectMapper.readValue(passportJson, Passport.class);
-                memberService.integrateMember(passport);
                 PassportHolder.setPassport(passport);
             }
 

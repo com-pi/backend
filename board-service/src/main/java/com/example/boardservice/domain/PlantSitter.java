@@ -1,5 +1,6 @@
 package com.example.boardservice.domain;
 
+import com.example.common.domain.Address;
 import lombok.*;
 
 import java.util.List;

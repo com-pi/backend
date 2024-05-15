@@ -5,7 +5,7 @@ import com.example.boardservice.application.port.in.PostArticleUseCase;
 import com.example.boardservice.application.port.out.ImageCommandPort;
 import com.example.boardservice.application.port.out.PostArticlePort;
 import com.example.boardservice.application.port.out.SaveImagesCommand;
-import com.example.boardservice.domain.Address;
+import com.example.common.domain.Address;
 import com.example.boardservice.domain.BuyAndSell;
 import com.example.boardservice.domain.Member;
 import com.example.boardservice.util.ObjectUrlMapper;
@@ -28,7 +28,7 @@ public class PostArticleService implements PostArticleUseCase {
 
     @Override
     @Transactional
-    public void postBuyAndSell(PostBuyAndSellCommand command) {
+    public Long postBuyAndSell(PostBuyAndSellCommand command) {
 
         // Todo 이미지 순서 관련 기획 논의
         // Todo 임시저장 관련 기획
@@ -48,6 +48,7 @@ public class PostArticleService implements PostArticleUseCase {
                 .build();
 
         postArticlePort.postBuyAndSell(newPost);
+        return null;
     }
 
 }

@@ -1,7 +1,6 @@
-package com.example.boardservice.security;
+package com.example.authserver.aop.filter;
 
 import com.example.common.domain.Passport;
-import jakarta.annotation.Nonnull;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -13,7 +12,6 @@ public class PassportHolder {
         holder.set(passport);
     }
 
-    @Nonnull
     public static Passport getPassport() {
         return holder.get();
     }

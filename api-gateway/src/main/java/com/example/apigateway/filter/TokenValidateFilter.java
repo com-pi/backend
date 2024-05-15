@@ -1,7 +1,7 @@
 package com.example.apigateway.filter;
 
 import com.example.apigateway.domain.Passport;
-import com.example.apigateway.exception.InvalidAccessTokenException;
+import com.example.apigateway.util.CookieUtil;
 import com.example.apigateway.util.JwtValidator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,10 +10,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.OrderedGatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Optional;
 
 
@@ -32,29 +35,35 @@ public class TokenValidateFilter extends AbstractGatewayFilterFactory<TokenValid
     public GatewayFilter apply(TokenValidateFilter.Config config) {
         return new OrderedGatewayFilter(
                 (exchange, chain) -> {
-                    if(isAuthRequest(exchange)) {
-                        return chain.filter(exchange);
-                    }
-
                     Optional<String> accessTokenHeader = getAccessToken(exchange);
 
-                    if(isSwaggerRequest(exchange)) {
+                    if(isApiDocRequest(exchange)) {
                         return chain.filter(exchange);
                     }
 
-                    String accessToken = accessTokenHeader.orElseThrow(InvalidAccessTokenException::new);
-                    Passport passport = jwtValidator.validateToken(accessToken);
-                    return chain.filter(exchangeWithPassport(exchange, passport));
+                    if(accessTokenHeader.isPresent()) {
+                        Passport passport = jwtValidator.validateToken(accessTokenHeader.get());
+                        return chain.filter(exchangeWithPassport(exchange, passport));
+                    }
+
+                    if(CookieUtil.hasRefreshTokenCookie(exchange)){
+                        final String tokenReissueEndPoint = "/auth-service/token";
+
+                        String redirectUrl = UriComponentsBuilder.fromUri(exchange.getRequest().getURI())
+                                .replacePath(tokenReissueEndPoint)
+                                .build().toUriString();
+
+                        exchange.getResponse().setStatusCode(HttpStatus.SEE_OTHER);
+                        exchange.getResponse().getHeaders().setLocation(URI.create(redirectUrl));
+                        return exchange.getResponse().setComplete();
+                    }
+
+                    return chain.filter(exchange);
                 },
                 10);
     }
 
-    private boolean isAuthRequest(ServerWebExchange exchange) {
-        String requestPath = exchange.getRequest().getPath().toString();
-        return requestPath.startsWith("/auth-service");
-    }
-
-    private Boolean isSwaggerRequest(ServerWebExchange exchange){
+    private Boolean isApiDocRequest(ServerWebExchange exchange){
         String requestPath = exchange.getRequest().getPath().toString();
         return requestPath.endsWith("/v3/api-docs");
     }
@@ -79,7 +88,5 @@ public class TokenValidateFilter extends AbstractGatewayFilterFactory<TokenValid
     @Setter
     @AllArgsConstructor
     public static class Config {
-        // Filter 에 Configuration 정보를 전달 합니다.
-        private String prefix;
     }
 }

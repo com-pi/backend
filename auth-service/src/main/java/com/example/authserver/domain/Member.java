@@ -4,11 +4,12 @@ import com.example.authserver.adapter.in.JoinRequest;
 import com.example.authserver.application.port.out.external.KakaoUserInfoResponse;
 import com.example.authserver.application.port.out.external.NaverUserInfoResponse;
 import com.example.common.baseentity.DeletedAtAbstractEntity;
+import com.example.common.domain.Address;
 import com.example.common.domain.Role;
 import com.example.common.exception.NotFoundException;
 import jakarta.persistence.*;
 import lombok.*;
-import org.springframework.data.geo.Point;
+import org.locationtech.jts.geom.Point;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
@@ -27,13 +28,13 @@ public class Member extends DeletedAtAbstractEntity {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "kakao_id", unique = true)
+    @Column(name = "kakao_id", unique = true, updatable = false)
     private String kakaoId;
 
-    @Column(name = "naver_id", unique = true)
+    @Column(name = "naver_id", unique = true, updatable = false)
     private String naverId;
 
-    @Column(unique = true)
+    @Column(unique = true, updatable = false)
     private String email;
     private String password;
     private String phoneNumber;
@@ -43,20 +44,20 @@ public class Member extends DeletedAtAbstractEntity {
 
     @Column(unique = true, nullable = false)
     private String nickname;
+    private String introduction;
     private String imageUrl;
     private String thumbnailUrl;
+    private Point location;
+    @Embedded
+    private Address address;
     private LocalDateTime lastLogin;
 
-    // Todo :mysql 지리 데이터 타입 핸들링 필요
-//    @Column(columnDefinition = "Point")
-    private Point location;
-
-    public void updateProfileFromSocialProfile(KakaoUserInfoResponse.KakaoProfile kakaoProfile) {
+    public void updateFromSocialProfile(KakaoUserInfoResponse.KakaoProfile kakaoProfile) {
         this.imageUrl = kakaoProfile.profile_image_url();
         this.thumbnailUrl = kakaoProfile.thumbnail_image_url();
     }
 
-    public void updateProfileFromSocialProfile(NaverUserInfoResponse.NaverProfile naverProfile) {
+    public void updateFromSocialProfile(NaverUserInfoResponse.NaverProfile naverProfile) {
         this.imageUrl = naverProfile.profile_image();
     }
 
@@ -99,6 +100,11 @@ public class Member extends DeletedAtAbstractEntity {
         }
     }
 
+    public void updateInfo(String nickname, String introduction){
+        this.nickname = nickname;
+        this.introduction = introduction;
+    }
+
     public LocalDateTime loginStamp(){
         // LocalDateTime 은 불변 객체
         LocalDateTime lastLoginTime = lastLogin;
@@ -106,12 +112,16 @@ public class Member extends DeletedAtAbstractEntity {
         return lastLoginTime;
     }
 
-    @SuppressWarnings("unused")
     public void deleteMember(){
+        // Todo 정책 다시 생각해보기
+        // 다시 가입할 수 있도록 처리
+        // 닉네임은 다시 못쓰도록 함
         kakaoId = null;
         naverId = null;
         email = null;
         super.delete();
     }
+
+
 
 }

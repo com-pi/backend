@@ -1,16 +1,20 @@
 package com.example.authserver.application.port.out.external;
 
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor
 @Getter
 public class NaverUserInfoResponse {
 
     private final String resultcode;
     private final String message;
-    private final NaverProfile response; ;
+    private final NaverProfile response;
+
+    public NaverUserInfoResponse(String resultcode, String message, NaverProfile response) {
+        this.resultcode = resultcode;
+        this.message = message;
+        this.response = response;
+    }
 
     public record NaverProfile(
             String id,
@@ -23,5 +27,4 @@ public class NaverUserInfoResponse {
             String birthyear,
             String mobile
     ){}
-
 }

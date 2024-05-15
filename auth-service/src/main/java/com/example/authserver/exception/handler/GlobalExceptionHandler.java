@@ -5,9 +5,12 @@ import com.example.authserver.exception.InvalidTokenException;
 import com.example.authserver.exception.OAuthLoginException;
 import com.example.common.baseentity.CommonResponse;
 import com.example.common.exception.NotFoundException;
+import com.example.common.exception.UnauthorizedException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.ws.rs.ForbiddenException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -15,9 +18,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
 @RestControllerAdvice
+@RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     // Todo : 에러 로깅
 
@@ -49,6 +53,16 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AlreadyLoggedInException.class)
     public ResponseEntity<CommonResponse<Void>> handleAlreadyLoggedInException(AlreadyLoggedInException exception) {
         return CommonResponse.conflictWithMessage(exception.getMessage());
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<CommonResponse<Void>> handleUnauthorizedException(UnauthorizedException exception) {
+        return CommonResponse.unauthorizedWithMessage(exception.getMessage());
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<CommonResponse<Void>> handleForbiddenException(ForbiddenException exception) {
+        return CommonResponse.forbiddenWithMessage(exception.getMessage());
     }
 
 }

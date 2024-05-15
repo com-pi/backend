@@ -21,4 +21,6 @@ public interface MemberPort extends JpaRepository<Member, Long> {
     Optional<Member> findByEmail(@Param("email") String email);
 
     Optional<Member> findByPhoneNumber(String phoneNumber);
+
+    Optional<Member> findByPhoneNumberAndEmailAndDeletionYn(String phoneNumber, String email, String deletionYn);
 }

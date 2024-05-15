@@ -4,6 +4,6 @@ import com.example.boardservice.adapter.in.web.PostBuyAndSellCommand;
 
 public interface PostArticleUseCase {
 
-    void postBuyAndSell(PostBuyAndSellCommand command);
+    Long postBuyAndSell(PostBuyAndSellCommand command);
 
 }
