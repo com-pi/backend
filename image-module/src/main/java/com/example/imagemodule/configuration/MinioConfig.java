@@ -35,7 +35,7 @@ public class MinioConfig {
             endpoint = "http://localhost:9000";
             credential = "compcomp!!";
         } else {
-            endpoint = "https://bucket.com-p.site";
+            endpoint = "http://minio:9000";
             credential = "compcomp!!";
         }
     }
