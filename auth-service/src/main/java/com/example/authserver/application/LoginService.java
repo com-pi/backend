@@ -28,7 +28,7 @@ public class LoginService implements LoginUseCase {
     @Transactional
     public LoginResponse login(LoginRequest loginRequest, HttpServletResponse response) {
 
-        Member member = memberPort.findByEmail(loginRequest.email()).orElseThrow(() ->
+        Member member = memberPort.findByEmailAndDeletionYn(loginRequest.email(), "N").orElseThrow(() ->
                 new NotFoundException(Member.class));
 
         member.authenticateWithPassword(loginRequest.password(), passwordEncoder);
