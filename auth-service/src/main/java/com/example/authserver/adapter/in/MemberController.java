@@ -9,9 +9,7 @@ import com.example.imagemodule.domain.ImageAndThumbnail;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.annotation.Nonnull;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -52,14 +50,12 @@ public class MemberController {
     @PutMapping(value = "/info")
     @Authenticate(Role.MEMBER)
     public ResponseEntity<CommonResponse<Void>> modifyMember(
-            @Parameter(description = "닉네임")
-            @RequestParam("nickname") @Nonnull @NotBlank String nickname,
-            @Parameter(description = "소개글")
-            @RequestParam("introduction") @Nonnull @NotBlank String introduction) {
+            @RequestBody @Valid ModifyInfoRequest request
+    ) {
 
         memberUseCase.modifyMemberInfo(
-                nickname,
-                introduction
+                request.nickname(),
+                request.introduction()
         );
 
         return CommonResponse.okWithMessage("회원 정보가 변경되었습니다.");
@@ -69,6 +65,7 @@ public class MemberController {
     @PostMapping(value = "/profileImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Authenticate(Role.MEMBER)
     public ResponseEntity<CommonResponse<ImageAndThumbnail>> modifyMember(
+            @Parameter(description = "프로필 사진")
             @RequestPart("profileImage") MultipartFile profileImage) {
 
         ImageAndThumbnail imageAndThumbnail = memberUseCase.postProfileImage(profileImage);

@@ -3,12 +3,12 @@ package com.example.authserver.adapter.in;
 import com.example.authserver.application.port.in.JoinUseCase;
 import com.example.common.baseentity.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import lombok.RequiredArgsConstructor;
 import org.springdoc.core.annotations.ParameterObject;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,20 +24,20 @@ public class JoinController {
 
     private final JoinUseCase joinUseCase;
 
-    @Operation(summary = "전화번호 sms 인증", description = "휴대 전화번호를 인증을 요청 합니다.")
-    @GetMapping(value = "/phone_number_verification")
+    @Operation(summary = "핸드폰 번호 sms 인증", description = "휴대 전화번호를 인증을 요청 합니다.")
+    @PostMapping(value = "/phone_number_verification")
     public ResponseEntity<CommonResponse<String>> requestPhoneNumberVerification(
-            @ParameterObject @Valid VerifyPhoneNumberRequest request){
+            @RequestBody @Valid VerifyPhoneNumberRequest request){
 
         String code = joinUseCase.requestNumberVerification(request);
 
         return CommonResponse.okWithMessage("인증번호가 발송되었습니다. 인증번호는 3분간 유효합니다.", code);
     }
 
-    @Operation(summary = "인증 코드 등록", description = "문자로 발송된 인증 코드를 등록합니다.")
-    @PostMapping(value = "/verification_code", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    @Operation(summary = "인증 코드 전송", description = "문자로 발송된 인증 코드를 전송합니다.")
+    @GetMapping(value = "/verification_code")
     public ResponseEntity<CommonResponse<Void>> verifyCode(
-            @RequestBody @Valid VerifyCodeForJoinRequest request
+            @ParameterObject @Valid VerifyCodeForJoinRequest request
     ){
         joinUseCase.verifyCode(request);
 
@@ -58,7 +58,9 @@ public class JoinController {
     @Operation(summary = "이메일 중복 검사", description = "이메일 중복검사를 진행합니다.")
     @GetMapping("/is_duplicate")
     public ResponseEntity<CommonResponse<Void>> joinNumber(
-            @RequestParam("email") @Email String email) {
+            @Parameter(description = "이메일 주소")
+            @Valid @Email
+            @RequestParam String email) {
 
         boolean isDuplicated = joinUseCase.isDuplicateEmail(email);
 

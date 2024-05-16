@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,7 +21,7 @@ public class LoginController {
     private final LoginUseCase loginUseCase;
 
     @Operation(summary = "로그인")
-    @GetMapping()
+    @PostMapping()
     public ResponseEntity<LoginResponse> login(
             @RequestBody @Valid LoginRequest request,
             HttpServletResponse response) {

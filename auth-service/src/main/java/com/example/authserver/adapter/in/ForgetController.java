@@ -52,5 +52,4 @@ public class ForgetController {
         return CommonResponse.okWithMessage("이메일로 임시 비밀번호를 발송하였습니다.");
     }
 
-
 }
