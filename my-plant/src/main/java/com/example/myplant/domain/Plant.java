@@ -1,56 +1,57 @@
 package com.example.myplant.domain;
 
-import com.example.myplant.adapter.out.persistence.JsonToStringListConverter;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+
+import jakarta.persistence.*;
+import java.time.LocalDate;
 import java.util.List;
 
+
+
 @Entity
-@Table(name = "my_plant")
-@Getter
+@Data
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder(builderMethodName = "generate")
+public class Plant {    // 식물 정보 엔티티
 
-public class Plant {
-
-
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @jakarta.persistence.Id
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Plant(Long id) {
-        this.id = id;
-    }
 
     private Long memberId;
-
     private String plantName;
     private String plantType;
-    private String plantAge;
-    private String plantBirthday;
+    private int plantAge;
+    private LocalDate plantBirthday;
 
-    @Convert(converter = JsonToStringListConverter.class)
-    private List<String> plantImageUrl;
+    @ElementCollection  // plantImageUrls 여러 값 가질 수 있게
+    private List<String> plantImageUrls;
 
+    @Embedded
+    private WateringInfo wateringInfo;
 
-    private String plantWaterDays;
-    private String lastWaterDay;
-    private String intimacy;
-    private String plantDescription;
+    @Embedded
+    private MaintenanceSchedule maintenanceSchedule;
 
-    @Enumerated(EnumType.STRING)
-    private PlantLocation plantLocation;
+    private String plantLocation; // 식물 위치
+    private String potType; // 화분 타입
 
-    @Enumerated(EnumType.STRING)
-    private PlantStatus plantStatus;
-
-
-
-    public static Plant ofId(Long authorId){
-        return new Plant(authorId);
+    @Builder
+    public Plant(Long memberId, String plantName, String plantType, int plantAge, LocalDate plantBirthday, List<String> plantImageUrls, WateringInfo wateringInfo, MaintenanceSchedule maintenanceSchedule, String plantLocation, String potType) {
+        this.memberId = memberId;
+        this.plantName = plantName;
+        this.plantType = plantType;
+        this.plantAge = plantAge;
+        this.plantBirthday = plantBirthday;
+        this.plantImageUrls = plantImageUrls;
+        this.wateringInfo = wateringInfo;
+        this.maintenanceSchedule = maintenanceSchedule;
+        this.plantLocation = plantLocation;
+        this.potType = potType;
     }
-
 }

@@ -1,66 +1,54 @@
 package com.example.myplant.adapter.in.web;
 
-import com.example.myplant.application.port.in.RegistPlantCommand;
 import com.example.myplant.application.port.in.RegistPlantUseCase;
-import com.example.myplant.domain.PlantLocation;
-import com.example.myplant.domain.PlantStatus;
-import io.swagger.v3.oas.annotations.Parameter;
+import com.example.myplant.application.port.in.UpdatePlantUseCase;
+import com.example.myplant.adapter.in.web.PlantCommand;
+import com.example.myplant.adapter.in.web.UpdatePlantCommand;
+import com.example.myplant.domain.Plant;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequiredArgsConstructor
+@RequestMapping("/api/my-plant")
+@Tag(name = "식물 관리", description = "식물 등록 및 수정 API")
 public class MyPlantController {
 
-    @Autowired
     private final RegistPlantUseCase registPlantUseCase;
+    private final UpdatePlantUseCase updatePlantUseCase;
 
-    @Tag(name = "식물 등록", description = "새로운 식물을 등록합니다.")
-    @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void registerPlant(
-        @Parameter(description = "식물 ID", required = true) Long id,
-        @Parameter(description = "회원 ID", required = true) Long member_id,
-        @Parameter(description = "식물명", required = true) String plant_name,
-        @Parameter(description = "식물 종류", required = true) String plant_type,
-        @Parameter(description = "식물 나이", required = true) String plant_age,
-        @Parameter(description = "식물 생일", required = true) String plant_birthday,
-        @Parameter(description = "식물 사진 Url") @RequestPart("imageFiles") List<MultipartFile> plant_image_url,
-        @Parameter(description = "식물 급수 주기", required = true) String plant_water_days,
-        @Parameter(description = "식물 위치", required = true) String plantLocation,
-        @Parameter(description = "급수 날짜", required = true) String last_water_day,
-        @Parameter(description = "식물 설명", required = true) String plant_description,
-        @Parameter(description = "식물 상태 ", required = true) String status,
-        @Parameter(description = "친밀도", required = true) String intimacy)
-    {
-        RegistPlantCommand request = RegistPlantCommand.builder()
-                .id(id)
-                .memberId(member_id)
-                .plantName(plant_name)
-                .plantType(plant_type)
-                .plantAge(plant_age)
-                .plantBirthday(plant_birthday)
-                .plantImageUrl(plant_image_url)
-                .plantWaterDays(plant_water_days)
-                .lastWaterDay(last_water_day)
-                .plantDescription(plant_description)
-                .plantLocation(PlantLocation.of(plantLocation))
-                .plantStatus(PlantStatus.of(status))
-                .intimacy(intimacy)
-                .buildAndValidate();
-        registPlantUseCase.registPlant(request);
+    @Autowired
+    public MyPlantController(RegistPlantUseCase registPlantUseCase, UpdatePlantUseCase updatePlantUseCase) {
+        this.registPlantUseCase = registPlantUseCase;
+        this.updatePlantUseCase = updatePlantUseCase;
+    }
+
+    @Operation(summary = "식물 등록", description = "새로운 식물을 등록합니다.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(schema = @Schema(implementation = PlantCommand.class))
+            ))
+    @PostMapping
+    public ResponseEntity<Plant> createPlant(@Valid @RequestBody PlantCommand command) {
+        Plant plant = registPlantUseCase.registPlant(command);
+        return ResponseEntity.ok(plant);
+    }
+
+    @Operation(summary = "식물 수정", description = "기존 식물의 정보를 수정합니다.",
+            requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    content = @Content(schema = @Schema(implementation = UpdatePlantCommand.class))
+            ))
+    @PutMapping("/{id}")
+    public ResponseEntity<Plant> updatePlant(@PathVariable Long id, @Valid @RequestBody UpdatePlantCommand command) {
+        command.setId(id);
+        Plant updatedPlant = updatePlantUseCase.updatePlant(command);
+        return ResponseEntity.ok(updatedPlant);
     }
 }
-
-
-
 
 
 
