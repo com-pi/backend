@@ -76,6 +76,6 @@ public class RedisAdapter implements RedisPort {
     @Override
     public boolean verifyFindIdCode(String phoneNumber, String verificationCode) {
         return verificationCode.equals(
-                redisTemplate.opsForValue().get(VERIFICATION_CODE_REDIS_KEY + phoneNumber));
+                redisTemplate.opsForValue().get(FIND_ID_CODE_REDIS_KEY + phoneNumber));
     }
 }
