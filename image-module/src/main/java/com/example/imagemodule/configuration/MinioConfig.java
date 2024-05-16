@@ -33,10 +33,10 @@ public class MinioConfig {
         }
         if (activeProfile.equals("local")) {
             endpoint = "http://localhost:9000";
-            credential = "compcomp";
+            credential = "compcomp!!";
         } else {
             endpoint = "http://minio:9000";
-            credential = "compcomp";
+            credential = "compcomp!!";
         }
     }
 
