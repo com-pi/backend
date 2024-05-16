@@ -1,7 +1,5 @@
 package com.example.apigateway.filter;
 
-import com.example.apigateway.exception.InvalidAccessTokenException;
-import com.example.apigateway.util.CookieUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -11,10 +9,8 @@ import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
-import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
 
-import java.net.URI;
 import java.nio.charset.StandardCharsets;
 
 @Slf4j
@@ -24,32 +20,20 @@ public class ExceptionHandlerFilter extends AbstractGatewayFilterFactory<Excepti
     public ExceptionHandlerFilter() {
         super(Config.class);
     }
-
-    private final String tokenReissueEndPoint = "/auth-service/token";
-    // Todo 응답 반환 더 깔끔한 방법 없는지 확인 할 것
-    private final String authFailMessageJson = "{\"message\":\"로그인이 필요합니다.\"}";
-
     @Override
     public GatewayFilter apply(ExceptionHandlerFilter.Config config) {
         return new OrderedGatewayFilter(
                 (exchange, chain) -> chain.filter(exchange)
-                .onErrorResume(e -> handleException(exchange, chain, e)),
+                        .onErrorResume(e -> handleException(exchange, chain, e)),
                 -50);
 
     }
 
     private Mono<Void> handleException(ServerWebExchange exchange, GatewayFilterChain chain, Throwable e) {
-        if(e instanceof InvalidAccessTokenException) {
-            if (CookieUtil.hasRefreshTokenCookie(exchange)) {
-                String redirectUrl = UriComponentsBuilder.fromUri(exchange.getRequest().getURI())
-                        .replacePath(tokenReissueEndPoint)
-                        .build().toUriString();
+        // Todo gateway Exception 핸들링 필요
 
-                exchange.getResponse().setStatusCode(HttpStatus.FOUND);
-                exchange.getResponse().getHeaders().setLocation(URI.create(redirectUrl));
-                return exchange.getResponse().setComplete();
-            }
-        }
+        final String authFailMessageJson = "{\"message\":\"Gateway Exception 발생.\"}";
+
         DataBuffer bodyBuffer = exchange.getResponse().bufferFactory().wrap(
                 authFailMessageJson.getBytes(StandardCharsets.UTF_8));
 
@@ -59,6 +43,7 @@ public class ExceptionHandlerFilter extends AbstractGatewayFilterFactory<Excepti
                     exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
                     exchange.getResponse().getHeaders().add("Content-Type", "application/json");
                 }));
+
     }
 
     public static class Config {

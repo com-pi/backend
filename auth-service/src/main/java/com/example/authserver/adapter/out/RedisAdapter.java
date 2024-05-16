@@ -17,7 +17,8 @@ public class RedisAdapter implements RedisPort {
 
     private final RedisTemplate<String, String> redisTemplate;
     private final String REFRESH_TOKEN_REDIS_KEY = "RefreshToken:";
-    private final String VERIFICATION_CODE_REDIS_KEY = "RefreshToken:";
+    private final String VERIFICATION_CODE_REDIS_KEY = "VerificationCode:";
+    private final String FIND_ID_CODE_REDIS_KEY = "FindId:";
 
     @Override
     public void saveRefreshToken(Member member, ComPToken refreshToken) {
@@ -64,6 +65,17 @@ public class RedisAdapter implements RedisPort {
     @Override
     public boolean checkVerification(String phoneNumber, String email) {
         return email.equals(
+                redisTemplate.opsForValue().get(VERIFICATION_CODE_REDIS_KEY + phoneNumber));
+    }
+
+    @Override
+    public void setFindIdValidationCode(String phoneNumber, String verificationCode) {
+        redisTemplate.opsForValue().set(FIND_ID_CODE_REDIS_KEY + phoneNumber, verificationCode);
+    }
+
+    @Override
+    public boolean verifyFindIdCode(String phoneNumber, String verificationCode) {
+        return verificationCode.equals(
                 redisTemplate.opsForValue().get(VERIFICATION_CODE_REDIS_KEY + phoneNumber));
     }
 }

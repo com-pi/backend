@@ -17,8 +17,16 @@ spring:
           predicates:
             - Path=/board-service/**
           filters:
-            - name: PathPrefixRemoveFilter
             - name: TokenValidateFilter
+            - name: PathPrefixRemoveFilter
+
+        - id: member-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth-service/member/**
+          filters:
+            - name: TokenValidateFilter
+            - name: PathPrefixRemoveFilter
 
         - id: auth-service
           uri: lb://AUTH-SERVICE
@@ -33,13 +41,10 @@ spring:
             - Path=/my-plant/**
           filters:
             - name: PathPrefixRemoveFilter
-              args:
-                prefix: /my-plant
 
 secret:
   accessToken: test1
   refreshToken: test2
-
 
 springdoc:
   webjars:

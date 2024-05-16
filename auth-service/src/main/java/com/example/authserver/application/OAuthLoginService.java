@@ -59,7 +59,7 @@ public class OAuthLoginService implements OAuthLoginUseCase {
 
         // Todo: 서비스간 정합성 맞추기
         if (kakaoMember.isPresent()) {
-            kakaoMember.get().updateProfileFromSocialProfile(kakaoUserInfo.getKakao_account().profile());
+            kakaoMember.get().updateFromSocialProfile(kakaoUserInfo.getKakao_account().profile());
         } else {
             Member newKakaoMember = Member.newMemberForKakaoUser(kakaoUserInfo);
             memberPort.save(newKakaoMember);
@@ -84,8 +84,8 @@ public class OAuthLoginService implements OAuthLoginUseCase {
             HttpServletResponse response) {
 
         loginConflictCheck(request);
-
         NaverUserInfoResponse naverUserInfo;
+
         try {
             NaverTokenResponse naverResponse = naverAuthClient.getAccessToken(
                     code, state, NAVER_APP_KEY, NAVER_SECRET, GRANT_TYPE);
@@ -101,7 +101,7 @@ public class OAuthLoginService implements OAuthLoginUseCase {
 
         // Todo: 서비스간 정합성 맞추기
         if (naverMember.isPresent()) {
-            naverMember.get().updateProfileFromSocialProfile(naverUserInfo.getResponse());
+            naverMember.get().updateFromSocialProfile(naverUserInfo.getResponse());
         } else {
             Member newNaverMember = Member.newMemberForNaverUser(naverUserInfo);
             memberPort.save(newNaverMember);

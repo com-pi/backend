@@ -1,8 +1,10 @@
 package com.example.boardservice.adapter.in.web;
 
 import com.example.boardservice.application.port.in.PostArticleUseCase;
+import com.example.common.annotation.Authenticate;
 import com.example.boardservice.security.PassportHolder;
 import com.example.common.baseentity.CommonResponse;
+import com.example.common.domain.Role;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -25,8 +27,9 @@ public class BuyAndSellController {
     private final ObjectMapper objectMapper;
 
     @Tag(name = "식물거래 게시글 작성", description = "새로운 식물거래 게시글을 작성합니다.")
+    @Authenticate(Role.USER)
     @PostMapping(value = "/buy-and-sell", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<CommonResponse> postBuyAndSellArticle(
+    public ResponseEntity<CommonResponse<Long>> postBuyAndSellArticle(
             @Schema(
                     description = "json 데이터",
                     example = "{\"title\":\"안녕하세요\",\"content\":\"반갑습니다\"," +
@@ -42,9 +45,9 @@ public class BuyAndSellController {
         command.setMemberId(PassportHolder.getPassport().memberId());
         command.setImageFiles(imageFiles);
 
-        postArticleUseCase.postBuyAndSell(command);
+        Long articleId = postArticleUseCase.postBuyAndSell(command);
 
-        return CommonResponse.okWithMessage("게시글 작성에 성공하였습니다.");
+        return CommonResponse.okWithMessage("게시글 작성에 성공하였습니다.", articleId);
     }
 
 }

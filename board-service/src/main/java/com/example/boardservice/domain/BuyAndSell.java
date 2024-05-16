@@ -1,6 +1,7 @@
 package com.example.boardservice.domain;
 
 import com.example.boardservice.adapter.out.persistence.JsonToStringListConverter;
+import com.example.common.domain.Address;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -25,8 +25,7 @@ public class SwaggerConfig {
                 .in(SecurityScheme.In.HEADER)
                 .name("Authorization");
 
-        SecurityRequirement securityRequirement = new SecurityRequirement()
-                .addList("bearerAuth");
+        SecurityRequirement securityRequirement = new SecurityRequirement().addList("bearerAuth");
 
         return new OpenAPI()
                 .info(new Info().title("꼼삐 Swagger").description("식물생활 서비스 API"))
