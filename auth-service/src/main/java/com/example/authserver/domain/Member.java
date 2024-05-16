@@ -37,8 +37,10 @@ public class Member extends DeletedAtAbstractEntity {
 
     @Column(unique = true, updatable = false)
     private String email;
-    private String password;
+    @Column(unique = true, updatable = false)
     private String phoneNumber;
+
+    private String password;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -125,6 +127,7 @@ public class Member extends DeletedAtAbstractEntity {
         kakaoId = null;
         naverId = null;
         email = null;
+        phoneNumber = null;
         super.delete();
     }
 
