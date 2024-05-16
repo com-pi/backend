@@ -26,7 +26,7 @@ import java.util.UUID;
 @Builder
 public class Member extends DeletedAtAbstractEntity {
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "kakao_id", unique = true, updatable = false)
