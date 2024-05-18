@@ -5,5 +5,5 @@ import com.example.myplant.domain.Plant;
 
 public interface RegistPlantUseCase {
 
-    Plant registPlant(PlantCommand command);
+    Plant registerPlant(PlantCommand command);
 }

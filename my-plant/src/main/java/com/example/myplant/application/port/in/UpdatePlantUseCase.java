@@ -4,5 +4,5 @@ import com.example.myplant.adapter.in.web.UpdatePlantCommand;
 import com.example.myplant.domain.Plant;
 
 public interface UpdatePlantUseCase {
-    Plant updatePlant(UpdatePlantCommand command);
+    Plant updatePlant(Long plantId, UpdatePlantCommand command);
 }

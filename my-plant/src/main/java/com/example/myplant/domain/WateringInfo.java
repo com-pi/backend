@@ -1,15 +1,15 @@
 package com.example.myplant.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 import jakarta.persistence.Embeddable;
-import lombok.NoArgsConstructor;
 
-@Data
 @Embeddable
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class WateringInfo {
-    private int intervalInWeeks; // 물주기 주기 (주 단위)
-    private int frequency; // 물주기 빈도 (회수)
+
+    private int intervalInWeeks;
+    private int frequency;
 }

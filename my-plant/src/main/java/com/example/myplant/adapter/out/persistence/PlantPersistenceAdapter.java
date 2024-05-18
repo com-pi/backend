@@ -1,16 +1,14 @@
 package com.example.myplant.adapter.out.persistence;
 
-import com.example.myplant.application.port.out.LoadPlantPort;
+import com.example.myplant.application.port.out.FindPlantPort;
 import com.example.myplant.application.port.out.SavePlantPort;
 import com.example.myplant.domain.Plant;
-import com.example.myplant.adapter.out.persistence.PlantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
+import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
-@Component
-public class PlantPersistenceAdapter implements SavePlantPort, LoadPlantPort {
+@Repository
+public class PlantPersistenceAdapter implements SavePlantPort, FindPlantPort {
 
     private final PlantRepository plantRepository;
 
@@ -25,7 +23,7 @@ public class PlantPersistenceAdapter implements SavePlantPort, LoadPlantPort {
     }
 
     @Override
-    public Optional<Plant> loadPlantById(Long id) {
+    public Optional<Plant> findPlantById(Long id) {
         return plantRepository.findById(id);
     }
 }
