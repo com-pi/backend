@@ -41,6 +41,6 @@ public class PlantCommand extends SelfValidating<PlantCommand> {
     private LocalDate pruningDate;
     private String plantLocation;
     private String potType;
-    private int intimacy = 1; // 친밀도 초기값 1
+    private int intimacy;
 
 }

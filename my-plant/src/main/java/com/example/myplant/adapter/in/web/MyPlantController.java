@@ -54,6 +54,7 @@ public class MyPlantController {
 
         PlantCommand command;
         command = objectMapper.readValue(plantData, PlantCommand.class);
+        command.setIntimacy(1);
         command.setPlantImages(plantImages);
 
         Plant registeredPlant = registPlantUseCase.registerPlant(command);
