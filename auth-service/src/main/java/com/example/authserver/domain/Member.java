@@ -120,6 +120,10 @@ public class Member extends DeletedAtAbstractEntity {
         return lastLoginTime;
     }
 
+    public void changePassword(String newPassword, PasswordEncoder encoder){
+        this.password = encoder.encode(newPassword);
+    }
+
     public void deleteMember(){
         // Todo 정책 다시 생각해보기
         // 다시 가입할 수 있도록 처리

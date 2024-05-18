@@ -11,7 +11,10 @@ import com.example.authserver.exception.BadRequestException;
 import com.example.common.exception.NotFoundException;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Random;
 import java.util.UUID;
@@ -24,6 +27,7 @@ public class ForgetService {
     private final MemberPort memberPort;
     private final EmailPort emailPort;
     private final Random random = new Random();
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public String findId(FindIdRequest request){
         Member foundMember = memberPort.findByPhoneNumber(request.phoneNumber())
@@ -47,12 +51,13 @@ public class ForgetService {
         if(isMatch) {
             Member foundMember = memberPort.findByPhoneNumber(request.phoneNumber())
                     .orElseThrow(() -> new NotFoundException(Member.class));
-            return foundMember.getPhoneNumber();
+            return foundMember.getEmail();
         }
 
         return null;
     }
 
+    @Transactional
     public void findPassword(FindPwdRequest request){
         Member member = memberPort.findByPhoneNumberAndEmailAndDeletionYn(
                 request.phoneNumber(),
@@ -60,6 +65,8 @@ public class ForgetService {
                 "N").orElseThrow(() -> new NotFoundException(Member.class));
 
         String tempPwd = UUID.randomUUID().toString().substring(0, 9);
+
+        member.changePassword(tempPwd, passwordEncoder);
 
         emailPort.sendPasswordEmail(member.getEmail(), tempPwd);
     }
