@@ -19,5 +19,5 @@ springdoc:
       name: 식물생활 서비스
       url: https://api.com-p.site/board-service/v3/api-docs
     urls[2]:
-      name: 식물생활 서비스
+      name: 내 식물 서비스
       url: https://api.com-p.site/my-plant/v3/api-docs
