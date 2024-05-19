@@ -9,6 +9,9 @@ import java.io.IOException;
 
 public class ThumbnailGenerator {
 
+
+    // Todo 에러 수정 (Thumbnail 안됨)
+
     public static MultipartFile createThumbnail(MultipartFile file) throws IOException {
         int quality = 100;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();

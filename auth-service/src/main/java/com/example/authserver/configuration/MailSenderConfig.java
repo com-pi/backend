@@ -10,6 +10,8 @@ import java.util.Properties;
 @Configuration
 public class MailSenderConfig {
 
+    // Todo 상수 관리
+
     @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
