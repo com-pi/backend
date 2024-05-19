@@ -3,7 +3,7 @@ server:
 
 eureka:
   client:
-    register-with-eureka: false
-    fetch-registry: false
-#    service-url:
-#    defaultZone: http://discovery-eureka:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://discovery-eureka:8761/eureka
