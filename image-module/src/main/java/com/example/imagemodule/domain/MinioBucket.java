@@ -8,7 +8,8 @@ public enum MinioBucket {
     ARTICLE_PLANT_LIFE("plant-life"),
     ARTICLE_TRADE("article-trade"),
     PROFILE_IMAGE("profile-image"),
-    TEMPORAL("temp");
+    TEMPORAL("temp"),
+    PLANT_IMAGES("plant-image");
 
     private final String bucketName;
 

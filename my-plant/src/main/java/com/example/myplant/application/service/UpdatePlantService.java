@@ -1,10 +1,12 @@
 package com.example.myplant.application.service;
 
+import com.example.imagemodule.application.port.SaveImagesCommand;
+import com.example.imagemodule.domain.MinioBucket;
 import com.example.myplant.adapter.in.web.UpdatePlantCommand;
 import com.example.myplant.application.port.in.UpdatePlantUseCase;
 import com.example.myplant.application.port.out.SavePlantPort;
 import com.example.myplant.application.port.out.FindPlantPort;
-import com.example.myplant.application.port.out.ImageUploadPort;
+import com.example.imagemodule.application.port.ImageCommandPort;
 import com.example.myplant.domain.Plant;
 import com.example.myplant.domain.WateringInfo;
 import com.example.myplant.domain.MaintenanceSchedule;
@@ -18,20 +20,20 @@ public class UpdatePlantService implements UpdatePlantUseCase{
 
     private final SavePlantPort savePlantPort;
     private final FindPlantPort findPlantPort;
-    private final ImageUploadPort imageUploadPort;
+    private final ImageCommandPort imageCommandPort;
 
     @Autowired
-    public UpdatePlantService(SavePlantPort savePlantPort, FindPlantPort findPlantPort, ImageUploadPort imageUploadPort) {
+    public UpdatePlantService(SavePlantPort savePlantPort, FindPlantPort findPlantPort, ImageCommandPort imageCommandPort) {
         this.savePlantPort = savePlantPort;
         this.findPlantPort = findPlantPort;
-        this.imageUploadPort = imageUploadPort;
+        this.imageCommandPort = imageCommandPort;
     }
 
     @Override
     public Plant updatePlant(Long plantId, UpdatePlantCommand command) {
         Plant existingPlant = findPlantPort.findPlantById(plantId).orElseThrow(() -> new RuntimeException("Plant not found"));
 
-        List<String> imageUrls = command.getPlantImages() != null ? imageUploadPort.uploadImages(command.getPlantImages()) : existingPlant.getPlantImageUrls();
+        List<String> imageUrls = command.getPlantImages() != null ? imageCommandPort.saveImages(new SaveImagesCommand(command.getPlantImages(),MinioBucket.PLANT_IMAGES)) : existingPlant.getPlantImageUrls();
 
         WateringInfo wateringInfo = command.getWateringIntervalInWeeks() != 0 || command.getWateringFrequency() != 0 ?
                 WateringInfo.builder()

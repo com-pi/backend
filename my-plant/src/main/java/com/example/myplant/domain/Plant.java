@@ -2,7 +2,6 @@ package com.example.myplant.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDate;
 import java.util.List;
 

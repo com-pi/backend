@@ -1,9 +1,11 @@
 package com.example.myplant.application.service;
 
+import com.example.imagemodule.application.port.SaveImagesCommand;
 import com.example.myplant.adapter.in.web.PlantCommand;
 import com.example.myplant.application.port.in.RegistPlantUseCase;
 import com.example.myplant.application.port.out.SavePlantPort;
-import com.example.myplant.application.port.out.ImageUploadPort;
+import com.example.imagemodule.application.port.ImageCommandPort;
+import com.example.imagemodule.domain.MinioBucket;
 import com.example.myplant.domain.Plant;
 import com.example.myplant.domain.WateringInfo;
 import com.example.myplant.domain.MaintenanceSchedule;
@@ -16,17 +18,18 @@ import java.util.List;
 public class RegistPlantService implements RegistPlantUseCase {
 
     private final SavePlantPort savePlantPort;
-    private final ImageUploadPort imageUploadPort;
+    private final ImageCommandPort imageCommandPort;
+
 
     @Autowired
-    public RegistPlantService(SavePlantPort savePlantPort, ImageUploadPort imageUploadPort) {
+    public RegistPlantService(SavePlantPort savePlantPort, ImageCommandPort imageCommandPort) {
         this.savePlantPort = savePlantPort;
-        this.imageUploadPort = imageUploadPort;
+        this.imageCommandPort = imageCommandPort;
     }
 
     @Override
     public Plant registerPlant(PlantCommand command) {
-        List<String> imageUrls = imageUploadPort.uploadImages(command.getPlantImages());
+        List<String> imageUrls = imageCommandPort.saveImages(new SaveImagesCommand(command.getPlantImages(), MinioBucket.PLANT_IMAGES));
 
         WateringInfo wateringInfo = WateringInfo.builder()
                 .intervalInWeeks(command.getWateringIntervalInWeeks())
