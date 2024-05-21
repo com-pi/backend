@@ -64,7 +64,10 @@ public class OAuthLoginService implements OAuthLoginUseCase {
         } else {
             Optional<Member> byEmail = memberPort.findByEmail(kakaoUserInfo.getKakao_account().email());
             if (byEmail.isPresent()) {
-                throw new ConflictException("이미 가입된 이메일 주소 입니다.");
+                if(byEmail.get().getKakaoId() != null) {
+                    throw new ConflictException("카카오 계정으로 가입된 회원입니다.");
+                }
+                throw new ConflictException("이메일/비밀번호를 통해 가입된 계정입니다.");
             }
             Member newKakaoMember = Member.newMemberForKakaoUser(kakaoUserInfo);
             memberPort.save(newKakaoMember);
@@ -110,7 +113,10 @@ public class OAuthLoginService implements OAuthLoginUseCase {
         } else {
             Optional<Member> byEmail = memberPort.findByEmail(naverUserInfo.getResponse().email());
             if (byEmail.isPresent()) {
-                throw new ConflictException("이미 가입된 이메일 주소입니다.");
+                if(byEmail.get().getNaverId() != null) {
+                    throw new ConflictException("네이버 계정으로 가입된 회원입니다.");
+                }
+                throw new ConflictException("이메일/비밀번호를 통해 가입된 계정입니다.");
             }
             Member newNaverMember = Member.newMemberForNaverUser(naverUserInfo);
             memberPort.save(newNaverMember);
