@@ -57,12 +57,12 @@ public class JoinController {
 
     @Operation(summary = "이메일 중복 검사", description = "이메일 중복검사를 진행합니다.")
     @GetMapping("/is_duplicate")
-    public ResponseEntity<CommonResponse<Void>> joinNumber(
+    public ResponseEntity<CommonResponse<Void>> checkEmailDuplication (
             @Parameter(description = "이메일 주소")
             @Valid @Email
             @RequestParam String email) {
 
-        boolean isDuplicated = joinUseCase.isDuplicateEmail(email);
+        boolean isDuplicated = joinUseCase.checkEmailDupliction(email);
 
         return CommonResponse.okWithMessage(
                 isDuplicated ? "이미 존재하는 이메일 주소입니다." : "중복되지 않은 이메일 주소입니다."

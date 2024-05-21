@@ -9,12 +9,14 @@ import com.example.authserver.application.port.out.persistence.MemberPort;
 import com.example.authserver.application.port.out.persistence.RedisPort;
 import com.example.authserver.domain.Member;
 import com.example.authserver.exception.VerificationFailException;
+import com.example.common.exception.ConflictException;
 import com.example.common.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -44,14 +46,19 @@ public class JoinService implements JoinUseCase {
     }
 
     @Override
-    public boolean isDuplicateEmail(String email) {
-
-        return memberPort.findByEmailAndDeletionYn(email, "N").isPresent();
-
+    public boolean checkEmailDupliction(String email) {
+        return memberPort.findByEmail(email).isPresent();
     }
 
     @Override
     public String requestNumberVerification(VerifyPhoneNumberRequest request) {
+        if(checkEmailDupliction(request.email())){
+            throw new ConflictException("이미 가입된 이메일 주소 입니다.");
+        }
+        Optional<Member> findByPhoneNumber = memberPort.findByPhoneNumber(request.phoneNumber());
+        if(findByPhoneNumber.isPresent()) {
+            throw new ConflictException("이미 가입된 전화번호 입니다.");
+        }
 
         String verificationCode = String.valueOf(random.nextInt(900000) + 100000);
 
@@ -64,7 +71,6 @@ public class JoinService implements JoinUseCase {
 
     @Override
     public void verifyCode(VerifyCodeForJoinRequest request) {
-
         String storedCode = redisPort.getVerificationCode(request.phoneNumber())
                 .orElseThrow(() -> new NotFoundException("인증 코드"));
 

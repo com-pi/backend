@@ -2,6 +2,7 @@ package com.example.authserver.exception.handler;
 
 import com.example.authserver.exception.*;
 import com.example.common.baseentity.CommonResponse;
+import com.example.common.exception.ConflictException;
 import com.example.common.exception.NotFoundException;
 import com.example.common.exception.UnauthorizedException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -97,6 +98,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<CommonResponse<Void>> handleRuntimeException(RuntimeException exception) {
         return CommonResponse.internalServerErrorWithMessage(exception.getMessage());
+    }
+
+    @ExceptionHandler(ConflictException.class)
+    public ResponseEntity<CommonResponse<Void>> handleConflictException(ConflictException exception) {
+        return CommonResponse.conflictWithMessage(exception.getMessage());
     }
 
 }

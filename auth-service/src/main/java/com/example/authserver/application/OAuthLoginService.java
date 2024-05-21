@@ -12,6 +12,7 @@ import com.example.authserver.exception.AlreadyLoggedInException;
 import com.example.authserver.exception.OAuthLoginException;
 import com.example.authserver.util.CookieUtil;
 import com.example.authserver.util.JwtUtil;
+import com.example.common.exception.ConflictException;
 import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -45,22 +46,26 @@ public class OAuthLoginService implements OAuthLoginUseCase {
             String redirectUrl,
             HttpServletRequest request,
             HttpServletResponse response) {
+        // Todo: 서비스간 정합성 맞추기
 
         loginConflictCheck(request);
 
         KakaoTokenResponse token = kakaoAuthClient
                 .getAccessToken(KAKAO_APP_KEY, KAKAO_SECRET, code, redirectUrl, GRANT_TYPE);
-
         KakaoUserInfoResponse kakaoUserInfo = kakaoTokenClient
                 .getUserInfo("Bearer " + token.access_token());
 
         Optional<Member> kakaoMember = memberPort.findByKakaoId(kakaoUserInfo.getId().toString());
         Boolean isNewMember = kakaoMember.isEmpty();
 
-        // Todo: 서비스간 정합성 맞추기
+
         if (kakaoMember.isPresent()) {
             kakaoMember.get().updateFromSocialProfile(kakaoUserInfo.getKakao_account().profile());
         } else {
+            Optional<Member> byEmail = memberPort.findByEmail(kakaoUserInfo.getKakao_account().email());
+            if (byEmail.isPresent()) {
+                throw new ConflictException("이미 가입된 이메일 주소 입니다.");
+            }
             Member newKakaoMember = Member.newMemberForKakaoUser(kakaoUserInfo);
             memberPort.save(newKakaoMember);
             kakaoMember = Optional.of(newKakaoMember);
@@ -103,6 +108,10 @@ public class OAuthLoginService implements OAuthLoginUseCase {
         if (naverMember.isPresent()) {
             naverMember.get().updateFromSocialProfile(naverUserInfo.getResponse());
         } else {
+            Optional<Member> byEmail = memberPort.findByEmail(naverUserInfo.getResponse().email());
+            if (byEmail.isPresent()) {
+                throw new ConflictException("이미 가입된 이메일 주소입니다.");
+            }
             Member newNaverMember = Member.newMemberForNaverUser(naverUserInfo);
             memberPort.save(newNaverMember);
             naverMember = Optional.of(newNaverMember);

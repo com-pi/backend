@@ -7,7 +7,7 @@ import com.example.authserver.adapter.in.VerifyPhoneNumberRequest;
 public interface JoinUseCase {
 
     void join(JoinRequest joinRequest);
-    boolean isDuplicateEmail(String email);
+    boolean checkEmailDupliction(String email);
     String requestNumberVerification(VerifyPhoneNumberRequest request);
     void verifyCode(VerifyCodeForJoinRequest request);
 

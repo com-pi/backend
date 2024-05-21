@@ -14,7 +14,8 @@ public class KakaoUserInfoResponse {
      * Feign 클라이언트의 맵핑을 위해 스네이크 케이스를 사용하였습니다.
      */
     public record KakaoAccount(
-            KakaoProfile profile
+            KakaoProfile profile,
+            String email
     ) {}
 
     public record KakaoProfile(
