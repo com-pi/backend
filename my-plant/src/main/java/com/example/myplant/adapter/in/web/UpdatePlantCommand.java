@@ -2,42 +2,52 @@ package com.example.myplant.adapter.in.web;
 
 import com.example.common.baseentity.SelfValidating;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.List;
 
 @Getter
-@Builder
+@Setter
+@NoArgsConstructor
 public class UpdatePlantCommand extends SelfValidating<UpdatePlantCommand> {
-    @NotNull
-    private Long memberId;
 
-    @NotNull
+    private Long plantId;
     private String plantName;
 
-    @NotNull
     private String plantType;
 
     private int plantAge;
 
-    @NotNull
     private LocalDate plantBirthday;
+
     private LocalDate lastWaterday;
-    @Setter
-    private List<MultipartFile> plantImages;
 
-    @NotNull
-    private int wateringIntervalInWeeks;
+    private int wateringIntervalInDays;
 
-    @NotNull
     private int wateringFrequency;
 
     private LocalDate repottingDate;
     private LocalDate fertilizingDate;
     private LocalDate pruningDate;
+    private int maintenanceIntervalInMonths;
     private String plantLocation;
     private String potType;
 
+    @Builder
+    public UpdatePlantCommand(String plantName, String plantType, int plantAge, LocalDate plantBirthday,
+                              LocalDate lastWaterday, int wateringIntervalInDays, LocalDate repottingDate,
+                              LocalDate fertilizingDate, LocalDate pruningDate, int maintenanceIntervalInMonths,
+                              String plantLocation, String potType) {
+        this.plantName = plantName;
+        this.plantType = plantType;
+        this.plantAge = plantAge;
+        this.plantBirthday = plantBirthday;
+        this.lastWaterday = lastWaterday;
+        this.wateringIntervalInDays = wateringIntervalInDays;
+        this.repottingDate = repottingDate;
+        this.fertilizingDate = fertilizingDate;
+        this.pruningDate = pruningDate;
+        this.maintenanceIntervalInMonths = maintenanceIntervalInMonths;
+        this.plantLocation = plantLocation;
+        this.potType = potType;
+    }
 }

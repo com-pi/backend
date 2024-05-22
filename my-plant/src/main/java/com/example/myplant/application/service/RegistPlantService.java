@@ -1,45 +1,40 @@
 package com.example.myplant.application.service;
 
-import com.example.imagemodule.application.port.SaveImagesCommand;
 import com.example.myplant.adapter.in.web.PlantCommand;
 import com.example.myplant.application.port.in.RegistPlantUseCase;
 import com.example.myplant.application.port.out.SavePlantPort;
-import com.example.imagemodule.application.port.ImageCommandPort;
-import com.example.imagemodule.domain.MinioBucket;
 import com.example.myplant.domain.Plant;
 import com.example.myplant.domain.WateringInfo;
 import com.example.myplant.domain.MaintenanceSchedule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
 public class RegistPlantService implements RegistPlantUseCase {
 
+    private static final Logger logger = LoggerFactory.getLogger(RegistPlantService.class);
     private final SavePlantPort savePlantPort;
-    private final ImageCommandPort imageCommandPort;
 
 
     @Autowired
-    public RegistPlantService(SavePlantPort savePlantPort, ImageCommandPort imageCommandPort) {
+    public RegistPlantService(SavePlantPort savePlantPort) {
         this.savePlantPort = savePlantPort;
-        this.imageCommandPort = imageCommandPort;
     }
 
     @Override
     public Plant registerPlant(PlantCommand command) {
-        List<String> imageUrls = imageCommandPort.saveImages(new SaveImagesCommand(command.getPlantImages(), MinioBucket.PLANT_IMAGES));
-
         WateringInfo wateringInfo = WateringInfo.builder()
-                .intervalInWeeks(command.getWateringIntervalInWeeks())
-                .frequency(command.getWateringFrequency())
+                .intervalInDays(command.getWateringIntervalInDays())
                 .build();
 
         MaintenanceSchedule maintenanceSchedule = MaintenanceSchedule.builder()
                 .repottingDate(command.getRepottingDate())
                 .fertilizingDate(command.getFertilizingDate())
                 .pruningDate(command.getPruningDate())
+                .intervalInMonths(command.getMaintenanceIntervalInMonths())
                 .build();
 
         Plant plant = Plant.builder()
@@ -49,7 +44,6 @@ public class RegistPlantService implements RegistPlantUseCase {
                 .plantAge(command.getPlantAge())
                 .plantBirthday(command.getPlantBirthday())
                 .lastWaterday(command.getLastWaterday())
-                .plantImageUrls(imageUrls)
                 .wateringInfo(wateringInfo)
                 .maintenanceSchedule(maintenanceSchedule)
                 .plantLocation(command.getPlantLocation())
@@ -57,6 +51,10 @@ public class RegistPlantService implements RegistPlantUseCase {
                 .intimacy(1) // 친밀도 초기값 1
                 .build();
 
-        return savePlantPort.savePlant(plant);
+        Plant savedPlant = savePlantPort.savePlant(plant);
+
+        logger.info("Registered Plant - id: {}, memberId: {}, plantId: {}", savedPlant.getId(), savedPlant.getMemberId(), savedPlant.getPlantId());
+
+        return savedPlant;
     }
 }

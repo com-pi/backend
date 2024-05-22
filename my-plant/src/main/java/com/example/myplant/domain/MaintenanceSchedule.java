@@ -10,12 +10,20 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 @Getter
-@Builder
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class MaintenanceSchedule {
 
     private LocalDate repottingDate;
     private LocalDate fertilizingDate;
     private LocalDate pruningDate;
+    private int intervalInMonths; // 3개월, 6개월, 9개월, 12개월
+
+    @Builder
+    public MaintenanceSchedule(LocalDate repottingDate, LocalDate fertilizingDate, LocalDate pruningDate, int intervalInMonths){
+        this.repottingDate = repottingDate;
+        this.fertilizingDate = fertilizingDate;
+        this.pruningDate = pruningDate;
+        this.intervalInMonths = intervalInMonths;
+    }
 }

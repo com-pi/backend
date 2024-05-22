@@ -5,8 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication(scanBasePackages = {
 		"com.example.myplant",
-		"com.example.common",
-		"com.example.imagemodule"
+		"com.example.common"
 })
 public class MyPlantApplication {
 

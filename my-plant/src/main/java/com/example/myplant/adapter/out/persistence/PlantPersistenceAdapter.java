@@ -5,6 +5,8 @@ import com.example.myplant.application.port.out.SavePlantPort;
 import com.example.myplant.domain.Plant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -25,5 +27,15 @@ public class PlantPersistenceAdapter implements SavePlantPort, FindPlantPort {
     @Override
     public Optional<Plant> findPlantById(Long id) {
         return plantRepository.findById(id);
+    }
+
+    @Override
+    public List<Plant> findPlantsByMemberId(Long memberId) {
+        return plantRepository.findByMemberId(memberId);
+    }
+
+    @Override
+    public Optional<Plant> findPlantByPlantId(Long plantId) {
+        return plantRepository.findByPlantId(plantId);
     }
 }

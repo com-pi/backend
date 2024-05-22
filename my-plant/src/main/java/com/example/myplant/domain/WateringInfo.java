@@ -5,11 +5,15 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 @Getter
-@Builder
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class WateringInfo {
 
-    private int intervalInWeeks;
-    private int frequency;
+    private int intervalInDays; // n일마다 1회 물 주기
+
+    @Builder
+    public WateringInfo(int intervalInDays) {
+        this.intervalInDays = intervalInDays;
+    }
+
 }

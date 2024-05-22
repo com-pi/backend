@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Random;
 
 @Entity
 @Table(name = "plant")
@@ -17,15 +18,16 @@ public class Plant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
+    private Long plantId;
+
     private Long memberId;
     private String plantName;
     private String plantType;
     private int plantAge;
     private LocalDate plantBirthday;
     private LocalDate lastWaterday;
-
-    @ElementCollection
-    private List<String> plantImageUrls;
+    private String plantDescription;
 
     @Embedded
     private WateringInfo wateringInfo;
@@ -37,15 +39,20 @@ public class Plant {
     private String potType;
     private int intimacy;
 
+    @PrePersist
+    public void prePersiste() {
+        Random random = new Random();
+        this.plantId = (long) random.nextInt(999999); // 0부터 999999까지의 랜덤 숫자 생성
+    }
+
     public void updatePlant(String plantName, String plantType, int plantAge, LocalDate plantBirthday,
-                            LocalDate lastWaterday, List<String> plantImageUrls, WateringInfo wateringInfo,
+                            LocalDate lastWaterday, WateringInfo wateringInfo,
                             MaintenanceSchedule maintenanceSchedule, String plantLocation, String potType) {
         if (plantName != null) this.plantName = plantName;
         if (plantType != null) this.plantType = plantType;
         if (plantAge != 0) this.plantAge = plantAge;
         if (plantBirthday != null) this.plantBirthday = plantBirthday;
         if (lastWaterday != null) this.lastWaterday = lastWaterday;
-        if (plantImageUrls != null) this.plantImageUrls = plantImageUrls;
         if (wateringInfo != null) this.wateringInfo = wateringInfo;
         if (maintenanceSchedule != null) this.maintenanceSchedule = maintenanceSchedule;
         if (plantLocation != null) this.plantLocation = plantLocation;
