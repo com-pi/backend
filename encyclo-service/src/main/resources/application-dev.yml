@@ -8,6 +8,13 @@ spring:
     username: root
     password: 1234
 
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://discovery-eureka:8761/eureka
+
 scraping-target:
   drfull:
     url: http://scraper
