@@ -21,3 +21,6 @@ springdoc:
     urls[2]:
       name: 내 식물 서비스
       url: http://localhost:8000/my-plant/v3/api-docs
+    urls[3]:
+      name: 싹싹도감 서비스
+      url: http://localhost:8000/encyclo-service/v3/api-docs

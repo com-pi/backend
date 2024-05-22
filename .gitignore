@@ -3,4 +3,14 @@
 /.idea/
 /common/build/
 /common/out/
-d
+/discovery-eureka/out/
+/discovery-eureka/build/
+/auth-service/build/
+/auth-service/out/
+/api-gateway/build/
+/api-gateway/out/
+/encyclo-service/build/
+/encyclo-service/out/
+/my-plant/build/
+/my-plant/out/
+

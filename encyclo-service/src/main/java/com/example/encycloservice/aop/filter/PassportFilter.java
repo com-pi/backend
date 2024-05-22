@@ -1,4 +1,4 @@
-package com.example.authserver.aop.filter;
+package com.example.encycloservice.aop.filter;
 
 import com.example.common.domain.Passport;
 import com.fasterxml.jackson.core.JsonProcessingException;

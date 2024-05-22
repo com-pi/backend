@@ -42,6 +42,13 @@ spring:
           filters:
             - name: PathPrefixRemoveFilter
 
+        - id: encyclo-service
+          uri: lb://ENCYCLO-SERVICE
+          predicates:
+            - Path=/encyclo-service/**
+          filters:
+            - name: PathPrefixRemoveFilter
+
 secret:
   accessToken: test1
   refreshToken: test2

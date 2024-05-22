@@ -1,0 +1,14 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://mysql:3306/board
+    username: root
+    password: 1234
+
+scraping-target:
+  drfull:
+    url: http://scraper
+
