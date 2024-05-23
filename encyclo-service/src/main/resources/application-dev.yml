@@ -17,5 +17,5 @@ eureka:
 
 scraping-target:
   drfull:
-    url: http://scraper
+    url: http://scraper:8085
 
