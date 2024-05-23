@@ -3,9 +3,11 @@ package com.example.apigateway.util;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.apigateway.domain.Passport;
-import com.example.apigateway.exception.InvalidAccessTokenException;
+import com.example.apigateway.domain.TokenType;
+import com.example.apigateway.exception.InvalidTokenException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -23,8 +25,10 @@ public class JwtValidator {
             String nickName = decodedJWT.getClaim("nik").asString();
             String thumbnail = decodedJWT.getClaim("img").asString();
             return Passport.of(subject, memberId, nickName, thumbnail);
+        } catch(TokenExpiredException e) {
+            throw new InvalidTokenException("토큰이 만료 되었습니다.", e);
         } catch (JWTVerificationException e) {
-            throw new InvalidAccessTokenException("토큰 검증에 실패했습니다.", e);
+            throw new InvalidTokenException(TokenType.ACCESS_TOKEN, e);
         }
 
     }

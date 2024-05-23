@@ -24,9 +24,12 @@ public class TokenReissueService {
 
     public TokenReIssueResponse reissueToken(HttpServletRequest request, HttpServletResponse response) {
 
-        String refreshToken = CookieUtil.getRefreshToken(request).orElseThrow(InvalidTokenException::new);
-        Passport passport = jwtUtil.validateToken(refreshToken, REFRESH_TOKEN).orElseThrow(InvalidTokenException::new);
-        String storedToken = redisPort.getRefreshToken(passport).orElseThrow(InvalidTokenException::new);
+        String refreshToken = CookieUtil.getRefreshToken(request)
+                .orElseThrow(() -> new InvalidTokenException(REFRESH_TOKEN));
+        Passport passport = jwtUtil.validateToken(refreshToken, REFRESH_TOKEN)
+                .orElseThrow(() -> new InvalidTokenException(REFRESH_TOKEN));
+        String storedToken = redisPort.getRefreshToken(passport)
+                .orElseThrow(() -> new InvalidTokenException(REFRESH_TOKEN));
 
         if (refreshToken.equals(storedToken)) {
             ComPToken comPToken = jwtUtil.generateToken(passport, ACCESS_TOKEN);
