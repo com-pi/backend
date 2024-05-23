@@ -23,9 +23,9 @@ public class PlantScrapeService implements ScrapeUseCase {
         } catch (FeignException e) {
             switch (e.status()) {
                 case 404:
-                    throw new CommonException("검색 결과가 없습니다.", 404);
+                    throw new CommonException("검색 결과가 없습니다.", 404, e);
                 default:
-                    throw new CommonException("스크랩핑중 에러 발생", 500);
+                    throw new CommonException("스크랩핑중 에러 발생", 500, e);
             }
         }
     }
@@ -37,9 +37,9 @@ public class PlantScrapeService implements ScrapeUseCase {
         } catch (FeignException e) {
             switch (e.status()) {
                 case 404:
-                    throw new CommonException("검색 결과가 없습니다.", 404);
+                    throw new CommonException("검색 결과가 없습니다.", 404, e);
                 default:
-                    throw new CommonException("스크랩핑중 에러 발생", 500);
+                    throw new CommonException("스크랩핑중 에러 발생", 500, e);
             }
         }
     }

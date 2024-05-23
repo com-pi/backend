@@ -19,6 +19,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CommonException.class)
     public ResponseEntity<CommonResponse<Void>> handleNotFoundException(CommonException exception) {
+        log.info(exception.getMessage(), exception);
         return switch (HttpStatus.resolve(exception.getHttpStatus())) {
             case NOT_FOUND -> CommonResponse.notFoundWithMessage(exception.getMessage());
             case FORBIDDEN -> CommonResponse.forbiddenWithMessage(exception.getMessage());
@@ -30,6 +31,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BindException.class)
     public ResponseEntity<CommonResponse<List<String>>> handleBindException(BindException exception) {
+        log.info(exception.getMessage(), exception);
         List<String> errors = exception.getBindingResult().getAllErrors().stream()
                 .map(e -> {
                     if (e instanceof FieldError) {
