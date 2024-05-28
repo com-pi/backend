@@ -2,12 +2,12 @@ package com.example.myplant.application.service;
 
 import com.example.myplant.adapter.in.web.PlantCommand;
 import com.example.myplant.application.port.in.RegistPlantUseCase;
+import com.example.myplant.application.port.out.FindPlantPort;
 import com.example.myplant.application.port.out.SavePlantPort;
 import com.example.myplant.domain.Plant;
 import com.example.myplant.domain.WateringInfo;
 import com.example.myplant.domain.MaintenanceSchedule;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.example.myplant.domain.Character;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,13 +15,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class RegistPlantService implements RegistPlantUseCase {
 
-    private static final Logger logger = LoggerFactory.getLogger(RegistPlantService.class);
     private final SavePlantPort savePlantPort;
-
+    private final FindPlantPort findPlantPort;
 
     @Autowired
-    public RegistPlantService(SavePlantPort savePlantPort) {
+    public RegistPlantService(SavePlantPort savePlantPort, FindPlantPort findPlantPort) {
         this.savePlantPort = savePlantPort;
+        this.findPlantPort = findPlantPort;
     }
 
     @Override
@@ -37,6 +37,9 @@ public class RegistPlantService implements RegistPlantUseCase {
                 .intervalInMonths(command.getMaintenanceIntervalInMonths())
                 .build();
 
+        Character character = findPlantPort.findCharacterById(command.getCharacterId())
+                .orElseThrow(() -> new RuntimeException("Character not found"));
+
         Plant plant = Plant.builder()
                 .memberId(command.getMemberId())
                 .plantName(command.getPlantName())
@@ -49,12 +52,8 @@ public class RegistPlantService implements RegistPlantUseCase {
                 .plantLocation(command.getPlantLocation())
                 .potType(command.getPotType())
                 .intimacy(1) // 친밀도 초기값 1
+                .character(character)
                 .build();
-
-        Plant savedPlant = savePlantPort.savePlant(plant);
-
-        logger.info("Registered Plant - id: {}, memberId: {}, plantId: {}", savedPlant.getId(), savedPlant.getMemberId(), savedPlant.getPlantId());
-
-        return savedPlant;
+        return savePlantPort.savePlant(plant);
     }
 }

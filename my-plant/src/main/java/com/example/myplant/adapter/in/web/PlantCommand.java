@@ -1,6 +1,7 @@
 package com.example.myplant.adapter.in.web;
 
 import com.example.common.baseentity.SelfValidating;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -9,38 +10,57 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 public class PlantCommand extends SelfValidating<PlantCommand> {
-
-
+    @Schema(description = "Member ID", example = "1")
     private Long memberId;
 
+    @Schema(description = "Plant Name", example = "MyPlant")
     @NotNull
     private String plantName;
 
+    @Schema(description = "Plant Type", example = "Flower")
     @NotNull
     private String plantType;
 
+    @Schema(description = "Plant Age", example = "2")
     private int plantAge;
 
+    @Schema(description = "Plant Birthday", example = "2022-01-01")
     @NotNull
     private LocalDate plantBirthday;
+
+    @Schema(description = "Last Waterday", example = "2022-01-01")
     @NotNull
     private LocalDate lastWaterday;
 
-    @NotNull
+    @Schema(description = "Watering Interval in Days", example = "7")
     private int wateringIntervalInDays;
 
+    @Schema(description = "Repotting Date", example = "2023-01-01")
     private LocalDate repottingDate;
+
+    @Schema(description = "Fertilizing Date", example = "2023-02-01")
     private LocalDate fertilizingDate;
+
+    @Schema(description = "Pruning Date", example = "2023-03-01")
     private LocalDate pruningDate;
+
+    @Schema(description = "Maintenance Interval in Months", example = "6")
     private int maintenanceIntervalInMonths;
+
+    @Schema(description = "Plant Location", example = "Indoor")
     private String plantLocation;
+
+    @Schema(description = "Pot Type", example = "Ceramic")
     private String potType;
+
+    @Schema(description = "Character ID", example = "1")
+    private Long characterId;
 
     @Builder
     public PlantCommand(String plantName, String plantType, int plantAge, LocalDate plantBirthday,
                         LocalDate lastWaterday, int wateringIntervalInDays, LocalDate repottingDate,
                         LocalDate fertilizingDate, LocalDate pruningDate, int maintenanceIntervalInMonths,
-                        String plantLocation, String potType) {
+                        String plantLocation, String potType, Long characterId) {
         this.plantName = plantName;
         this.plantType = plantType;
         this.plantAge = plantAge;
@@ -53,5 +73,6 @@ public class PlantCommand extends SelfValidating<PlantCommand> {
         this.maintenanceIntervalInMonths = maintenanceIntervalInMonths;
         this.plantLocation = plantLocation;
         this.potType = potType;
+        this.characterId = characterId;
     }
 }

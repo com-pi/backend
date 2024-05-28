@@ -7,6 +7,7 @@ import com.example.myplant.application.port.out.FindPlantPort;
 import com.example.myplant.domain.Plant;
 import com.example.myplant.domain.WateringInfo;
 import com.example.myplant.domain.MaintenanceSchedule;
+import com.example.myplant.domain.Character;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
@@ -43,16 +44,17 @@ public class UpdatePlantService implements UpdatePlantUseCase{
                         .intervalInMonths(command.getMaintenanceIntervalInMonths())
                         .build() : existingPlant.getMaintenanceSchedule();
 
+        Character character = findPlantPort.findCharacterById(command.getCharacterId())
+                .orElseThrow(() -> new RuntimeException("Character not found"));
+
         existingPlant.updatePlant(command.getPlantName(), command.getPlantType(), command.getPlantAge(),
                 command.getPlantBirthday(), command.getLastWaterday(),wateringInfo, maintenanceSchedule,
-                command.getPlantLocation(), command.getPotType());
+                command.getPlantLocation(), command.getPotType(), character);
 
-        Plant existedPlant = savePlantPort.savePlant(existingPlant);
+        Plant updatedPlant = savePlantPort.savePlant(existingPlant);
 
-        logger.info("Registered Plant - id: {}, memberId: {}, plantId: {}", existedPlant.getId(), existedPlant.getMemberId(), existedPlant.getPlantId());
+        logger.info("Updated Plant - id: {}, memberId: {}, plantId: {}", updatedPlant.getId(), updatedPlant.getMemberId(), updatedPlant.getPlantId());
 
-        return existedPlant;
-
-        //return savePlantPort.savePlant(existingPlant);
+        return updatedPlant;
     }
 }

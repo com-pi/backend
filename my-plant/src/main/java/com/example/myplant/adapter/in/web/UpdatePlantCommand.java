@@ -1,6 +1,7 @@
 package com.example.myplant.adapter.in.web;
 
 import com.example.common.baseentity.SelfValidating;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -31,12 +32,14 @@ public class UpdatePlantCommand extends SelfValidating<UpdatePlantCommand> {
     private int maintenanceIntervalInMonths;
     private String plantLocation;
     private String potType;
+    private Long characterId;
+
 
     @Builder
     public UpdatePlantCommand(String plantName, String plantType, int plantAge, LocalDate plantBirthday,
                               LocalDate lastWaterday, int wateringIntervalInDays, LocalDate repottingDate,
                               LocalDate fertilizingDate, LocalDate pruningDate, int maintenanceIntervalInMonths,
-                              String plantLocation, String potType) {
+                              String plantLocation, String potType, Long characterId) {
         this.plantName = plantName;
         this.plantType = plantType;
         this.plantAge = plantAge;
@@ -49,5 +52,6 @@ public class UpdatePlantCommand extends SelfValidating<UpdatePlantCommand> {
         this.maintenanceIntervalInMonths = maintenanceIntervalInMonths;
         this.plantLocation = plantLocation;
         this.potType = potType;
+        this.characterId = characterId;
     }
 }
