@@ -35,9 +35,11 @@ oauth:
     app-key: 5b085c799bdb7da9923e226b6a8b6188
     secret: tGusphDWBKePGSVjyGqY5ElI0jkvzRBj
 
+# Todo: Secret 관리 필요
 secret:
   accessToken: test1
   refreshToken: test2
+  passwordChangeToken: test3
 
 sms:
   app-key: 4ba4ea3ab3b400866466c98fb879421e

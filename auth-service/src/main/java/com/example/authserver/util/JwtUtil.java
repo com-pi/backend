@@ -25,7 +25,8 @@ public class JwtUtil {
     private String accessTokenSecret;
     @Value("${secret.refreshToken}")
     private String refreshTokenSecret;
-
+    @Value("${secret.passwordChangeToken}")
+    private String passwordChangeTokenSecret;
 
     public ComPToken generateToken(Member member, TokenType tokenType) {
 
@@ -36,9 +37,7 @@ public class JwtUtil {
                 .withClaim("nik", member.getNickname())
                 .withClaim("img", member.getImageUrl())
                 .withClaim("thm", member.getThumbnailUrl())
-                .sign(Algorithm.HMAC256(
-                        tokenType == TokenType.REFRESH_TOKEN ? refreshTokenSecret : accessTokenSecret
-                ));
+                .sign(Algorithm.HMAC256(tokenType.getSecret(this)));
 
         return ComPToken.of(tokenType, token);
     }
@@ -51,18 +50,15 @@ public class JwtUtil {
                 .withClaim("rol", passPort.role().name())
                 .withClaim("nik", passPort.nickName())
                 .withClaim("img", passPort.thumbnail())
-                .sign(Algorithm.HMAC256(
-                        tokenType == TokenType.REFRESH_TOKEN ? refreshTokenSecret : accessTokenSecret
-                ));
+                .sign(Algorithm.HMAC256(tokenType.getSecret(this)));
 
         return ComPToken.of(tokenType, token);
     }
 
     public Optional<Passport> validateToken(String token, TokenType tokenType) {
         try {
-            DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(
-                    tokenType == TokenType.REFRESH_TOKEN ? refreshTokenSecret : accessTokenSecret
-            )).build().verify(token);
+            DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(tokenType.getSecret(this))).build()
+                    .verify(token);
             return Optional.ofNullable(Passport.of(
                     decodedJWT.getSubject(),
                     decodedJWT.getClaim("rol").asString(),

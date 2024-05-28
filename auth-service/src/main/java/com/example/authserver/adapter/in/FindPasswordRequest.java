@@ -5,10 +5,10 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record FindPwdRequest(
+public record FindPasswordRequest(
+        @Parameter(description = "이메일")
+        @NotNull @NotBlank @Email String email,
         @Parameter(description = "핸드폰 번호")
-        @NotNull @NotBlank String phoneNumber,
-        @Parameter(description = "이메일 주소")
-        @NotNull @Email String email
+        @NotNull @NotBlank String phoneNumber
 ) {
 }

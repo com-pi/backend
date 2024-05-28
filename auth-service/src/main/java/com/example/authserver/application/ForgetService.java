@@ -1,13 +1,15 @@
 package com.example.authserver.application;
 
-import com.example.authserver.adapter.in.FindIdRequest;
-import com.example.authserver.adapter.in.FindPwdRequest;
-import com.example.authserver.adapter.in.VerifyCodeForEmailRequest;
-import com.example.authserver.application.port.out.external.EmailPort;
+import com.example.authserver.adapter.in.*;
 import com.example.authserver.application.port.out.persistence.MemberPort;
 import com.example.authserver.application.port.out.persistence.RedisPort;
+import com.example.authserver.domain.ComPToken;
 import com.example.authserver.domain.Member;
+import com.example.authserver.domain.TokenType;
 import com.example.authserver.exception.BadRequestException;
+import com.example.authserver.exception.InvalidTokenException;
+import com.example.authserver.util.JwtUtil;
+import com.example.common.domain.Passport;
 import com.example.common.exception.NotFoundException;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Random;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class ForgetService {
 
     private final RedisPort redisPort;
     private final MemberPort memberPort;
-    private final EmailPort emailPort;
+    private final JwtUtil jwtUtil;
     private final Random random = new Random();
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -45,7 +46,7 @@ public class ForgetService {
     }
 
     @Nullable
-    public String verifyCode(VerifyCodeForEmailRequest request){
+    public String verifyFindIdCode(VerifyCodeForEmailRequest request){
         boolean isMatch = redisPort.verifyFindIdCode(request.phoneNumber(), request.verifyCode());
 
         if(isMatch) {
@@ -57,20 +58,59 @@ public class ForgetService {
         return null;
     }
 
-    @Transactional
-    public void findPassword(FindPwdRequest request){
-        Member member = memberPort.findByPhoneNumberAndEmailAndDeletionYn(
+    public String findPassword(FindPasswordRequest request){
+        memberPort.findByPhoneNumberAndEmail(
+                request.phoneNumber(),
+                request.email()).orElseThrow(() -> new NotFoundException(Member.class));
+
+        String verificationCode = String.valueOf(random.nextInt(900000) + 100000);
+
+        redisPort.setFindPasswordValidationCode(
                 request.phoneNumber(),
                 request.email(),
-                "N").orElseThrow(() -> new NotFoundException(Member.class));
+                verificationCode
+        );
 
-        String tempPwd = UUID.randomUUID().toString().substring(0, 9);
-
-        member.changePassword(tempPwd, passwordEncoder);
-
-        emailPort.sendPasswordEmail(member.getEmail(), tempPwd);
+        return verificationCode;
     }
 
+    public ComPToken verifyPasswordCode(VerifyFindPasswordCodeRequest request){
+        boolean isMatch = redisPort.verifyFindPasswordValidationCode(
+                request.phoneNumber(),
+                request.email(),
+                request.verificationCode());
 
+        if(!isMatch) {
+            return null;
+        }
+
+        Member member = memberPort.findByPhoneNumber(request.phoneNumber())
+                .orElseThrow(() -> new NotFoundException(Member.class));
+
+        ComPToken comPToken = jwtUtil.generateToken(member, TokenType.PASSWORD_CHANGE_TOKEN);
+        redisPort.setChangePasswordCode(request.phoneNumber(), request.email(), comPToken);
+
+        return comPToken;
+    }
+
+    @Transactional
+    public void changePassword(ChangePasswordRequest request) {
+        Passport passport = jwtUtil.validateToken(request.changePasswordToken(), TokenType.PASSWORD_CHANGE_TOKEN)
+                .orElseThrow(() -> new InvalidTokenException(TokenType.PASSWORD_CHANGE_TOKEN));
+
+        Member member = memberPort.findById(passport.memberId())
+                .orElseThrow(() -> new NotFoundException(Member.class));
+
+        boolean isMatch = redisPort.verifyChangePasswordToken(
+                member.getPhoneNumber(),
+                member.getEmail(),
+                request.changePasswordToken());
+
+        if(!isMatch){
+            throw new RuntimeException(TokenType.PASSWORD_CHANGE_TOKEN.getInvalidMessage());
+        }
+
+        member.changePassword(request.changePasswordToken(), passwordEncoder);
+    }
 
 }
