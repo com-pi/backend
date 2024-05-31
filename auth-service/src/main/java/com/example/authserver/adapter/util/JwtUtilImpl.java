@@ -1,9 +1,10 @@
-package com.example.authserver.util;
+package com.example.authserver.adapter.util;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.example.authserver.application.util.JwtUtil;
 import com.example.authserver.domain.ComPToken;
 import com.example.authserver.domain.Member;
 import com.example.authserver.domain.TokenType;
@@ -18,7 +19,7 @@ import java.util.Optional;
 @Component
 @Getter
 @Slf4j
-public class JwtUtil {
+public class JwtUtilImpl implements JwtUtil {
 
     private static final String TOKEN_ISSUER = "꼼삐";
     @Value("${secret.accessToken}")
@@ -28,6 +29,7 @@ public class JwtUtil {
     @Value("${secret.passwordChangeToken}")
     private String passwordChangeTokenSecret;
 
+    @Override
     public ComPToken generateToken(Member member, TokenType tokenType) {
 
         String token = JWT.create().withIssuer(TOKEN_ISSUER)
@@ -42,6 +44,7 @@ public class JwtUtil {
         return ComPToken.of(tokenType, token);
     }
 
+    @Override
     public ComPToken generateToken(Passport passPort, TokenType tokenType) {
 
         String token = JWT.create().withIssuer(TOKEN_ISSUER)
@@ -55,6 +58,7 @@ public class JwtUtil {
         return ComPToken.of(tokenType, token);
     }
 
+    @Override
     public Optional<Passport> validateToken(String token, TokenType tokenType) {
         try {
             DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(tokenType.getSecret(this))).build()

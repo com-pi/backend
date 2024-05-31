@@ -1,6 +1,7 @@
 package com.example.authserver.application.port.out.persistence;
 
-import com.example.authserver.domain.Member;
+import com.example.authserver.adapter.out.MemberEntity;
+import com.example.authserver.adapter.out.MemberJpaRepository;
 import com.example.common.domain.Role;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,16 +17,16 @@ import java.util.Optional;
 
 @ActiveProfiles("test")
 @DataJpaTest
-class MemberPortTest {
+class MemberEntityPortTest {
 
     @Autowired
-    MemberPort memberPort;
+    MemberJpaRepository memberJpaRepository;
 
     GeometryFactory geometryFactory = new GeometryFactory();
 
     @BeforeEach
     void init(){
-        Member test_member = Member.builder()
+        MemberEntity test_memberEntity = MemberEntity.builder()
                 .email("kihong@google.com")
                 .nickname("테스트 회원")
                 .phoneNumber("01094862225")
@@ -33,13 +34,13 @@ class MemberPortTest {
                 .role(Role.MEMBER)
                 .build();
 
-        memberPort.saveAndFlush(test_member);
+        memberJpaRepository.saveAndFlush(test_memberEntity);
     }
 
     @Test
     @DisplayName("지리데이터 핸들링 테스트")
     void getMember(){
-        Optional<Member> found = memberPort.findByPhoneNumberAndEmailAndDeletionYn(
+        Optional<MemberEntity> found = memberJpaRepository.findByPhoneNumberAndEmailAndDeletionYn(
                 "01094862225", "kihong@google.com", "N");
 
         Assertions.assertTrue(found.isPresent());

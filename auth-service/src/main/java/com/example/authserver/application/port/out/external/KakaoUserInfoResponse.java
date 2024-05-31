@@ -1,7 +1,11 @@
 package com.example.authserver.application.port.out.external;
 
+import com.example.authserver.adapter.in.request.MemberCreateRequest;
+import com.example.authserver.domain.MemberCreate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.UUID;
 
 @Getter
 @AllArgsConstructor
@@ -24,5 +28,18 @@ public class KakaoUserInfoResponse {
             String profile_image_url,
             Boolean is_default_image
     ){}
+
+    public MemberCreate toMemberCreate() {
+        return MemberCreate.builder()
+                .kakaoId(id.toString())
+                .email(kakao_account.email)
+                .nickname(kakao_account.profile().nickname != null ?
+                        kakao_account.profile().nickname : "새회원" +
+                        UUID.randomUUID().toString().substring(0, 10)
+                )
+                .imageUrl(kakao_account.profile().profile_image_url)
+                .thumbnailUr(kakao_account.profile.thumbnail_image_url)
+                .build();
+    }
 
 }

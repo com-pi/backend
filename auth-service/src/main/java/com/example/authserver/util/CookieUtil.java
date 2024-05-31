@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 import java.util.Optional;
 
-public class CookieUtil {
+public class CookieUtil implements CookieUtil{
 
     public static void setRefreshCookie(ComPToken comPToken, HttpServletResponse response) {
         response.setHeader("Set-Cookie", comPToken.generateRefreshTokenCookie());

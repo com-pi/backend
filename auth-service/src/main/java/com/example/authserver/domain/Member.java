@@ -1,145 +1,96 @@
 package com.example.authserver.domain;
 
-import com.example.authserver.adapter.in.request.JoinRequest;
-import com.example.authserver.application.port.out.external.KakaoUserInfoResponse;
-import com.example.authserver.application.port.out.external.NaverUserInfoResponse;
-import com.example.common.baseentity.DeletedAtAbstractEntity;
+import com.example.authserver.adapter.out.MemberEntity;
 import com.example.common.domain.Address;
 import com.example.common.domain.Role;
 import com.example.common.exception.NotFoundException;
 import com.example.imagemodule.domain.ImageAndThumbnail;
-import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import org.locationtech.jts.geom.Point;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
-@Entity
-@Table(name = "MEMBER")
-@EqualsAndHashCode(of = {"id"}, callSuper = false)
-@ToString(exclude = {"location"})
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
-public class Member extends DeletedAtAbstractEntity {
-
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "kakao_id", unique = true, updatable = false)
-    private String kakaoId;
-
-    @Column(name = "naver_id", unique = true, updatable = false)
-    private String naverId;
-
-    @Column(unique = true, updatable = false)
-    private String email;
-    @Column(unique = true, updatable = false)
-    private String phoneNumber;
-
-    private String password;
-
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
-    @Column(unique = true, nullable = false)
-    private String nickname;
-    private String introduction;
-    private String imageUrl;
-    private String thumbnailUrl;
-    private Point location;
-
-    @Embedded
-    private Address address;
-    private LocalDateTime lastLogin;
-
-    public void updateFromSocialProfile(KakaoUserInfoResponse.KakaoProfile kakaoProfile) {
-        this.imageUrl = kakaoProfile.profile_image_url();
-        this.thumbnailUrl = kakaoProfile.thumbnail_image_url();
-    }
-
-    public void updateFromSocialProfile(NaverUserInfoResponse.NaverProfile naverProfile) {
-        this.imageUrl = naverProfile.profile_image();
-    }
+@AllArgsConstructor
+@Builder(toBuilder = true)
+public class Member {
+    private final Long id;
+    private final String kakaoId;
+    private final String naverId;
+    private final String email;
+    private final String phoneNumber;
+    private final String password;
+    private final Role role;
+    private final String nickname;
+    private final String introduction;
+    private final String imageUrl;
+    private final String thumbnailUrl;
+    private final Point location;
+    private final Address address;
+    private final LocalDateTime lastLogin;
 
     public boolean isSocialAccount() {
         return this.kakaoId != null || this.naverId != null;
     }
 
-    public static Member newMemberForKakaoUser(KakaoUserInfoResponse kakaoUserInfo) {
+    public static Member create(MemberCreate memberCreate) {
         return Member.builder()
-                .kakaoId(kakaoUserInfo.getId().toString())
-                .email(kakaoUserInfo.getKakao_account().email())
-                .nickname(
-                        kakaoUserInfo.getKakao_account().profile().nickname() == null ?
-                                "새회원_" + UUID.randomUUID() : kakaoUserInfo.getKakao_account().profile().nickname())
+                .kakaoId(memberCreate.getKakaoId())
+                .naverId(memberCreate.getNaverId())
+                .phoneNumber(memberCreate.getPhoneNumber())
+                .email(memberCreate.getEmail())
+                .password(memberCreate.getPassword())
+                .nickname(memberCreate.getNickname())
                 .role(Role.MEMBER)
-                .imageUrl(kakaoUserInfo.getKakao_account().profile().profile_image_url())
-                .thumbnailUrl(kakaoUserInfo.getKakao_account().profile().thumbnail_image_url())
-                .build();
-    }
-
-    public static Member newMemberForNaverUser(NaverUserInfoResponse naverUserInfo) {
-        return Member.builder()
-                .naverId(naverUserInfo.getResponse().id())
-                .email(naverUserInfo.getResponse().email())
-                .nickname(naverUserInfo.getResponse().nickname() == null ?
-                                "새회원_" + UUID.randomUUID() : naverUserInfo.getResponse().nickname())
-                .email(naverUserInfo.getResponse().email())
-                .role(Role.MEMBER)
-                .imageUrl(naverUserInfo.getResponse().profile_image())
-                .build();
-    }
-
-    public static Member newMemberFromRequest(JoinRequest joinRequest, PasswordEncoder encoder) {
-        return Member.builder()
-                .email(joinRequest.email())
-                .password(encoder.encode(joinRequest.password()))
-                .nickname("새회원_" + UUID.randomUUID())
-                .phoneNumber(joinRequest.phoneNumber())
-                .role(Role.MEMBER)
+                .imageUrl(memberCreate.getImageUrl())
+                .thumbnailUrl(memberCreate.getThumbnailUr())
                 .build();
     }
 
     public void authenticateWithPassword(String password, PasswordEncoder encoder) {
         if(!encoder.matches(password, this.password)){
-            throw new NotFoundException(Member.class);
+            throw new NotFoundException(MemberEntity.class);
         }
     }
 
-    public void updateInfo(String nickname, String introduction){
-        this.nickname = nickname;
-        this.introduction = introduction;
+    public Member updateInfo(String nickname, String introduction){
+        return this.toBuilder()
+                .nickname(nickname)
+                .introduction(introduction)
+                .build();
     }
 
-    public LocalDateTime loginStamp(){
-        // LocalDateTime 은 불변 객체
-        LocalDateTime lastLoginTime = lastLogin;
-        lastLogin = LocalDateTime.now();
-        return lastLoginTime;
+    public Member loginStamp(LocalDateTime loginTime){
+        return this.toBuilder()
+                .lastLogin(loginTime)
+                .build();
     }
 
-    public void changePassword(String newPassword, PasswordEncoder encoder){
-        this.password = encoder.encode(newPassword);
+    public Member changePassword(String newPassword, PasswordEncoder encoder){
+        return this.toBuilder()
+                .password(encoder.encode(newPassword))
+                .build();
     }
 
-    public void deleteMember(){
+    public Member deleteMember(){
         // Todo 정책 다시 생각해보기
         // 다시 가입할 수 있도록 처리
         // 닉네임은 다시 못쓰도록 함
-        kakaoId = null;
-        naverId = null;
-        email = null;
-        phoneNumber = null;
-        super.delete();
+        return this.toBuilder()
+                .kakaoId(null)
+                .naverId(null)
+                .email(null)
+                .phoneNumber(null)
+                .build();
     }
 
-
-    public void updateProfileImage(ImageAndThumbnail imageAndThumbnail) {
-        this.imageUrl = imageAndThumbnail.imageUrl();
-        this.thumbnailUrl = imageAndThumbnail.thumbnailUrl();
+    public Member updateProfileImage(ImageAndThumbnail imageAndThumbnail) {
+        return this.toBuilder()
+                .imageUrl(imageAndThumbnail.imageUrl())
+                .imageUrl(imageAndThumbnail.thumbnailUrl())
+                .build();
     }
 }

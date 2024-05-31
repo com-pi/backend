@@ -1,6 +1,6 @@
 package com.example.authserver.adapter.in;
 
-import com.example.authserver.adapter.in.request.JoinRequest;
+import com.example.authserver.adapter.in.request.MemberCreateRequest;
 import com.example.authserver.adapter.in.request.VerifyCodeForJoinRequest;
 import com.example.authserver.adapter.in.request.VerifyPhoneNumberRequest;
 import com.example.authserver.application.port.in.JoinUseCase;
@@ -51,9 +51,9 @@ public class JoinController {
             "인증되지 않은 번호를 입력하면 예외를 반환합니다.")
     @PostMapping()
     public ResponseEntity<CommonResponse<Void>> join(
-            @RequestBody @Valid JoinRequest joinRequest) {
+            @RequestBody @Valid MemberCreateRequest memberCreateRequest) {
 
-        joinUseCase.join(joinRequest);
+        joinUseCase.join(memberCreateRequest);
 
         return CommonResponse.okWithMessage("회원가입이 정상 처리되었습니다.");
     }
