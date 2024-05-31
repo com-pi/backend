@@ -1,6 +1,7 @@
 package com.example.boardservice.domain;
 
 import com.example.boardservice.adapter.out.persistence.JsonToStringListConverter;
+import com.example.common.baseentity.DeletedAtAbstractEntity;
 import com.example.common.domain.Address;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BuyAndSell {
+public class BuyAndSell extends DeletedAtAbstractEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
