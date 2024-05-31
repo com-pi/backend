@@ -1,5 +1,9 @@
 package com.example.authserver.adapter.in;
 
+import com.example.authserver.adapter.in.request.ModifyInfoRequest;
+import com.example.authserver.adapter.in.request.ModifyLocationRequest;
+import com.example.authserver.adapter.in.response.MemberInfoResponse;
+import com.example.authserver.adapter.in.response.MyInfoResponse;
 import com.example.authserver.application.port.in.MemberUseCase;
 import com.example.common.annotation.Authenticate;
 import com.example.common.baseentity.CommonResponse;

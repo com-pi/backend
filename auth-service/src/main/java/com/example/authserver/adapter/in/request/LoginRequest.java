@@ -1,4 +1,4 @@
-package com.example.authserver.adapter.in;
+package com.example.authserver.adapter.in.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;

@@ -1,6 +1,6 @@
 package com.example.authserver.application;
 
-import com.example.authserver.adapter.in.*;
+import com.example.authserver.adapter.in.request.*;
 import com.example.authserver.application.port.out.persistence.MemberPort;
 import com.example.authserver.application.port.out.persistence.RedisPort;
 import com.example.authserver.domain.ComPToken;

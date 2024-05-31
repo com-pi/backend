@@ -1,7 +1,7 @@
 package com.example.authserver.application;
 
-import com.example.authserver.adapter.in.LoginRequest;
-import com.example.authserver.adapter.in.LoginResponse;
+import com.example.authserver.adapter.in.request.LoginRequest;
+import com.example.authserver.adapter.in.response.LoginResponse;
 import com.example.authserver.application.port.in.LoginUseCase;
 import com.example.authserver.application.port.out.persistence.MemberPort;
 import com.example.authserver.domain.ComPToken;

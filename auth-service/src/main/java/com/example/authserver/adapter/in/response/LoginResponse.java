@@ -1,4 +1,4 @@
-package com.example.authserver.adapter.in;
+package com.example.authserver.adapter.in.response;
 
 import com.example.authserver.domain.ComPToken;
 

@@ -1,4 +1,4 @@
-package com.example.authserver.adapter.in;
+package com.example.authserver.adapter.in.request;
 
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.constraints.Email;

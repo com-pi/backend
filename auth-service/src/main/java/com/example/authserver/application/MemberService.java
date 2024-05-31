@@ -1,8 +1,8 @@
 package com.example.authserver.application;
 
-import com.example.authserver.adapter.in.MemberInfoResponse;
-import com.example.authserver.adapter.in.ModifyLocationRequest;
-import com.example.authserver.adapter.in.MyInfoResponse;
+import com.example.authserver.adapter.in.request.ModifyLocationRequest;
+import com.example.authserver.adapter.in.response.MemberInfoResponse;
+import com.example.authserver.adapter.in.response.MyInfoResponse;
 import com.example.authserver.aop.filter.PassportHolder;
 import com.example.authserver.application.port.in.MemberUseCase;
 import com.example.authserver.application.port.out.persistence.MemberPort;
@@ -12,8 +12,6 @@ import com.example.common.exception.NotFoundException;
 import com.example.imagemodule.application.port.ImageCommandPort;
 import com.example.imagemodule.domain.ImageAndThumbnail;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 public class MemberService implements MemberUseCase {
 
     private final MemberPort memberPort;
-    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final ImageCommandPort imageCommandPort;
 
     @Override
@@ -63,11 +60,6 @@ public class MemberService implements MemberUseCase {
         me.updateProfileImage(imageAndThumbnail);
 
         return imageAndThumbnail;
-    }
-
-    @Override
-    public void modifyPassword(String oldPassword, String newPassword) {
-        // Todo
     }
 
     @Override

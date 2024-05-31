@@ -1,4 +1,4 @@
-package com.example.authserver.adapter.in;
+package com.example.authserver.adapter.in.request;
 
 import com.example.common.domain.AddressValue;
 import io.swagger.v3.oas.annotations.Parameter;

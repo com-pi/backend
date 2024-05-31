@@ -1,6 +1,6 @@
 package com.example.authserver.application.port.in;
 
-import com.example.authserver.adapter.in.LoginResponse;
+import com.example.authserver.adapter.in.response.LoginResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 

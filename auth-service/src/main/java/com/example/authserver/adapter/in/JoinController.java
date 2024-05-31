@@ -1,5 +1,8 @@
 package com.example.authserver.adapter.in;
 
+import com.example.authserver.adapter.in.request.JoinRequest;
+import com.example.authserver.adapter.in.request.VerifyCodeForJoinRequest;
+import com.example.authserver.adapter.in.request.VerifyPhoneNumberRequest;
 import com.example.authserver.application.port.in.JoinUseCase;
 import com.example.common.baseentity.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;

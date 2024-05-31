@@ -1,6 +1,6 @@
 package com.example.authserver.application;
 
-import com.example.authserver.adapter.in.LoginResponse;
+import com.example.authserver.adapter.in.response.LoginResponse;
 import com.example.authserver.application.port.in.OAuthLoginUseCase;
 import com.example.authserver.application.port.out.external.*;
 import com.example.authserver.application.port.out.persistence.MemberPort;

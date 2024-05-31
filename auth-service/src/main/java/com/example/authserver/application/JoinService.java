@@ -1,8 +1,8 @@
 package com.example.authserver.application;
 
-import com.example.authserver.adapter.in.JoinRequest;
-import com.example.authserver.adapter.in.VerifyCodeForJoinRequest;
-import com.example.authserver.adapter.in.VerifyPhoneNumberRequest;
+import com.example.authserver.adapter.in.request.JoinRequest;
+import com.example.authserver.adapter.in.request.VerifyCodeForJoinRequest;
+import com.example.authserver.adapter.in.request.VerifyPhoneNumberRequest;
 import com.example.authserver.application.port.in.JoinUseCase;
 import com.example.authserver.application.port.out.external.SMSPort;
 import com.example.authserver.application.port.out.persistence.MemberPort;

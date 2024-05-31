@@ -1,6 +1,6 @@
 package com.example.authserver.domain;
 
-import com.example.authserver.adapter.in.JoinRequest;
+import com.example.authserver.adapter.in.request.JoinRequest;
 import com.example.authserver.application.port.out.external.KakaoUserInfoResponse;
 import com.example.authserver.application.port.out.external.NaverUserInfoResponse;
 import com.example.common.baseentity.DeletedAtAbstractEntity;
