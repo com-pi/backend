@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+
 @Component
 @RequiredArgsConstructor
 public class ArticleQueryAdapter implements ArticleQueryPort {
@@ -16,5 +18,10 @@ public class ArticleQueryAdapter implements ArticleQueryPort {
     @Override
     public Page<BuyAndSell> getBuyAndSellList(int page) {
         return buyAndSellRepository.findByDeletionYn("N", PageRequest.of(page, 10));
+    }
+
+    @Override
+    public Optional<BuyAndSell> getBuyAndSell(Long id) {
+        return buyAndSellRepository.findById(id);
     }
 }
