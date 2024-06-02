@@ -47,7 +47,6 @@ spring:
           predicates:
             - Path=/encyclo-service/**
           filters:
-            - name: TokenValidateFilter
             - name: PathPrefixRemoveFilter
 
 secret:

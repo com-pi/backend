@@ -14,7 +14,7 @@ public class SearchPlantAdapter implements SearchPlantQuery {
     private final PlantInfoScraper plantInfoScraper;
     private final PlantIdentifier plantIdentifier;
     // Todo app key 관리
-    private final String appKey = "2b10OsIi0nKjga2Wggytf9xmEu";
+    private final java.lang.String appKey = "2b10OsIi0nKjga2Wggytf9xmEu";
 
     @Override
     public SearchPlantResultList searchPlant(String keyword){

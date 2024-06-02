@@ -36,10 +36,6 @@ management:
       exposure:
         include: health, info
 
-spring:
-  jackson:
-    property-naming-strategy: SNAKE_CASE
-
 springdoc:
   swagger-ui:
     display-request-duration: true
@@ -50,3 +46,8 @@ springdoc:
       theme: nord
     persist-authorization: true
   pre-loading-enabled: true
+
+logging:
+  level:
+    com.example.encycloservice: DEBUG
+

@@ -7,8 +7,14 @@ import java.util.List;
 
 @Builder
 public record PlantIdentifyResponse(
-        double score,
-        PlantTaxonomy plantTaxonomy,
-        List<String> commonNames
-) { }
+        List<PlantEstimate> results
+) {
+    @Builder
+    public record PlantEstimate(
+            double score,
+            PlantTaxonomy plantTaxonomy,
+            List<String> commonNames
+    ){
+    }
+}
 

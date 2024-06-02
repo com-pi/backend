@@ -31,7 +31,7 @@ public class ScrapingController {
     private final IdentifyPlantUseCase identifyPlantUseCase;
 
     @GetMapping("/search")
-    @Authenticate(Role.ADMIN)
+    @Authenticate(Role.MEMBER)
     public ResponseEntity<CommonResponse<SearchPlantResultList>> search(
             @RequestParam("keyword")
             @Valid
@@ -44,7 +44,7 @@ public class ScrapingController {
     }
 
     @GetMapping("/detail")
-    @Authenticate(Role.ADMIN)
+    @Authenticate(Role.MEMBER)
     public ResponseEntity<CommonResponse<PlantDetailResult>> scrapeDetail(
             @RequestParam("plantName")
             @Valid
@@ -54,15 +54,6 @@ public class ScrapingController {
         PlantDetailResult result = scrapeUseCase.scrapePlantDetail(plantName);
 
         return CommonResponse.okWithMessage("검색 성공", result);
-    }
-
-    @PostMapping(value = "/identify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<CommonResponse<PlantIdentifyResponse>> identify(
-            @RequestPart List<MultipartFile> images
-    ) {
-        PlantIdentifyResponse response = identifyPlantUseCase.identifyPlant(images);
-
-        return CommonResponse.okWithMessage("식물 인식 성공", response);
     }
 
 }
