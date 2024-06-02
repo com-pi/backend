@@ -1,32 +1,8 @@
 spring:
   application:
     name: encyclo-service
-  jackson:
-    property-naming-strategy: SNAKE_CASE
 
   profiles:
     default: dev
-
-  jpa:
-    properties:
-      hibernate:
-        show_sql: true
-
-management:
-  endpoint:
-    web:
-      exposure:
-        include: health, info  # IDE ?? ?? Error
-
-springdoc:
-  swagger-ui:
-    display-request-duration: true
-    tags-sorter: alpha
-    operations-sorter: alpha
-    doc-expansion: none
-    syntax-highlight:
-      theme: nord
-    persist-authorization: true
-  pre-loading-enabled: true
 
 

@@ -1,6 +1,13 @@
+--- # 기본 설정
+spring:
+  application:
+    name: encyclo-service
+
 server:
   port: 8080
 
+
+--- # DB 설정
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
@@ -8,6 +15,17 @@ spring:
     username: root
     password: 1234
 
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+
+--- # 상수 관리
+scraping-target:
+  drfull:
+    url: http://scraper:8080
+
+--- # discovery 설정
 eureka:
   client:
     fetch-registry: true
@@ -15,7 +33,26 @@ eureka:
     service-url:
       defaultZone: http://discovery-eureka:8761/eureka
 
-scraping-target:
-  drfull:
-    url: http://scraper:8080
+
+--- # 기타 설정
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+
+spring:
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+
+springdoc:
+  swagger-ui:
+    display-request-duration: true
+    tags-sorter: alpha
+    operations-sorter: alpha
+    doc-expansion: none
+    syntax-highlight:
+      theme: nord
+    persist-authorization: true
+  pre-loading-enabled: true
 
