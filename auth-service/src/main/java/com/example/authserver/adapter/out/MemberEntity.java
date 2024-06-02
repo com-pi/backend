@@ -1,6 +1,7 @@
 package com.example.authserver.adapter.out;
 
 import com.example.authserver.domain.Member;
+import com.example.authserver.util.GeomUtil;
 import com.example.common.baseentity.DeletedAtAbstractEntity;
 import com.example.common.domain.Address;
 import com.example.common.domain.Role;
@@ -52,6 +53,7 @@ public class MemberEntity extends DeletedAtAbstractEntity {
 
     public static MemberEntity fromDomain(Member member) {
         return MemberEntity.builder()
+                .id(member.getId())
                 .kakaoId(member.getKakaoId())
                 .naverId(member.getNaverId())
                 .email(member.getEmail())
@@ -62,7 +64,7 @@ public class MemberEntity extends DeletedAtAbstractEntity {
                 .introduction(member.getIntroduction())
                 .imageUrl(member.getImageUrl())
                 .thumbnailUrl(member.getThumbnailUrl())
-                .location(member.getLocation())
+                .location(GeomUtil.createPoint(member.getLocation()))
                 .address(member.getAddress())
                 .lastLogin(member.getLastLogin())
                 .build();
@@ -70,6 +72,7 @@ public class MemberEntity extends DeletedAtAbstractEntity {
 
     public static Member toDomain(MemberEntity memberEntity) {
         return Member.builder()
+                .id(memberEntity.getId())
                 .kakaoId(memberEntity.getKakaoId())
                 .naverId(memberEntity.getNaverId())
                 .email(memberEntity.getEmail())
@@ -80,15 +83,23 @@ public class MemberEntity extends DeletedAtAbstractEntity {
                 .introduction(memberEntity.getIntroduction())
                 .imageUrl(memberEntity.getImageUrl())
                 .thumbnailUrl(memberEntity.getThumbnailUrl())
-                .location(memberEntity.getLocation())
+                .location(GeomUtil.createLocation(memberEntity.getLocation()))
                 .address(memberEntity.getAddress())
                 .lastLogin(memberEntity.getLastLogin())
                 .build();
     }
 
     public void update(Member member){
-
+        email = member.getEmail();
+        phoneNumber = member.getPhoneNumber();
+        password = member.getPassword();
+        role = member.getRole();
+        nickname = member.getNickname();
+        introduction = member.getIntroduction();
+        imageUrl = member.getImageUrl();
+        thumbnailUrl = member.getThumbnailUrl();
+        location = GeomUtil.createPoint(member.getLocation());
+        address = member.getAddress();
+        lastLogin = member.getLastLogin();
     }
-
-
 }

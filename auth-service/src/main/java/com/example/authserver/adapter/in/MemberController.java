@@ -7,8 +7,7 @@ import com.example.authserver.adapter.in.response.MyInfoResponse;
 import com.example.authserver.application.port.in.MemberUseCase;
 import com.example.common.annotation.Authenticate;
 import com.example.common.baseentity.CommonResponse;
-import com.example.common.domain.AddressValue;
-import com.example.common.domain.Role;
+import com.example.common.domain.*;
 import com.example.imagemodule.domain.ImageAndThumbnail;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -57,7 +56,7 @@ public class MemberController {
             @RequestBody @Valid ModifyInfoRequest request
     ) {
 
-        memberUseCase.modifyMemberInfo(
+        memberUseCase.modifyMyInfo(
                 request.nickname(),
                 request.introduction()
         );
@@ -81,12 +80,12 @@ public class MemberController {
     @Operation(summary = "회원 위치 변경")
     @PatchMapping("/location")
     @Authenticate(Role.MEMBER)
-    public ResponseEntity<CommonResponse<AddressValue>> modifyMemberLocation(
+    public ResponseEntity<CommonResponse<Address>> modifyMemberLocation(
             @RequestBody @Valid ModifyLocationRequest request
     ) {
-        AddressValue addressValue = memberUseCase.modifyLocation(request);
+        Address address = memberUseCase.modifyLocation(request.location().toDomain());
 
-        return CommonResponse.okWithMessage("회원 위치 정보가 변경되었습니다.", addressValue);
+        return CommonResponse.okWithMessage("회원 위치 정보가 변경되었습니다.", address);
     }
 
 

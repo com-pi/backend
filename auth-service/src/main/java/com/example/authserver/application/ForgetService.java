@@ -2,7 +2,8 @@ package com.example.authserver.application;
 
 import com.example.authserver.adapter.in.request.*;
 import com.example.authserver.adapter.out.MemberEntity;
-import com.example.authserver.application.port.out.persistence.MemberPort;
+import com.example.authserver.application.port.out.persistence.MemberCommand;
+import com.example.authserver.application.port.out.persistence.MemberQuery;
 import com.example.authserver.application.port.out.persistence.RedisPort;
 import com.example.authserver.application.util.JwtUtil;
 import com.example.authserver.domain.ComPToken;
@@ -27,13 +28,14 @@ import java.util.Random;
 public class ForgetService {
 
     private final RedisPort redisPort;
-    private final MemberPort memberPort;
+    private final MemberQuery memberQuery;
+    private final MemberCommand memberCommand;
     private final JwtUtil jwtUtil;
     private final Random random = new Random();
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public String findId(FindIdRequest request){
-        Member foundMember = memberPort.findByPhoneNumber(request.phoneNumber())
+        Member foundMember = memberQuery.findByPhoneNumber(request.phoneNumber())
                 .orElseThrow(() -> new NotFoundException(MemberEntity.class));
 
         if(foundMember.isSocialAccount()) {
@@ -53,13 +55,13 @@ public class ForgetService {
             throw new BadRequestException("올바른 인증코드가 아닙니다.");
         }
 
-        Member foundMember = memberPort.findByPhoneNumber(request.phoneNumber())
+        Member foundMember = memberQuery.findByPhoneNumber(request.phoneNumber())
                 .orElseThrow(() -> new NotFoundException(MemberEntity.class));
         return foundMember.getEmail();
     }
 
     public String findPassword(FindPasswordRequest request){
-        memberPort.findByPhoneNumberAndEmail(
+        memberQuery.findByPhoneNumberAndEmail(
                 request.phoneNumber(),
                 request.email())
                 .orElseThrow(() -> new NotFoundException(MemberEntity.class));
@@ -85,7 +87,7 @@ public class ForgetService {
             throw new BadRequestException("올바른 인증코드가 아닙니다.");
         }
 
-        Member member = memberPort.findByPhoneNumber(request.phoneNumber())
+        Member member = memberQuery.findByPhoneNumber(request.phoneNumber())
                 .orElseThrow(() -> new NotFoundException(MemberEntity.class));
 
         ComPToken passwordChangeToken = jwtUtil.generateToken(member, TokenType.PASSWORD_CHANGE_TOKEN);
@@ -99,7 +101,7 @@ public class ForgetService {
         Passport passport = jwtUtil.validateToken(request.changePasswordToken(), TokenType.PASSWORD_CHANGE_TOKEN)
                 .orElseThrow(() -> new InvalidTokenException(TokenType.PASSWORD_CHANGE_TOKEN));
 
-        Member member = memberPort.findById(passport.memberId())
+        Member member = memberQuery.findById(passport.memberId())
                 .orElseThrow(() -> new NotFoundException(MemberEntity.class));
 
         boolean isMatch = redisPort.verifyChangePasswordToken(
@@ -112,7 +114,7 @@ public class ForgetService {
         }
 
         Member modifiedMember = member.changePassword(request.changePasswordToken(), passwordEncoder);
-        memberPort.update(modifiedMember);
+        memberCommand.update(modifiedMember);
     }
 
 }

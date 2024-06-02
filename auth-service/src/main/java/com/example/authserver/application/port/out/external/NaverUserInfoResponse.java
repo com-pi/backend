@@ -4,6 +4,8 @@ package com.example.authserver.application.port.out.external;
 import com.example.authserver.domain.MemberCreate;
 import lombok.Getter;
 
+import java.util.UUID;
+
 @Getter
 public class NaverUserInfoResponse {
 
@@ -32,6 +34,10 @@ public class NaverUserInfoResponse {
     public MemberCreate toDomain() {
         return MemberCreate.builder()
                 .naverId(response.id)
+                .nickname(response.nickname() != null ?
+                        response.nickname() : "새회원" +
+                        UUID.randomUUID().toString().replace("-", "")
+                )
                 .email(response.email)
                 .imageUrl(response.profile_image)
                 .phoneNumber(response.mobile)

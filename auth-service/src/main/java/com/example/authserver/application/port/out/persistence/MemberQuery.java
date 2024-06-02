@@ -4,11 +4,7 @@ import com.example.authserver.domain.Member;
 
 import java.util.Optional;
 
-public interface MemberPort {
-
-    void save(Member member);
-    void update(Member member);
-
+public interface MemberQuery {
     Optional<Member> findById(Long id);
     Optional<Member> findByKakaoId(String kakaoId);
     Optional<Member> findByNaverId(String naverId);

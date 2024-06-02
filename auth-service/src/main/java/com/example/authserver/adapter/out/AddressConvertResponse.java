@@ -10,7 +10,7 @@ public record AddressConvertResponse(
         @JsonAlias("documents")
         ArrayList<AddressConvertResult> addressResult
 ) {
-    private static String 행정동_코드 = "H";
+    private static final String 행정동_코드 = "H";
 
     public record AddressConvertResult(
             String regionType,
@@ -26,13 +26,15 @@ public record AddressConvertResponse(
     ){}
 
     public Optional<Address> getAddress() {
-        AddressConvertResult hResult =
-                addressResult.stream().filter(a -> a.regionType.equals(행정동_코드)).findFirst()
-                                .orElse(null);
-
-        if (hResult == null) {
+        if (addressResult.isEmpty()) {
             return Optional.empty();
         }
+
+        AddressConvertResult hResult =
+                addressResult.stream()
+                        .filter(a -> 행정동_코드.equals(a.regionType))
+                        .findFirst()
+                        .orElse(addressResult.get(0));
 
         return Optional.of(Address.of(
            hResult.sido,

@@ -1,7 +1,7 @@
 package com.example.imagemodule.adapter;
 
 import com.example.common.exception.InternalServerException;
-import com.example.imagemodule.application.port.ImageCommandPort;
+import com.example.imagemodule.application.port.ImageCommand;
 import com.example.imagemodule.application.port.SaveImagesCommand;
 import com.example.imagemodule.domain.ImageAndThumbnail;
 import com.example.imagemodule.domain.MinioBucket;
@@ -28,7 +28,7 @@ import static com.example.imagemodule.domain.MinioBucket.TEMPORAL;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class ImageCommandAdapter implements ImageCommandPort {
+public class ImageCommandAdapter implements ImageCommand {
 
     private final MinioClient minioClient;
     private final ObjectUrlMapper objectUrlMapper;

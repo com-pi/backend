@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface AddressConverterPort {
 
-    public Optional<Address> convertToAddress(Location location);
+    Optional<Address> convertToAddress(Location location);
 
 }

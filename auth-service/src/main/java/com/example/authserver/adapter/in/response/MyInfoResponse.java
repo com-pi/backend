@@ -26,7 +26,7 @@ public record MyInfoResponse(
                 member.getImageUrl(),
                 member.getThumbnailUrl(),
                 member.getAddress(),
-                Location.of(member.getLocation())
+                member.getLocation()
         );
     }
 

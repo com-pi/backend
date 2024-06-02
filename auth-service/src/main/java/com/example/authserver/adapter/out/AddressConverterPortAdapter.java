@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class AddressConverterAdapter implements AddressConverterPort {
+public class AddressConverterPortAdapter implements AddressConverterPort {
 
     private final KakaoMapClient kakaoMapClient;
 
@@ -20,7 +20,7 @@ public class AddressConverterAdapter implements AddressConverterPort {
 
         try {
             AddressConvertResponse response = kakaoMapClient.getAddress(
-                    Secret.KAKAO_APP_KEY,
+                    String.format("KakaoAK %s", Secret.KAKAO_APP_KEY),
                     location.getLongitude(),
                     location.getLatitude()
             );

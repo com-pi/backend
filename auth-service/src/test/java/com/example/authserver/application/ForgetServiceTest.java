@@ -1,7 +1,8 @@
 package com.example.authserver.application;
 
 import com.example.authserver.adapter.in.request.*;
-import com.example.authserver.application.port.out.persistence.MemberPort;
+import com.example.authserver.application.port.out.persistence.MemberCommand;
+import com.example.authserver.application.port.out.persistence.MemberQuery;
 import com.example.authserver.application.port.out.persistence.RedisPort;
 import com.example.authserver.application.util.JwtUtil;
 import com.example.authserver.domain.ComPToken;
@@ -22,7 +23,8 @@ import static org.mockito.BDDMockito.*;
 
 class ForgetServiceTest {
 
-    private MemberPort memberPort;
+    private MemberQuery memberQuery;
+    private MemberCommand memberCommand;
     private RedisPort redisPort;
     private JwtUtil jwtUtil;
     private ForgetService forgetService;
@@ -30,12 +32,14 @@ class ForgetServiceTest {
 
     @BeforeEach
     void init() {
-        memberPort = mock(MemberPort.class);
+        memberQuery = mock(MemberQuery.class);
+        memberCommand = mock(MemberCommand.class);
         redisPort = mock(RedisPort.class);
         jwtUtil = mock(JwtUtil.class);
         forgetService = ForgetService.builder()
                 .redisPort(redisPort)
-                .memberPort(memberPort)
+                .memberQuery(memberQuery)
+                .memberCommand(memberCommand)
                 .jwtUtil(jwtUtil)
                 .build();
     }
@@ -51,7 +55,7 @@ class ForgetServiceTest {
                 .build();
 
         // when
-        given(memberPort.findByPhoneNumber("01012345678"))
+        given(memberQuery.findByPhoneNumber("01012345678"))
                 .willReturn(Optional.ofNullable(member));
         FindIdRequest request = new FindIdRequest("01012345678");
         String code = forgetService.findId(request);
@@ -71,7 +75,7 @@ class ForgetServiceTest {
                 .phoneNumber("01012345678")
                 .build();
 
-        given(memberPort.findByPhoneNumber("01012345678"))
+        given(memberQuery.findByPhoneNumber("01012345678"))
                 .willReturn(Optional.ofNullable(member));
 
         FindIdRequest request = new FindIdRequest("01012345678");
@@ -98,7 +102,7 @@ class ForgetServiceTest {
         // when
         given(redisPort.verifyFindIdCode(request.phoneNumber(), request.verifyCode()))
                 .willReturn(true);
-        given(memberPort.findByPhoneNumber(request.phoneNumber())).willReturn(Optional.of(member));
+        given(memberQuery.findByPhoneNumber(request.phoneNumber())).willReturn(Optional.of(member));
         String email = forgetService.verifyFindIdCode(request);
 
         // then
@@ -122,7 +126,7 @@ class ForgetServiceTest {
         // when
         given(redisPort.verifyFindIdCode(request.phoneNumber(), request.verifyCode()))
                 .willReturn(false);
-        given(memberPort.findByPhoneNumber(request.phoneNumber())).willReturn(Optional.of(member));
+        given(memberQuery.findByPhoneNumber(request.phoneNumber())).willReturn(Optional.of(member));
 
         // then
         assertThatThrownBy(() -> forgetService.verifyFindIdCode(request))
@@ -144,7 +148,7 @@ class ForgetServiceTest {
                 .build();
 
         // when
-        given(memberPort.findByPhoneNumberAndEmail(request.phoneNumber(), request.email()))
+        given(memberQuery.findByPhoneNumberAndEmail(request.phoneNumber(), request.email()))
                 .willReturn(Optional.of(member));
         String code = forgetService.findPassword(request);
 
@@ -161,7 +165,7 @@ class ForgetServiceTest {
                 .build();
 
         // when
-        given(memberPort.findByPhoneNumberAndEmail(request.phoneNumber(), request.email()))
+        given(memberQuery.findByPhoneNumberAndEmail(request.phoneNumber(), request.email()))
                 .willReturn(Optional.empty());
         // then
         assertThatThrownBy(() -> forgetService.findPassword(request))
@@ -191,7 +195,7 @@ class ForgetServiceTest {
                 request.verificationCode()
         )).willReturn(true);
 
-        given(memberPort.findByPhoneNumber(request.phoneNumber()))
+        given(memberQuery.findByPhoneNumber(request.phoneNumber()))
                 .willReturn(Optional.of(member));
 
         given(jwtUtil.generateToken(member, TokenType.PASSWORD_CHANGE_TOKEN))
@@ -243,12 +247,12 @@ class ForgetServiceTest {
                 .phoneNumber("01012345678")
                 .build();
 
-        Passport passport = Passport.of("1", Role.MEMBER.toString(), null, null);
+        Passport passport = new Passport(1L, Role.MEMBER, null, null);
 
         given(jwtUtil.validateToken(comPToken.getToken(), comPToken.getTokenType()))
                 .willReturn(Optional.of(passport));
 
-        given(memberPort.findById(passport.memberId())).willReturn(Optional.of(member));
+        given(memberQuery.findById(passport.memberId())).willReturn(Optional.of(member));
 
         given(redisPort.verifyChangePasswordToken(
                 member.getPhoneNumber(),
@@ -259,7 +263,7 @@ class ForgetServiceTest {
         forgetService.changePassword(request);
 
         // when
-        then(memberPort).should().update(any());
+        then(memberCommand).should().update(any());
     }
 
 

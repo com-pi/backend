@@ -5,7 +5,8 @@ import com.example.authserver.adapter.in.request.VerifyCodeForJoinRequest;
 import com.example.authserver.adapter.in.request.VerifyPhoneNumberRequest;
 import com.example.authserver.application.port.in.JoinUseCase;
 import com.example.authserver.application.port.out.external.SMSPort;
-import com.example.authserver.application.port.out.persistence.MemberPort;
+import com.example.authserver.application.port.out.persistence.MemberCommand;
+import com.example.authserver.application.port.out.persistence.MemberQuery;
 import com.example.authserver.application.port.out.persistence.RedisPort;
 import com.example.authserver.domain.Member;
 import com.example.authserver.exception.VerificationFailException;
@@ -24,7 +25,8 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class JoinService implements JoinUseCase {
 
-    private final MemberPort memberPort;
+    private final MemberQuery memberQuery;
+    private final MemberCommand memberCommand;
     private final SMSPort smsPort;
     private final RedisPort redisPort;
     private final Random random = new Random();
@@ -40,13 +42,13 @@ public class JoinService implements JoinUseCase {
             throw new VerificationFailException("인증되지 않은 이메일/핸드폰 번호 입니다.");
         }
 
-        Member newMember = Member.create(memberCreateRequest.toDomain(passwordEncoder));
-        memberPort.save(newMember);
+        Member newMember = Member.create(memberCreateRequest.toDomain(), passwordEncoder);
+        memberCommand.save(newMember);
     }
 
     @Override
     public boolean checkEmailDupliction(String email) {
-        return memberPort.findByEmail(email).isPresent();
+        return memberQuery.findByEmail(email).isPresent();
     }
 
     @Override
@@ -54,7 +56,7 @@ public class JoinService implements JoinUseCase {
         if(checkEmailDupliction(request.email())){
             throw new ConflictException("이미 가입된 이메일 주소 입니다.");
         }
-        Optional<Member> findByPhoneNumber = memberPort.findByPhoneNumber(request.phoneNumber());
+        Optional<Member> findByPhoneNumber = memberQuery.findByPhoneNumber(request.phoneNumber());
         if(findByPhoneNumber.isPresent()) {
             throw new ConflictException("이미 가입된 전화번호 입니다.");
         }

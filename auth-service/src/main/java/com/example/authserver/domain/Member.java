@@ -2,13 +2,13 @@ package com.example.authserver.domain;
 
 import com.example.authserver.adapter.out.MemberEntity;
 import com.example.common.domain.Address;
+import com.example.common.domain.Location;
 import com.example.common.domain.Role;
 import com.example.common.exception.NotFoundException;
 import com.example.imagemodule.domain.ImageAndThumbnail;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-import org.locationtech.jts.geom.Point;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
@@ -28,7 +28,7 @@ public class Member {
     private final String introduction;
     private final String imageUrl;
     private final String thumbnailUrl;
-    private final Point location;
+    private final Location location;
     private final Address address;
     private final LocalDateTime lastLogin;
 
@@ -36,7 +36,21 @@ public class Member {
         return this.kakaoId != null || this.naverId != null;
     }
 
-    public static Member create(MemberCreate memberCreate) {
+    public static Member create(MemberCreate memberCreate, PasswordEncoder passwordEncoder) {
+        return Member.builder()
+                .kakaoId(memberCreate.getKakaoId())
+                .naverId(memberCreate.getNaverId())
+                .phoneNumber(memberCreate.getPhoneNumber())
+                .email(memberCreate.getEmail())
+                .password(passwordEncoder.encode(memberCreate.getPassword()))
+                .nickname(memberCreate.getNickname())
+                .role(Role.MEMBER)
+                .imageUrl(memberCreate.getImageUrl())
+                .thumbnailUrl(memberCreate.getThumbnailUr())
+                .build();
+    }
+
+    public static Member createSocial(MemberCreate memberCreate) {
         return Member.builder()
                 .kakaoId(memberCreate.getKakaoId())
                 .naverId(memberCreate.getNaverId())
@@ -93,4 +107,12 @@ public class Member {
                 .imageUrl(imageAndThumbnail.thumbnailUrl())
                 .build();
     }
+
+    public Member updateLocation(Location location, Address address) {
+        return this.toBuilder()
+                .location(location)
+                .address(address)
+                .build();
+    }
+
 }

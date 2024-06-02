@@ -22,7 +22,6 @@ public record Passport(
             return null;
         }
     }
-
     public static Passport anonymous(){
         return new Passport(0L, Role.ANONYMOUS, "", "");
     }

@@ -5,7 +5,7 @@ import com.example.authserver.adapter.in.response.LoginResponse;
 import com.example.authserver.adapter.out.MemberEntity;
 import com.example.authserver.adapter.util.JwtUtilImpl;
 import com.example.authserver.application.port.in.LoginUseCase;
-import com.example.authserver.application.port.out.persistence.MemberPort;
+import com.example.authserver.application.port.out.persistence.MemberQuery;
 import com.example.authserver.domain.ComPToken;
 import com.example.authserver.domain.Member;
 import com.example.authserver.domain.TokenType;
@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class LoginService implements LoginUseCase {
 
-    private final MemberPort memberPort;
+    private final MemberQuery memberQuery;
     private final JwtUtilImpl jwtUtil;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -31,7 +31,7 @@ public class LoginService implements LoginUseCase {
     @Transactional
     public LoginResponse login(LoginRequest loginRequest, HttpServletResponse response) {
 
-        Member member = memberPort.findByEmail(loginRequest.email()).orElseThrow(() ->
+        Member member = memberQuery.findByEmail(loginRequest.email()).orElseThrow(() ->
                 new NotFoundException(MemberEntity.class));
 
         member.authenticateWithPassword(loginRequest.password(), passwordEncoder);

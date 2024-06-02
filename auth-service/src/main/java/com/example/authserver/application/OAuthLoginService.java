@@ -3,7 +3,8 @@ package com.example.authserver.application;
 import com.example.authserver.adapter.in.response.LoginResponse;
 import com.example.authserver.application.port.in.OAuthLoginUseCase;
 import com.example.authserver.application.port.out.external.*;
-import com.example.authserver.application.port.out.persistence.MemberPort;
+import com.example.authserver.application.port.out.persistence.MemberCommand;
+import com.example.authserver.application.port.out.persistence.MemberQuery;
 import com.example.authserver.application.port.out.persistence.RedisPort;
 import com.example.authserver.application.util.JwtUtil;
 import com.example.authserver.domain.ComPToken;
@@ -34,7 +35,8 @@ public class OAuthLoginService implements OAuthLoginUseCase {
     private final KakaoAuthClient.KakaoTokenClient kakaoTokenClient;
     private final NaverAuthClient naverAuthClient;
     private final NaverAuthClient.NaverTokenClient naverTokenClient;
-    private final MemberPort memberPort;
+    private final MemberQuery memberQuery;
+    private final MemberCommand memberCommand;
     private final JwtUtil jwtUtil;
     private final RedisPort redisPort;
     private static final String GRANT_TYPE = "authorization_code";
@@ -51,12 +53,12 @@ public class OAuthLoginService implements OAuthLoginUseCase {
 
         KakaoTokenResponse token = kakaoAuthClient.getAccessToken(KAKAO_APP_KEY, KAKAO_SECRET, code, redirectUrl, GRANT_TYPE);
         KakaoUserInfoResponse kakaoUserInfo = kakaoTokenClient.getUserInfo("Bearer " + token.access_token());
-        Optional<Member> kakaoMember = memberPort.findByKakaoId(kakaoUserInfo.getId().toString());
+        Optional<Member> kakaoMember = memberQuery.findByKakaoId(kakaoUserInfo.getId().toString());
 
         boolean isNewMember = kakaoMember.isEmpty();
 
         if(isNewMember) {
-            Optional<Member> byEmail = memberPort.findByEmail(kakaoUserInfo.getKakao_account().email());
+            Optional<Member> byEmail = memberQuery.findByEmail(kakaoUserInfo.getKakao_account().email());
 
             if (byEmail.isPresent()) {
                 if(byEmail.get().getKakaoId() != null) {
@@ -64,8 +66,8 @@ public class OAuthLoginService implements OAuthLoginUseCase {
                 }
                 throw new ConflictException("이메일/비밀번호를 통해 가입된 계정입니다.");
             }
-            Member newMember = Member.create(kakaoUserInfo.toMemberCreate());
-            memberPort.save(newMember);
+            Member newMember = Member.createSocial(kakaoUserInfo.toMemberCreate());
+            memberCommand.save(newMember);
             kakaoMember = Optional.of(newMember);
         }
 
@@ -99,20 +101,20 @@ public class OAuthLoginService implements OAuthLoginUseCase {
             throw new OAuthLoginException(e);
         }
 
-        Optional<Member> naverMember = memberPort.findByNaverId(naverUserInfo.getResponse().id());
+        Optional<Member> naverMember = memberQuery.findByNaverId(naverUserInfo.getResponse().id());
         Boolean isNewMember = naverMember.isEmpty();
 
         // Todo: 서비스간 정합성 맞추기
         if(isNewMember) {
-            Optional<Member> byEmail = memberPort.findByEmail(naverUserInfo.getResponse().email());
+            Optional<Member> byEmail = memberQuery.findByEmail(naverUserInfo.getResponse().email());
             if (byEmail.isPresent()) {
                 if(byEmail.get().getNaverId() != null) {
                     throw new ConflictException("네이버 계정으로 가입된 회원입니다.");
                 }
                 throw new ConflictException("이메일/비밀번호를 통해 가입된 계정입니다.");
             }
-            Member newMember = Member.create(naverUserInfo.toDomain());
-            memberPort.save(newMember);
+            Member newMember = Member.createSocial(naverUserInfo.toDomain());
+            memberCommand.save(newMember);
             naverMember = Optional.of(newMember);
         }
 

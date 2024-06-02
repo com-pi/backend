@@ -27,7 +27,7 @@ public class JoinController {
 
     private final JoinUseCase joinUseCase;
 
-    @Operation(summary = "회원가입 - 2. 핸드폰 번호 sms 인증코드 발송", description = "휴대 전화번호를 인증을 요청 합니다.")
+    @Operation(summary = "회원가입 - 1. 핸드폰 번호 sms 인증코드 발송", description = "휴대 전화번호를 인증을 요청 합니다.")
     @PostMapping(value = "/phone_number_verification")
     public ResponseEntity<CommonResponse<String>> requestPhoneNumberVerification(
             @RequestBody @Valid VerifyPhoneNumberRequest request){

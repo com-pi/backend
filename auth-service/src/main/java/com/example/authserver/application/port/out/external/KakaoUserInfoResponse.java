@@ -34,7 +34,7 @@ public class KakaoUserInfoResponse {
                 .email(kakao_account.email)
                 .nickname(kakao_account.profile().nickname != null ?
                         kakao_account.profile().nickname : "새회원" +
-                        UUID.randomUUID().toString().substring(0, 10)
+                        UUID.randomUUID().toString().replace("-", "")
                 )
                 .imageUrl(kakao_account.profile().profile_image_url)
                 .thumbnailUr(kakao_account.profile.thumbnail_image_url)
