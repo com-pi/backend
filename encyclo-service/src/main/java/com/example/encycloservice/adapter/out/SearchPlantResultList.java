@@ -1,4 +1,4 @@
-package com.example.encycloservice.domain;
+package com.example.encycloservice.adapter.out;
 
 import java.util.List;
 

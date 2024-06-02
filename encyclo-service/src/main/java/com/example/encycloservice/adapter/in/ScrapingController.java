@@ -1,21 +1,24 @@
-package com.example.encycloservice.adapter;
+package com.example.encycloservice.adapter.in;
 
 import com.example.common.annotation.Authenticate;
 import com.example.common.baseentity.CommonResponse;
 import com.example.common.domain.Role;
+import com.example.encycloservice.adapter.in.response.PlantIdentifyResponse;
+import com.example.encycloservice.application.port.in.IdentifyPlantUseCase;
 import com.example.encycloservice.application.port.in.ScrapeUseCase;
-import com.example.encycloservice.domain.PlantDetailResult;
-import com.example.encycloservice.domain.SearchPlantResultList;
+import com.example.encycloservice.adapter.out.PlantDetailResult;
+import com.example.encycloservice.adapter.out.SearchPlantResultList;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 
 @RestController
@@ -25,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ScrapingController {
 
     private final ScrapeUseCase scrapeUseCase;
+    private final IdentifyPlantUseCase identifyPlantUseCase;
 
     @GetMapping("/search")
     @Authenticate(Role.ADMIN)
@@ -50,6 +54,15 @@ public class ScrapingController {
         PlantDetailResult result = scrapeUseCase.scrapePlantDetail(plantName);
 
         return CommonResponse.okWithMessage("검색 성공", result);
+    }
+
+    @PostMapping(value = "/identify", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<CommonResponse<PlantIdentifyResponse>> identify(
+            @RequestPart List<MultipartFile> images
+    ) {
+        PlantIdentifyResponse response = identifyPlantUseCase.identifyPlant(images);
+
+        return CommonResponse.okWithMessage("식물 인식 성공", response);
     }
 
 }
