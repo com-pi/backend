@@ -1,4 +1,4 @@
-package com.example.boardservice.adapter.in.web;
+package com.example.boardservice.adapter.in.web.command;
 
 import com.example.boardservice.domain.Location;
 import com.example.common.baseentity.SelfValidating;

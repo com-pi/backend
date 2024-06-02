@@ -3,6 +3,7 @@ package com.example.boardservice.application;
 import com.example.boardservice.application.port.out.MemberPort;
 import com.example.boardservice.domain.Member;
 import com.example.common.domain.Passport;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,9 +11,10 @@ import java.util.Optional;
 
 @Component
 @Transactional
+@RequiredArgsConstructor
 public class MemberService {
 
-    private MemberPort memberPort;
+    private final MemberPort memberPort;
 
     public void integrateMember(Passport passport) {
         Optional<Member> storedMember = memberPort.findById(passport.memberId());
