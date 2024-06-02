@@ -1,4 +1,4 @@
-package com.example.boardservice.adapter.out.persistence;
+package com.example.boardservice.adapter.out.persistence.converter;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
