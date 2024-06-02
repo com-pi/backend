@@ -1,17 +1,18 @@
 package com.example.authserver.application;
 
-import com.example.authserver.adapter.in.LoginResponse;
+import com.example.authserver.adapter.in.response.LoginResponse;
 import com.example.authserver.application.port.in.OAuthLoginUseCase;
 import com.example.authserver.application.port.out.external.*;
-import com.example.authserver.application.port.out.persistence.MemberPort;
+import com.example.authserver.application.port.out.persistence.MemberCommand;
+import com.example.authserver.application.port.out.persistence.MemberQuery;
 import com.example.authserver.application.port.out.persistence.RedisPort;
+import com.example.authserver.application.util.JwtUtil;
 import com.example.authserver.domain.ComPToken;
 import com.example.authserver.domain.Member;
 import com.example.authserver.domain.TokenType;
 import com.example.authserver.exception.AlreadyLoggedInException;
 import com.example.authserver.exception.OAuthLoginException;
 import com.example.authserver.util.CookieUtil;
-import com.example.authserver.util.JwtUtil;
 import com.example.common.exception.ConflictException;
 import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,7 +35,8 @@ public class OAuthLoginService implements OAuthLoginUseCase {
     private final KakaoAuthClient.KakaoTokenClient kakaoTokenClient;
     private final NaverAuthClient naverAuthClient;
     private final NaverAuthClient.NaverTokenClient naverTokenClient;
-    private final MemberPort memberPort;
+    private final MemberQuery memberQuery;
+    private final MemberCommand memberCommand;
     private final JwtUtil jwtUtil;
     private final RedisPort redisPort;
     private static final String GRANT_TYPE = "authorization_code";
@@ -46,32 +48,27 @@ public class OAuthLoginService implements OAuthLoginUseCase {
             String redirectUrl,
             HttpServletRequest request,
             HttpServletResponse response) {
-        // Todo: 서비스간 정합성 맞추기
 
-        loginConflictCheck(request);
+        doubleLoginCheck(request);
 
-        KakaoTokenResponse token = kakaoAuthClient
-                .getAccessToken(KAKAO_APP_KEY, KAKAO_SECRET, code, redirectUrl, GRANT_TYPE);
-        KakaoUserInfoResponse kakaoUserInfo = kakaoTokenClient
-                .getUserInfo("Bearer " + token.access_token());
+        KakaoTokenResponse token = kakaoAuthClient.getAccessToken(KAKAO_APP_KEY, KAKAO_SECRET, code, redirectUrl, GRANT_TYPE);
+        KakaoUserInfoResponse kakaoUserInfo = kakaoTokenClient.getUserInfo("Bearer " + token.access_token());
+        Optional<Member> kakaoMember = memberQuery.findByKakaoId(kakaoUserInfo.getId().toString());
 
-        Optional<Member> kakaoMember = memberPort.findByKakaoId(kakaoUserInfo.getId().toString());
-        Boolean isNewMember = kakaoMember.isEmpty();
+        boolean isNewMember = kakaoMember.isEmpty();
 
+        if(isNewMember) {
+            Optional<Member> byEmail = memberQuery.findByEmail(kakaoUserInfo.getKakao_account().email());
 
-        if (kakaoMember.isPresent()) {
-            kakaoMember.get().updateFromSocialProfile(kakaoUserInfo.getKakao_account().profile());
-        } else {
-            Optional<Member> byEmail = memberPort.findByEmail(kakaoUserInfo.getKakao_account().email());
             if (byEmail.isPresent()) {
                 if(byEmail.get().getKakaoId() != null) {
                     throw new ConflictException("카카오 계정으로 가입된 회원입니다.");
                 }
                 throw new ConflictException("이메일/비밀번호를 통해 가입된 계정입니다.");
             }
-            Member newKakaoMember = Member.newMemberForKakaoUser(kakaoUserInfo);
-            memberPort.save(newKakaoMember);
-            kakaoMember = Optional.of(newKakaoMember);
+            Member newMember = Member.createSocial(kakaoUserInfo.toMemberCreate());
+            memberCommand.save(newMember);
+            kakaoMember = Optional.of(newMember);
         }
 
         ComPToken refreshToken = jwtUtil.generateToken(kakaoMember.get(), REFRESH_TOKEN);
@@ -91,7 +88,7 @@ public class OAuthLoginService implements OAuthLoginUseCase {
             HttpServletRequest request,
             HttpServletResponse response) {
 
-        loginConflictCheck(request);
+        doubleLoginCheck(request);
         NaverUserInfoResponse naverUserInfo;
 
         try {
@@ -104,23 +101,21 @@ public class OAuthLoginService implements OAuthLoginUseCase {
             throw new OAuthLoginException(e);
         }
 
-        Optional<Member> naverMember = memberPort.findByNaverId(naverUserInfo.getResponse().id());
+        Optional<Member> naverMember = memberQuery.findByNaverId(naverUserInfo.getResponse().id());
         Boolean isNewMember = naverMember.isEmpty();
 
         // Todo: 서비스간 정합성 맞추기
-        if (naverMember.isPresent()) {
-            naverMember.get().updateFromSocialProfile(naverUserInfo.getResponse());
-        } else {
-            Optional<Member> byEmail = memberPort.findByEmail(naverUserInfo.getResponse().email());
+        if(isNewMember) {
+            Optional<Member> byEmail = memberQuery.findByEmail(naverUserInfo.getResponse().email());
             if (byEmail.isPresent()) {
                 if(byEmail.get().getNaverId() != null) {
                     throw new ConflictException("네이버 계정으로 가입된 회원입니다.");
                 }
                 throw new ConflictException("이메일/비밀번호를 통해 가입된 계정입니다.");
             }
-            Member newNaverMember = Member.newMemberForNaverUser(naverUserInfo);
-            memberPort.save(newNaverMember);
-            naverMember = Optional.of(newNaverMember);
+            Member newMember = Member.createSocial(naverUserInfo.toDomain());
+            memberCommand.save(newMember);
+            naverMember = Optional.of(newMember);
         }
 
         ComPToken refreshToken = jwtUtil.generateToken(naverMember.get(), TokenType.REFRESH_TOKEN);
@@ -131,7 +126,7 @@ public class OAuthLoginService implements OAuthLoginUseCase {
         return LoginResponse.of(accessToken, isNewMember);
     }
 
-    private void loginConflictCheck(HttpServletRequest request) {
+    private void doubleLoginCheck(HttpServletRequest request) {
         Optional<String> refreshToken = CookieUtil.getRefreshToken(request);
         if(refreshToken.isPresent()) {
             refreshToken

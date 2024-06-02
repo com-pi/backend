@@ -1,11 +1,11 @@
 package com.example.authserver.application;
 
-import com.example.authserver.adapter.in.TokenReIssueResponse;
+import com.example.authserver.adapter.in.response.TokenReIssueResponse;
+import com.example.authserver.adapter.util.JwtUtilImpl;
 import com.example.authserver.application.port.out.persistence.RedisPort;
 import com.example.authserver.domain.ComPToken;
 import com.example.authserver.exception.InvalidTokenException;
 import com.example.authserver.util.CookieUtil;
-import com.example.authserver.util.JwtUtil;
 import com.example.common.domain.Passport;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -20,7 +20,7 @@ import static com.example.authserver.domain.TokenType.REFRESH_TOKEN;
 public class TokenReissueService {
 
     private final RedisPort redisPort;
-    private final JwtUtil jwtUtil;
+    private final JwtUtilImpl jwtUtil;
 
     public TokenReIssueResponse reissueToken(HttpServletRequest request, HttpServletResponse response) {
 

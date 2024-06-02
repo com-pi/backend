@@ -8,6 +8,7 @@ import org.locationtech.jts.geom.Point;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class Location {
+
     private Double latitude;
     private Double longitude;
 
@@ -16,6 +17,10 @@ public class Location {
             return new Location(Double.NaN, Double.NaN);
         }
         return new Location(point.getX(), point.getY());
+    }
+
+    public static Location of(double latitude, double longitude) {
+        return new Location(latitude, longitude);
     }
 
 }

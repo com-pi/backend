@@ -1,11 +1,10 @@
 package com.example.myplant.adapter.in.web;
 
-import com.example.myplant.domain.Character;
 import com.example.common.annotation.Authenticate;
-import com.example.myplant.application.service.CharacterService;
-import com.example.common.domain.Passport;
-import com.example.common.domain.Role;
 import com.example.common.baseentity.CommonResponse;
+import com.example.common.domain.Role;
+import com.example.myplant.application.service.CharacterService;
+import com.example.myplant.domain.Character;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;

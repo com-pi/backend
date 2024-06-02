@@ -1,11 +1,12 @@
 package com.example.authserver.application;
 
-import com.example.authserver.adapter.in.JoinRequest;
-import com.example.authserver.adapter.in.VerifyCodeForJoinRequest;
-import com.example.authserver.adapter.in.VerifyPhoneNumberRequest;
+import com.example.authserver.adapter.in.request.MemberCreateRequest;
+import com.example.authserver.adapter.in.request.VerifyCodeForJoinRequest;
+import com.example.authserver.adapter.in.request.VerifyPhoneNumberRequest;
 import com.example.authserver.application.port.in.JoinUseCase;
 import com.example.authserver.application.port.out.external.SMSPort;
-import com.example.authserver.application.port.out.persistence.MemberPort;
+import com.example.authserver.application.port.out.persistence.MemberCommand;
+import com.example.authserver.application.port.out.persistence.MemberQuery;
 import com.example.authserver.application.port.out.persistence.RedisPort;
 import com.example.authserver.domain.Member;
 import com.example.authserver.exception.VerificationFailException;
@@ -13,6 +14,7 @@ import com.example.common.exception.ConflictException;
 import com.example.common.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,31 +25,30 @@ import java.util.Random;
 @RequiredArgsConstructor
 public class JoinService implements JoinUseCase {
 
-    private final MemberPort memberPort;
+    private final MemberQuery memberQuery;
+    private final MemberCommand memberCommand;
     private final SMSPort smsPort;
     private final RedisPort redisPort;
     private final Random random = new Random();
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
     @Transactional
-    public void join(JoinRequest joinRequest) {
-
+    public void join(MemberCreateRequest memberCreateRequest) {
         boolean isVerifiedRequest = redisPort
-                .checkVerification(joinRequest.phoneNumber(), joinRequest.email());
+                .checkVerification(memberCreateRequest.phoneNumber(), memberCreateRequest.email());
 
         if(!isVerifiedRequest) {
             throw new VerificationFailException("인증되지 않은 이메일/핸드폰 번호 입니다.");
         }
 
-        Member member = Member.newMemberFromRequest(joinRequest, passwordEncoder);
-
-        memberPort.save(member);
+        Member newMember = Member.create(memberCreateRequest.toDomain(), passwordEncoder);
+        memberCommand.save(newMember);
     }
 
     @Override
     public boolean checkEmailDupliction(String email) {
-        return memberPort.findByEmail(email).isPresent();
+        return memberQuery.findByEmail(email).isPresent();
     }
 
     @Override
@@ -55,7 +56,7 @@ public class JoinService implements JoinUseCase {
         if(checkEmailDupliction(request.email())){
             throw new ConflictException("이미 가입된 이메일 주소 입니다.");
         }
-        Optional<Member> findByPhoneNumber = memberPort.findByPhoneNumber(request.phoneNumber());
+        Optional<Member> findByPhoneNumber = memberQuery.findByPhoneNumber(request.phoneNumber());
         if(findByPhoneNumber.isPresent()) {
             throw new ConflictException("이미 가입된 전화번호 입니다.");
         }
@@ -63,7 +64,6 @@ public class JoinService implements JoinUseCase {
         String verificationCode = String.valueOf(random.nextInt(900000) + 100000);
 
         smsPort.sendVerificationSMS();
-
         redisPort.saveVerificationCode(request.phoneNumber(), verificationCode);
 
         return verificationCode;

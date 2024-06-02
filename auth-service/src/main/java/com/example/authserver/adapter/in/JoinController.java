@@ -1,5 +1,8 @@
 package com.example.authserver.adapter.in;
 
+import com.example.authserver.adapter.in.request.MemberCreateRequest;
+import com.example.authserver.adapter.in.request.VerifyCodeForJoinRequest;
+import com.example.authserver.adapter.in.request.VerifyPhoneNumberRequest;
 import com.example.authserver.application.port.in.JoinUseCase;
 import com.example.common.baseentity.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,7 +27,7 @@ public class JoinController {
 
     private final JoinUseCase joinUseCase;
 
-    @Operation(summary = "핸드폰 번호 sms 인증", description = "휴대 전화번호를 인증을 요청 합니다.")
+    @Operation(summary = "회원가입 - 1. 핸드폰 번호 sms 인증코드 발송", description = "휴대 전화번호를 인증을 요청 합니다.")
     @PostMapping(value = "/phone_number_verification")
     public ResponseEntity<CommonResponse<String>> requestPhoneNumberVerification(
             @RequestBody @Valid VerifyPhoneNumberRequest request){
@@ -34,7 +37,7 @@ public class JoinController {
         return CommonResponse.okWithMessage("인증번호가 발송되었습니다. 인증번호는 3분간 유효합니다.", code);
     }
 
-    @Operation(summary = "인증 코드 전송", description = "문자로 발송된 인증 코드를 전송합니다.")
+    @Operation(summary = "회원가입 - 2. 핸드폰 번호 sms 인증코드 인증", description = "문자로 발송된 인증 코드를 전송합니다.")
     @GetMapping(value = "/verification_code")
     public ResponseEntity<CommonResponse<Void>> verifyCode(
             @ParameterObject @Valid VerifyCodeForJoinRequest request
@@ -44,13 +47,13 @@ public class JoinController {
         return CommonResponse.okWithMessage("인증이 완료되었습니다.");
     }
 
-    @Operation(summary = "회원가입", description = "회원 가입을 진행합니다. <br>" +
+    @Operation(summary = "회원가입 - 3. 회원가입", description = "회원 가입을 진행합니다. <br>" +
             "인증되지 않은 번호를 입력하면 예외를 반환합니다.")
     @PostMapping()
     public ResponseEntity<CommonResponse<Void>> join(
-            @RequestBody @Valid JoinRequest joinRequest) {
+            @RequestBody @Valid MemberCreateRequest memberCreateRequest) {
 
-        joinUseCase.join(joinRequest);
+        joinUseCase.join(memberCreateRequest);
 
         return CommonResponse.okWithMessage("회원가입이 정상 처리되었습니다.");
     }

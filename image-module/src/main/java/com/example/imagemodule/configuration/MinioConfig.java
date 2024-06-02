@@ -41,7 +41,7 @@ public class MinioConfig {
     }
 
     @Bean
-    public MinioClient minioClientDev(){
+    public MinioClient minioClient(){
         MinioClient minioClient = MinioClient.builder()
                 .endpoint(endpoint)
                 .credentials("ADMIN", credential)

@@ -1,6 +1,11 @@
 server:
   port: 8081
 
+spring:
+  application:
+    name: auth-service
+
+--- ## Eureka
 eureka:
   client:
     fetch-registry: true
@@ -8,6 +13,7 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka
 
+--- ## db 설정
 spring:
   datasource:
     driver-class-name: org.h2.Driver
@@ -27,3 +33,43 @@ spring:
     redis:
       port: 6379
       password: 1234
+
+--- # kafka 설정
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      auto-offset-reset: earliest
+
+--- ## secret
+oauth:
+  naver:
+    app-key: OhHssSBOwmc929lDfGOg
+    secret: JIZ1uNAFt7
+  kakao:
+    app-key: 5b085c799bdb7da9923e226b6a8b6188
+    secret: tGusphDWBKePGSVjyGqY5ElI0jkvzRBj
+
+secret:
+  accessToken: test1
+  refreshToken: test2
+  passwordChangeToken: test3
+
+--- ## 기타
+springdoc:
+  swagger-ui:
+    display-request-duration: true
+    tags-sorter: alpha
+    operations-sorter: alpha
+    doc-expansion: none
+    syntax-highlight:
+      theme: nord
+    persist-authorization: true
+  pre-loading-enabled: true
+
+management:
+  endpoint:
+    health:
+      enabled: true
+    info:
+      enabled: true

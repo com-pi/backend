@@ -160,6 +160,9 @@ project(':auth-service') {
 		implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 		implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
+		// kafka
+		implementation 'org.springframework.kafka:spring-kafka'
+
 		// Geometry data 의존성
 		implementation 'org.locationtech.jts:jts-core:1.19.0'
 		implementation 'org.hibernate.orm:hibernate-spatial:6.4.4.Final'

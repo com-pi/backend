@@ -1,18 +1,15 @@
 package com.example.common.domain;
 
-import jakarta.annotation.Nonnull;
-import jakarta.annotation.Nullable;
-
 public record Passport(
     Long memberId,
     Role role,
     String nickName,
     String thumbnail
 ) {
-    public static Passport of(@Nonnull String id,
-                              @Nonnull String role,
-                              @Nonnull String nickName,
-                              @Nullable String thumbnail) {
+    public static Passport of(String id,
+                              String role,
+                              String nickName,
+                              String thumbnail) {
         try {
             long memberId = Long.parseLong(id);
             Role memberRole = Role.of(role);
@@ -25,7 +22,6 @@ public record Passport(
             return null;
         }
     }
-
     public static Passport anonymous(){
         return new Passport(0L, Role.ANONYMOUS, "", "");
     }

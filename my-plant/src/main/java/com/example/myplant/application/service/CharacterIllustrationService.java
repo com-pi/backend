@@ -1,15 +1,14 @@
 package com.example.myplant.application.service;
 
-import com.example.myplant.domain.CharacterIllustration;
 import com.example.myplant.application.port.in.CreateCharacterIllustrationUseCase;
 import com.example.myplant.application.port.in.UpdateCharacterIllustrationUseCase;
 import com.example.myplant.application.port.out.LoadCharacterIllustrationPort;
 import com.example.myplant.application.port.out.SaveCharacterIllustrationPort;
+import com.example.myplant.domain.CharacterIllustration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class CharacterIllustrationService implements CreateCharacterIllustrationUseCase, UpdateCharacterIllustrationUseCase {

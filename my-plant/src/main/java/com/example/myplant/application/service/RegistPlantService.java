@@ -4,10 +4,10 @@ import com.example.myplant.adapter.in.web.PlantCommand;
 import com.example.myplant.application.port.in.RegistPlantUseCase;
 import com.example.myplant.application.port.out.FindPlantPort;
 import com.example.myplant.application.port.out.SavePlantPort;
+import com.example.myplant.domain.Character;
+import com.example.myplant.domain.MaintenanceSchedule;
 import com.example.myplant.domain.Plant;
 import com.example.myplant.domain.WateringInfo;
-import com.example.myplant.domain.MaintenanceSchedule;
-import com.example.myplant.domain.Character;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,15 +1,14 @@
 package com.example.myplant.application.service;
 
-import com.example.myplant.domain.Diary;
 import com.example.myplant.application.port.in.CreateDiaryUseCase;
 import com.example.myplant.application.port.in.UpdateDiaryUseCase;
 import com.example.myplant.application.port.out.LoadDiaryPort;
 import com.example.myplant.application.port.out.SaveDiaryPort;
+import com.example.myplant.domain.Diary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DiaryService implements CreateDiaryUseCase, UpdateDiaryUseCase {

@@ -2,8 +2,12 @@ package com.example.myplant.adapter.in.web;
 
 import com.example.common.baseentity.SelfValidating;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import java.time.LocalDate;
 
 @Getter

@@ -1,5 +1,7 @@
 package com.example.authserver.adapter.in;
 
+import com.example.authserver.adapter.in.request.LoginRequest;
+import com.example.authserver.adapter.in.response.LoginResponse;
 import com.example.authserver.application.port.in.LoginUseCase;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

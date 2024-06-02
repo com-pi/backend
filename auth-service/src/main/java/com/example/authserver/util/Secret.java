@@ -13,7 +13,6 @@ public class Secret {
     public static String KAKAO_SECRET;
     public static String NAVER_APP_KEY;
     public static String NAVER_SECRET;
-    public static String SMS_APP_KEY;
 
     @Value("${oauth.kakao.app-key}")
     private String kakaoAppKey;
@@ -27,8 +26,6 @@ public class Secret {
     private String accessTokenSecret;
     @Value("${secret.refreshToken}")
     private String refreshTokenSecret;
-    @Value("${sms.app-key}")
-    private String smsAppKey;
 
     @PostConstruct
     public void init() {
@@ -38,7 +35,6 @@ public class Secret {
         KAKAO_SECRET = kakaoSecret;
         NAVER_APP_KEY = naverAppKey;
         NAVER_SECRET = naverSecret;
-        SMS_APP_KEY = smsAppKey;
     }
 
 }

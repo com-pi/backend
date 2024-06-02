@@ -1,5 +1,6 @@
 package com.example.authserver.adapter.in;
 
+import com.example.authserver.adapter.in.response.TokenReIssueResponse;
 import com.example.authserver.application.TokenReissueService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
