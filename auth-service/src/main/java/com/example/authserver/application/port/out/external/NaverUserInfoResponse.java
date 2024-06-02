@@ -1,6 +1,7 @@
 package com.example.authserver.application.port.out.external;
 
 
+import com.example.authserver.domain.MemberCreate;
 import lombok.Getter;
 
 @Getter
@@ -27,4 +28,14 @@ public class NaverUserInfoResponse {
             String birthyear,
             String mobile
     ){}
+
+    public MemberCreate toDomain() {
+        return MemberCreate.builder()
+                .naverId(response.id)
+                .email(response.email)
+                .imageUrl(response.profile_image)
+                .phoneNumber(response.mobile)
+                .build();
+    }
+
 }

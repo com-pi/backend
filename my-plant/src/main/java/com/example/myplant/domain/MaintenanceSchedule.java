@@ -1,11 +1,9 @@
 package com.example.myplant.domain;
 
+import jakarta.persistence.Embeddable;
 import lombok.*;
 
-
 import java.time.LocalDate;
-
-import jakarta.persistence.Embeddable;
 
 
 @Embeddable

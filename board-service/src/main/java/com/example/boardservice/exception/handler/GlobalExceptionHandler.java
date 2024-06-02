@@ -1,9 +1,9 @@
 package com.example.boardservice.exception.handler;
 
-import com.example.imagemodule.exception.FileUploadException;
 import com.example.common.baseentity.CommonResponse;
 import com.example.common.exception.InternalServerException;
 import com.example.common.exception.NotFoundException;
+import com.example.imagemodule.exception.FileUploadException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

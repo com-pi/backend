@@ -1,6 +1,5 @@
 package com.example.authserver.application.port.out.external;
 
-import com.example.authserver.adapter.in.request.MemberCreateRequest;
 import com.example.authserver.domain.MemberCreate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

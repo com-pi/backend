@@ -1,15 +1,14 @@
 package com.example.myplant.application.service;
 
-import com.example.myplant.domain.PlantDiary;
 import com.example.myplant.application.port.in.CreatePlantDiaryUseCase;
 import com.example.myplant.application.port.in.UpdatePlantDiaryUseCase;
 import com.example.myplant.application.port.out.LoadPlantDiaryPort;
 import com.example.myplant.application.port.out.SavePlantDiaryPort;
+import com.example.myplant.domain.PlantDiary;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PlantDiaryService implements CreatePlantDiaryUseCase, UpdatePlantDiaryUseCase {

@@ -1,6 +1,6 @@
 package com.example.authserver.adapter.in.response;
 
-import com.example.authserver.adapter.out.MemberEntity;
+import com.example.authserver.domain.Member;
 import com.example.common.domain.Address;
 
 public record MemberInfoResponse(
@@ -10,13 +10,13 @@ public record MemberInfoResponse(
         String thumbnailUrl,
         Address address
 ) {
-    public static MemberInfoResponse from(MemberEntity memberEntity) {
+    public static MemberInfoResponse from(Member member) {
         return new MemberInfoResponse(
-                memberEntity.getNickname(),
-                memberEntity.getIntroduction(),
-                memberEntity.getImageUrl(),
-                memberEntity.getThumbnailUrl(),
-                memberEntity.getAddress()
+                member.getNickname(),
+                member.getIntroduction(),
+                member.getImageUrl(),
+                member.getThumbnailUrl(),
+                member.getAddress()
         );
     }
 }

@@ -1,15 +1,14 @@
 package com.example.myplant.application.service;
 
-import com.example.myplant.domain.PlantCharacter;
 import com.example.myplant.application.port.in.CreatePlantCharacterUseCase;
 import com.example.myplant.application.port.in.UpdatePlantCharacterUseCase;
 import com.example.myplant.application.port.out.LoadPlantCharacterPort;
 import com.example.myplant.application.port.out.SavePlantCharacterPort;
+import com.example.myplant.domain.PlantCharacter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PlantCharacterService implements CreatePlantCharacterUseCase, UpdatePlantCharacterUseCase {

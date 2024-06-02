@@ -37,11 +37,7 @@ public class ForgetController {
     ) {
         String email = forgetService.verifyFindIdCode(request);
 
-        if (email != null) {
-            return CommonResponse.okWithMessage("인증에 성공했습니다", email);
-        }
-
-        return CommonResponse.badRequestWithMessage("인증번호가 틀렸습니다.", null);
+        return CommonResponse.okWithMessage("인증에 성공했습니다", email);
     }
 
     @Operation(summary = "비밀번호 변경 - 인증번호 발송", description = "회원 가입시 등록한 핸드폰 번호로 인증코드를 전송합니다.")
@@ -72,6 +68,7 @@ public class ForgetController {
             @ParameterObject @Valid ChangePasswordRequest request
     ){
         forgetService.changePassword(request);
+
         return CommonResponse.okWithMessage("새 비밀번호로 변경 되었습니다.", null);
     }
 

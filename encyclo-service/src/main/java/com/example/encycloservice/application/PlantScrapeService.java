@@ -1,10 +1,10 @@
 package com.example.encycloservice.application;
 
+import com.example.common.exception.CommonException;
 import com.example.encycloservice.application.port.in.ScrapeUseCase;
 import com.example.encycloservice.application.port.out.ScrapingPort;
 import com.example.encycloservice.domain.PlantDetailResult;
 import com.example.encycloservice.domain.SearchPlantResultList;
-import com.example.common.exception.CommonException;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

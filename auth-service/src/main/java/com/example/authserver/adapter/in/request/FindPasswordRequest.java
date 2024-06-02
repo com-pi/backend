@@ -4,7 +4,9 @@ import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 
+@Builder
 public record FindPasswordRequest(
         @Parameter(description = "이메일")
         @NotNull @NotBlank @Email String email,

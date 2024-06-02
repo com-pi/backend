@@ -2,12 +2,12 @@ package com.example.boardservice.application;
 
 import com.example.boardservice.adapter.in.web.PostBuyAndSellCommand;
 import com.example.boardservice.application.port.in.PostArticleUseCase;
-import com.example.imagemodule.application.port.ImageCommandPort;
 import com.example.boardservice.application.port.out.PostArticlePort;
-import com.example.imagemodule.application.port.SaveImagesCommand;
-import com.example.common.domain.Address;
 import com.example.boardservice.domain.BuyAndSell;
 import com.example.boardservice.domain.Member;
+import com.example.common.domain.Address;
+import com.example.imagemodule.application.port.ImageCommandPort;
+import com.example.imagemodule.application.port.SaveImagesCommand;
 import com.example.imagemodule.domain.MinioBucket;
 import com.example.imagemodule.util.ObjectUrlMapper;
 import lombok.RequiredArgsConstructor;

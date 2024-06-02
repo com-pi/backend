@@ -1,8 +1,8 @@
 package com.example.boardservice.adapter.in.web;
 
 import com.example.boardservice.application.port.in.PostArticleUseCase;
-import com.example.common.annotation.Authenticate;
 import com.example.boardservice.security.PassportHolder;
+import com.example.common.annotation.Authenticate;
 import com.example.common.baseentity.CommonResponse;
 import com.example.common.domain.Role;
 import com.fasterxml.jackson.core.JsonProcessingException;

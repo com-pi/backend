@@ -4,7 +4,9 @@ import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 
+@Builder
 public record VerifyFindPasswordCodeRequest(
         @Parameter(description = "핸드폰 번호")
         @NotNull @NotBlank String phoneNumber,

@@ -1,7 +1,7 @@
 package com.example.myplant.domain;
 
-import lombok.*;
 import jakarta.persistence.Embeddable;
+import lombok.*;
 
 @Embeddable
 @Getter

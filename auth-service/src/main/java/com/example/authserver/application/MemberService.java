@@ -3,10 +3,11 @@ package com.example.authserver.application;
 import com.example.authserver.adapter.in.request.ModifyLocationRequest;
 import com.example.authserver.adapter.in.response.MemberInfoResponse;
 import com.example.authserver.adapter.in.response.MyInfoResponse;
+import com.example.authserver.adapter.out.MemberEntity;
 import com.example.authserver.aop.filter.PassportHolder;
 import com.example.authserver.application.port.in.MemberUseCase;
-import com.example.authserver.adapter.out.MemberJpaRepository;
-import com.example.authserver.adapter.out.MemberEntity;
+import com.example.authserver.application.port.out.persistence.MemberPort;
+import com.example.authserver.domain.Member;
 import com.example.common.domain.AddressValue;
 import com.example.common.exception.NotFoundException;
 import com.example.imagemodule.application.port.ImageCommandPort;
@@ -21,38 +22,38 @@ import org.springframework.web.multipart.MultipartFile;
 @Transactional(readOnly = true)
 public class MemberService implements MemberUseCase {
 
-    private final MemberJpaRepository memberJpaRepository;
+    private final MemberPort memberPort;
     private final ImageCommandPort imageCommandPort;
 
     @Override
     public MyInfoResponse getMyInfo() {
-        MemberEntity me = memberJpaRepository.findById(PassportHolder.getPassport().memberId())
-                .orElseThrow(() -> new NotFoundException(MemberEntity.class));
+        Member me = memberPort.findById(PassportHolder.getPassport().memberId())
+                .orElseThrow(() -> new NotFoundException(Member.class));
 
         return MyInfoResponse.of(me);
     }
 
     @Override
     public MemberInfoResponse getMemberInfo(Long memberId) {
-        MemberEntity foundMemberEntity = memberJpaRepository.findById(memberId)
+        Member foundMember = memberPort.findById(memberId)
                 .orElseThrow(() -> new NotFoundException(MemberEntity.class));
 
-        return MemberInfoResponse.from(foundMemberEntity);
+        return MemberInfoResponse.from(foundMember);
     }
 
     @Override
     @Transactional
     public void modifyMemberInfo(String nickName, String introduction) {
-        MemberEntity memberEntity = memberJpaRepository.findById(PassportHolder.getPassport().memberId())
-                .orElseThrow(() -> new NotFoundException(MemberEntity.class));
+        Member member = memberPort.findById(PassportHolder.getPassport().memberId())
+                .orElseThrow(() -> new NotFoundException(Member.class));
 
-        memberEntity.updateInfo(nickName, introduction);
+        member.updateInfo(nickName, introduction);
     }
 
     @Override
     @Transactional
     public ImageAndThumbnail postProfileImage(MultipartFile profileImage) {
-        MemberEntity me = memberJpaRepository.findById(PassportHolder.getPassport().memberId())
+        Member me = memberPort.findById(PassportHolder.getPassport().memberId())
                 .orElseThrow(() -> new NotFoundException(MemberEntity.class));
 
         ImageAndThumbnail imageAndThumbnail = imageCommandPort.saveProfileImage(profileImage);

@@ -3,17 +3,15 @@ package com.example.authserver.application;
 import com.example.authserver.adapter.in.response.LoginResponse;
 import com.example.authserver.application.port.in.OAuthLoginUseCase;
 import com.example.authserver.application.port.out.external.*;
-import com.example.authserver.adapter.out.MemberJpaRepository;
 import com.example.authserver.application.port.out.persistence.MemberPort;
 import com.example.authserver.application.port.out.persistence.RedisPort;
+import com.example.authserver.application.util.JwtUtil;
 import com.example.authserver.domain.ComPToken;
-import com.example.authserver.adapter.out.MemberEntity;
 import com.example.authserver.domain.Member;
 import com.example.authserver.domain.TokenType;
 import com.example.authserver.exception.AlreadyLoggedInException;
 import com.example.authserver.exception.OAuthLoginException;
 import com.example.authserver.util.CookieUtil;
-import com.example.authserver.application.util.JwtUtil;
 import com.example.common.exception.ConflictException;
 import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -55,7 +53,9 @@ public class OAuthLoginService implements OAuthLoginUseCase {
         KakaoUserInfoResponse kakaoUserInfo = kakaoTokenClient.getUserInfo("Bearer " + token.access_token());
         Optional<Member> kakaoMember = memberPort.findByKakaoId(kakaoUserInfo.getId().toString());
 
-        if(kakaoMember.isEmpty()) {
+        boolean isNewMember = kakaoMember.isEmpty();
+
+        if(isNewMember) {
             Optional<Member> byEmail = memberPort.findByEmail(kakaoUserInfo.getKakao_account().email());
 
             if (byEmail.isPresent()) {
@@ -99,23 +99,21 @@ public class OAuthLoginService implements OAuthLoginUseCase {
             throw new OAuthLoginException(e);
         }
 
-        Optional<MemberEntity> naverMember = memberJpaRepository.findByNaverId(naverUserInfo.getResponse().id());
+        Optional<Member> naverMember = memberPort.findByNaverId(naverUserInfo.getResponse().id());
         Boolean isNewMember = naverMember.isEmpty();
 
         // Todo: 서비스간 정합성 맞추기
-        if (naverMember.isPresent()) {
-            naverMember.get().updateFromSocialProfile(naverUserInfo.getResponse());
-        } else {
-            Optional<MemberEntity> byEmail = memberJpaRepository.findByEmail(naverUserInfo.getResponse().email());
+        if(isNewMember) {
+            Optional<Member> byEmail = memberPort.findByEmail(naverUserInfo.getResponse().email());
             if (byEmail.isPresent()) {
                 if(byEmail.get().getNaverId() != null) {
                     throw new ConflictException("네이버 계정으로 가입된 회원입니다.");
                 }
                 throw new ConflictException("이메일/비밀번호를 통해 가입된 계정입니다.");
             }
-            MemberEntity newNaverMemberEntity = MemberEntity.newMemberForNaverUser(naverUserInfo);
-            memberJpaRepository.save(newNaverMemberEntity);
-            naverMember = Optional.of(newNaverMemberEntity);
+            Member newMember = Member.create(naverUserInfo.toDomain());
+            memberPort.save(newMember);
+            naverMember = Optional.of(newMember);
         }
 
         ComPToken refreshToken = jwtUtil.generateToken(naverMember.get(), TokenType.REFRESH_TOKEN);
