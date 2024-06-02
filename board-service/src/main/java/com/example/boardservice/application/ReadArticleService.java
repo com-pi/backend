@@ -1,10 +1,12 @@
 package com.example.boardservice.application;
 
+import com.example.boardservice.adapter.in.web.response.BuyAndSellDetailResponse;
 import com.example.boardservice.adapter.in.web.response.BuyAndSellListResponse;
 import com.example.boardservice.adapter.in.web.response.BuyAndSellResponse;
 import com.example.boardservice.application.port.in.ReadArticleUseCase;
 import com.example.boardservice.application.port.out.ArticleQueryPort;
 import com.example.boardservice.domain.BuyAndSell;
+import com.example.common.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -25,5 +27,12 @@ public class ReadArticleService implements ReadArticleUseCase {
                 .toList();
 
         return BuyAndSellListResponse.of(buyAndSellResponseList);
+    }
+
+    @Override
+    public BuyAndSellDetailResponse getBuyAndSell(Long id) {
+        BuyAndSell buyAndSell = articleQueryPort.getBuyAndSell(id)
+                .orElseThrow(() -> new NotFoundException(BuyAndSell.class));
+        return BuyAndSellDetailResponse.of(buyAndSell);
     }
 }

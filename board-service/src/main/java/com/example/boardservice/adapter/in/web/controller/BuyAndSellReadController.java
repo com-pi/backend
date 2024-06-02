@@ -1,5 +1,6 @@
 package com.example.boardservice.adapter.in.web.controller;
 
+import com.example.boardservice.adapter.in.web.response.BuyAndSellDetailResponse;
 import com.example.boardservice.adapter.in.web.response.BuyAndSellListResponse;
 import com.example.boardservice.application.port.in.ReadArticleUseCase;
 import com.example.common.annotation.Authenticate;
@@ -22,6 +23,14 @@ public class BuyAndSellReadController {
     @GetMapping(value = "/buy-and-sell/{page}")
     public ResponseEntity<BuyAndSellListResponse> getBuyAndSellArticleList(@PathVariable int page) {
         BuyAndSellListResponse response = readArticleUseCase.getBuyAndSellList(page);
+        return ResponseEntity.ok(response);
+    }
+
+    @Tag(name = "식물거래 게시글 상세 조회", description = "새로운 식물거래 게시글을 상세 조회합니다.")
+    @Authenticate(Role.MEMBER)
+    @GetMapping(value = "/buy-and-sell/detail/{id}")
+    public ResponseEntity<BuyAndSellDetailResponse> getBuyAndSellArticle(@PathVariable Long id) {
+        BuyAndSellDetailResponse response = readArticleUseCase.getBuyAndSell(id);
         return ResponseEntity.ok(response);
     }
 }
