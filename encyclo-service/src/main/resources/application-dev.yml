@@ -41,10 +41,6 @@ management:
       exposure:
         include: health, info
 
-spring:
-  jackson:
-    property-naming-strategy: SNAKE_CASE
-
 springdoc:
   swagger-ui:
     display-request-duration: true
