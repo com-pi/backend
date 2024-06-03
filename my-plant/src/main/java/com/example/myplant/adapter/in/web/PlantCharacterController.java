@@ -24,22 +24,23 @@ public class PlantCharacterController {
         this.plantCharacterService = plantCharacterService;
     }
 
-    @PostMapping("/add")
     @Authenticate(Role.ADMIN)
+    @PostMapping("/add")
     @Operation(summary = "식물 캐릭터 추가", description = "새로운 식물 캐릭터를 추가합니다.")
     public ResponseEntity<CommonResponse<PlantCharacter>> addPlantCharacter(@RequestBody PlantCharacter plantCharacter) {
         PlantCharacter addedPlantCharacter = plantCharacterService.createPlantCharacter(plantCharacter);
         return ResponseEntity.ok(new CommonResponse<>("Plant character added successfully",addedPlantCharacter));
     }
 
-    @PutMapping("/update/{id}")
     @Authenticate(Role.ADMIN)
+    @PutMapping("/update/{id}")
     @Operation(summary = "식물 캐릭터 수정", description = "기존 식물 캐릭터를 수정합니다.")
     public ResponseEntity<CommonResponse<PlantCharacter>> updatePlantCharacter(@PathVariable Long id, @RequestBody PlantCharacter plantCharacterDetails) {
         PlantCharacter updatedPlantCharacter = plantCharacterService.updatePlantCharacter(id, plantCharacterDetails);
         return ResponseEntity.ok(new CommonResponse<>("Plant character updated successfully",updatedPlantCharacter));
     }
 
+    @Authenticate(Role.MEMBER)
     @GetMapping("/list")
     @Operation(summary = "식물 캐릭터 목록 조회", description = "모든 식물 캐릭터를 조회합니다.")
     public ResponseEntity<CommonResponse<List<PlantCharacter>>> getAllPlantCharacters() {

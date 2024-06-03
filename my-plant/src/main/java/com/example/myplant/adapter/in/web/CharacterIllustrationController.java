@@ -1,8 +1,10 @@
 package com.example.myplant.adapter.in.web;
 
-import com.example.common.baseentity.CommonResponse;
-import com.example.myplant.application.service.CharacterIllustrationService;
+import com.example.common.annotation.Authenticate;
+import com.example.common.domain.Role;
 import com.example.myplant.domain.CharacterIllustration;
+import com.example.myplant.application.service.CharacterIllustrationService;
+import com.example.common.baseentity.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,7 @@ public class CharacterIllustrationController {
         this.characterIllustrationService = characterIllustrationService;
     }
 
+    @Authenticate(Role.ADMIN)
     @PostMapping("/add")
     @Operation(summary = "캐릭터 일러스트 추가", description = "새로운 캐릭터 일러스트를 추가합니다.")
     public ResponseEntity<CommonResponse<CharacterIllustration>> addCharacterIllustration(@RequestBody CharacterIllustration illustration) {
@@ -29,6 +32,7 @@ public class CharacterIllustrationController {
         return ResponseEntity.ok(new CommonResponse<>("Character illustration added successfully",addedIllustration));
     }
 
+    @Authenticate(Role.ADMIN)
     @PutMapping("/update/{id}")
     @Operation(summary = "캐릭터 일러스트 수정", description = "기존 캐릭터 일러스트를 수정합니다.")
     public ResponseEntity<CommonResponse<CharacterIllustration>> updateCharacterIllustration(@PathVariable Long id, @RequestBody CharacterIllustration illustrationDetails) {
@@ -36,6 +40,7 @@ public class CharacterIllustrationController {
         return ResponseEntity.ok(new CommonResponse<>("Character illustration updated successfully",updatedIllustration));
     }
 
+    @Authenticate(Role.MEMBER)
     @GetMapping("/list")
     @Operation(summary = "캐릭터 일러스트 목록 조회", description = "모든 캐릭터 일러스트를 조회합니다.")
     public ResponseEntity<CommonResponse<List<CharacterIllustration>>> getAllCharacterIllustrations() {

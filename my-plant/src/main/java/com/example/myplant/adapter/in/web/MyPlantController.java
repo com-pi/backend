@@ -47,6 +47,7 @@ public class MyPlantController {
         return ResponseEntity.ok(new CommonResponse<>("Plant registered successfully",registeredPlant.getId()));
     }
 
+    @Authenticate(Role.MEMBER)
     @PutMapping("/update/{plantId}")
     @Operation(summary = "식물 정보 수정", description = "기존 식물의 정보를 수정합니다.")
     public ResponseEntity<CommonResponse<Long>> updatePlant(@PathVariable Long plantId, @RequestBody UpdatePlantCommand command) {
@@ -54,6 +55,7 @@ public class MyPlantController {
         return ResponseEntity.ok(new CommonResponse<>("Plant updated successfully",updatedPlant.getId()));
     }
 
+    @Authenticate(Role.MEMBER)
     @GetMapping("/list")
     @Operation(summary = "사용자의 모든 식물 조회", description = "사용자가 등록한 모든 식물 정보를 조회합니다.")
     public ResponseEntity<CommonResponse<List<Plant>>> getPlantsByMemberId() {
@@ -64,6 +66,7 @@ public class MyPlantController {
         return ResponseEntity.ok(new CommonResponse<>("Plants retrieved successfully",plants));
     }
 
+    @Authenticate(Role.MEMBER)
     @GetMapping("/detail/{plantId}")
     @Operation(summary = "식물 상세 정보 조회", description = "식물의 상세 정보를 조회합니다.")
     public ResponseEntity<CommonResponse<Plant>> getPlantByPlantId(@PathVariable Long plantId) {
