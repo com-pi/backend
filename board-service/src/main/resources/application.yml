@@ -25,7 +25,6 @@ springdoc:
     syntax-highlight:
       theme: nord
     persist-authorization: true
-    path: swagger-ui.html
   pre-loading-enabled: true
 
 

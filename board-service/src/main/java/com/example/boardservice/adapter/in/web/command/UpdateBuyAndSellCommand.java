@@ -2,14 +2,12 @@ package com.example.boardservice.adapter.in.web.command;
 
 import com.example.boardservice.domain.Location;
 import com.example.common.baseentity.SelfValidating;
-import lombok.Builder;
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 @Getter
-@Builder
 public class UpdateBuyAndSellCommand extends SelfValidating<UpdateBuyAndSellCommand> {
 
     private final Long articleId;
@@ -24,11 +22,10 @@ public class UpdateBuyAndSellCommand extends SelfValidating<UpdateBuyAndSellComm
     private final List<String> hashTags;
     private List<MultipartFile> imageFiles;
 
-    public UpdateBuyAndSellCommand(Long articleId, Long memberId, String title, String content, Integer price,
+    public UpdateBuyAndSellCommand(Long articleId, String title, String content, Integer price,
                                    Location location, String sido, String sigungu, String eupmyundong,
                                    List<String> hashTags, List<MultipartFile> imageFiles) {
         this.articleId = articleId;
-        this.memberId = memberId;
         this.title = title;
         this.content = content;
         this.price = price;

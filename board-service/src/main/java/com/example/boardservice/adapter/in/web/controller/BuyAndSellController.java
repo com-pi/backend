@@ -57,7 +57,7 @@ public class BuyAndSellController {
     public ResponseEntity<CommonResponse<Long>> updateBuyAndSellArticle(
             @Schema(
                     description = "json 데이터",
-                    example = "{\"articleId\":1,\"memberId\":1,\"title\":\"수정\",\"content\":\"수정\"," +
+                    example = "{\"articleId\":1,\"title\":\"수정\",\"content\":\"수정\"," +
                             "\"price\":\"12000\",\"location\":{\"latitude\":\"37.29\",\"longitude\":\"127.14\"}," +
                             "\"sido\":\"수정\",\"sigungu\":\"수정\",\"eupmyundong\":\"수정\",\"hashTags\":[\"수정1\",\"수정2\"]}"
             )

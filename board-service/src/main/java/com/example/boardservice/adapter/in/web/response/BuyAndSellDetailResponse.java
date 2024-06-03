@@ -1,7 +1,8 @@
 package com.example.boardservice.adapter.in.web.response;
 
+import com.example.boardservice.adapter.out.persistence.converter.LocationToPointConverter;
 import com.example.boardservice.domain.BuyAndSell;
-import org.locationtech.jts.geom.Point;
+import com.example.boardservice.domain.Location;
 
 import java.util.List;
 
@@ -10,7 +11,7 @@ public record BuyAndSellDetailResponse(
         List<String> imageUrls,
         Integer price,
         Long memberId,
-        Point location,
+        Location location,
         String content
 ) {
     public static BuyAndSellDetailResponse of(BuyAndSell buyAndSell) {
@@ -19,7 +20,7 @@ public record BuyAndSellDetailResponse(
                 buyAndSell.getImageUrls(),
                 buyAndSell.getPrice(),
                 buyAndSell.getMember().getMemberId(),
-                buyAndSell.getLocation(),
+                new LocationToPointConverter().convertToEntityAttribute(buyAndSell.getLocation()),
                 buyAndSell.getContent()
         );
     }

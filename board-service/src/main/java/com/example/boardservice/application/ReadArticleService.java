@@ -6,10 +6,12 @@ import com.example.boardservice.adapter.in.web.response.BuyAndSellResponse;
 import com.example.boardservice.application.port.in.ReadArticleUseCase;
 import com.example.boardservice.application.port.out.ArticleQueryPort;
 import com.example.boardservice.domain.BuyAndSell;
+import com.example.boardservice.security.PassportHolder;
 import com.example.common.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,6 +20,7 @@ import java.util.List;
 public class ReadArticleService implements ReadArticleUseCase {
 
     private final ArticleQueryPort articleQueryPort;
+
 
     @Override
     public BuyAndSellListResponse getBuyAndSellList(int page) {
@@ -30,9 +33,19 @@ public class ReadArticleService implements ReadArticleUseCase {
     }
 
     @Override
+    @Transactional
     public BuyAndSellDetailResponse getBuyAndSell(Long id) {
         BuyAndSell buyAndSell = articleQueryPort.getBuyAndSell(id)
                 .orElseThrow(() -> new NotFoundException(BuyAndSell.class));
+
+        incrementViewCount(buyAndSell);
         return BuyAndSellDetailResponse.of(buyAndSell);
+    }
+
+    public void incrementViewCount(BuyAndSell buyAndSell) {
+        Long currentMemberId = PassportHolder.getPassport().memberId();
+        if(!buyAndSell.getMember().isSameAs(currentMemberId)) {
+            buyAndSell.incrementViewCount();
+        }
     }
 }

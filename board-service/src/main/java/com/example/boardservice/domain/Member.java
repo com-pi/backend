@@ -4,6 +4,8 @@ import com.example.common.domain.Passport;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "member")
 @Getter
@@ -40,4 +42,7 @@ public class Member {
         this.imageUrl = passport.thumbnail();
     }
 
+    public boolean isSameAs(Long id) {
+        return Objects.equals(this.memberId, id);
+    }
 }

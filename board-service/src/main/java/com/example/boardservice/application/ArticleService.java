@@ -3,7 +3,6 @@ package com.example.boardservice.application;
 import com.example.boardservice.adapter.in.web.command.PostBuyAndSellCommand;
 import com.example.boardservice.adapter.in.web.command.UpdateBuyAndSellCommand;
 import com.example.boardservice.adapter.out.persistence.BuyAndSellRepository;
-import com.example.boardservice.adapter.out.persistence.converter.LocationToPointConverter;
 import com.example.boardservice.application.port.in.ArticleUseCase;
 import com.example.boardservice.application.port.out.ArticleQueryPort;
 import com.example.boardservice.application.port.out.PostArticlePort;
@@ -14,7 +13,6 @@ import com.example.imagemodule.application.port.SaveImagesCommand;
 import com.example.imagemodule.domain.MinioBucket;
 import com.example.imagemodule.util.ObjectUrlMapper;
 import lombok.RequiredArgsConstructor;
-import org.locationtech.jts.geom.Point;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,7 +40,6 @@ public class ArticleService implements ArticleUseCase {
         List<String> objectNames = imageCommand.saveImages(
                 new SaveImagesCommand(command.getImageFiles(), BUY_AND_SELL.getBucket())
         );
-        Point point = new LocationToPointConverter().convertToDatabaseColumn(command.getLocation());
         List<String> imageUrls = objectUrlMapper.toUrl(objectNames, MinioBucket.ARTICLE_TRADE);
         BuyAndSell buyAndSell = BuyAndSell.write(command, imageUrls);
         postArticlePort.postBuyAndSell(buyAndSell);

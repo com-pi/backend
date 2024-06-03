@@ -3,10 +3,14 @@ package com.example.boardservice.domain;
 import com.example.boardservice.adapter.in.web.command.PostBuyAndSellCommand;
 import com.example.boardservice.adapter.in.web.command.UpdateBuyAndSellCommand;
 import com.example.boardservice.adapter.out.persistence.converter.JsonToStringListConverter;
+import com.example.boardservice.adapter.out.persistence.converter.LocationToPointConverter;
 import com.example.common.baseentity.DeletedAtAbstractEntity;
 import com.example.common.domain.Address;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.locationtech.jts.geom.Point;
 
 import java.util.List;
@@ -44,6 +48,8 @@ public class BuyAndSell extends DeletedAtAbstractEntity {
     @Embedded
     private Address area;
 
+    private Integer viewCount;
+
     @Convert(converter = JsonToStringListConverter.class)
     private List<String> imageUrls;
 
@@ -56,29 +62,31 @@ public class BuyAndSell extends DeletedAtAbstractEntity {
                 .title(command.getTitle())
                 .content(command.getContent())
                 .price(command.getPrice())
-//                .location(new LocationToPointConverter().convertToDatabaseColumn(command.getLocation()))
+                .location(new LocationToPointConverter().convertToDatabaseColumn(command.getLocation()))
                 .area(Address.of(command.getSido(), command.getSigungu(), command.getEupmyundong()))
+                .viewCount(0)
                 .imageUrls(imageUrls)
                 .hashtags(command.getHashTags())
                 .articleType(BUY_AND_SELL)
                 .build();
     }
+
     public void update(UpdateBuyAndSellCommand command, List<String> imageUrls) {
         this.title = command.getTitle();
         this.content = command.getContent();
         this.price = command.getPrice();
-//        this.location = new LocationToPointConverter().convertToDatabaseColumn(command.getLocation());
+        this.location = new LocationToPointConverter().convertToDatabaseColumn(command.getLocation());
         this.area = Address.of(command.getSido(), command.getSigungu(), command.getEupmyundong());
         this.hashtags = command.getHashTags();
-        this.imageUrls = imageUrls;
-    }
-
-    public void updateImages(List<String> imageUrls) {
         this.imageUrls = imageUrls;
     }
 
     @Override
     public void delete() {
         super.delete();
+    }
+
+    public void incrementViewCount() {
+        this.viewCount++;
     }
 }

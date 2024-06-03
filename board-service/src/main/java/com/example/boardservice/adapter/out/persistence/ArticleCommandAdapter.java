@@ -3,6 +3,7 @@ package com.example.boardservice.adapter.out.persistence;
 import com.example.boardservice.application.port.out.PostArticlePort;
 import com.example.boardservice.application.port.out.UpdateArticlePort;
 import com.example.boardservice.domain.BuyAndSell;
+import com.example.boardservice.security.PassportHolder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,11 +15,6 @@ public class ArticleCommandAdapter implements PostArticlePort, UpdateArticlePort
 
     @Override
     public void postBuyAndSell(BuyAndSell buyAndSell) {
-        buyAndSellRepository.save(buyAndSell);
-    }
-
-    @Override
-    public void updateBuyAndSell(BuyAndSell buyAndSell) {
         buyAndSellRepository.save(buyAndSell);
     }
 }
