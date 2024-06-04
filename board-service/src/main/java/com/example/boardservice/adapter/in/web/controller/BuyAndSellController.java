@@ -11,6 +11,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,10 +37,10 @@ public class BuyAndSellController {
                     example = "{\"title\":\"안녕하세요\",\"content\":\"반갑습니다\"," +
                             "\"price\":\"10000\",\"location\":{\"latitude\":\"37.29\"," +
                             "\"longitude\":\"127.14\"},\"sido\":\"서울시\",\"sigungu\":\"강남구\"," +
-                            "\"eupmyundong\":\"역삼동\",\"hashTags\":[\"선인장\",\"다육이\"]," +
+                            "\"eupmyundong\":\"역삼동\",\"isFree\":false,\"hashTags\":[\"선인장\",\"다육이\"]," +
                             "\"articleStatus\":\"saved\"}"
             )
-            @RequestPart("data") String requestJson,
+            @RequestPart("data") @Valid String requestJson,
             @RequestPart("imageFiles") List<MultipartFile> imageFiles) throws JsonProcessingException {
 
         PostBuyAndSellCommand command = objectMapper.readValue(requestJson, PostBuyAndSellCommand.class);
@@ -59,9 +60,10 @@ public class BuyAndSellController {
                     description = "json 데이터",
                     example = "{\"articleId\":1,\"title\":\"수정\",\"content\":\"수정\"," +
                             "\"price\":\"12000\",\"location\":{\"latitude\":\"37.29\",\"longitude\":\"127.14\"}," +
-                            "\"sido\":\"수정\",\"sigungu\":\"수정\",\"eupmyundong\":\"수정\",\"hashTags\":[\"수정1\",\"수정2\"]}"
+                            "\"sido\":\"수정\",\"sigungu\":\"수정\",\"eupmyundong\":\"수정\",\"isFree\":true," +
+                            "\"hashTags\":[\"수정1\",\"수정2\"]}"
             )
-            @RequestPart("data") String requestJson,
+            @RequestPart("data") @Valid String requestJson,
             @RequestPart(value = "imageFiles", required = false) List<MultipartFile> imageFiles) throws JsonProcessingException {
         UpdateBuyAndSellCommand command = objectMapper.readValue(requestJson, UpdateBuyAndSellCommand.class);
         command.addValue(PassportHolder.getPassport().memberId(), imageFiles);
