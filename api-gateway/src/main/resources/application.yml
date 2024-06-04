@@ -48,6 +48,7 @@ spring:
             - Path=/encyclo-service/**
           filters:
             - name: PathPrefixRemoveFilter
+            - name: TokenValidateFilter
 
 secret:
   accessToken: test1
