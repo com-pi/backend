@@ -14,7 +14,6 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 public class PlantCommand extends SelfValidating<PlantCommand> {
-    @Schema(description = "Member ID", example = "1")
     private Long memberId;
 
     @Schema(description = "Plant Name", example = "MyPlant")

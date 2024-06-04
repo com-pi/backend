@@ -27,16 +27,16 @@ public class CharacterController {
     @Authenticate(Role.ADMIN)
     @PostMapping("/add")
     @Operation(summary = "캐릭터 추가", description = "새로운 캐릭터를 추가합니다.")
-    public ResponseEntity<CommonResponse<Character>> addCharacter(@RequestBody Character character) {
-        Character addedCharacter = characterService.createCharacter(character);
+    public ResponseEntity<CommonResponse<Character>> addCharacter(@RequestBody CreateCharacterCommand command) {
+        Character addedCharacter = characterService.addCharacter(command);
         return ResponseEntity.ok(new CommonResponse<>("Character added successfully",addedCharacter));
     }
 
     @Authenticate(Role.ADMIN)
     @PutMapping("/update/{id}")
     @Operation(summary = "캐릭터 수정", description = "기존 캐릭터를 수정합니다.")
-    public ResponseEntity<CommonResponse<Character>> updateCharacter(@PathVariable Long id, @RequestBody Character characterDetails) {
-        Character updatedCharacter = characterService.updateCharacter(id, characterDetails);
+    public ResponseEntity<CommonResponse<Character>> updateCharacter(@RequestBody UpdateCharacterCommand command) {
+        Character updatedCharacter = characterService.updateCharacter(command);
         return ResponseEntity.ok(new CommonResponse<>("Character updated successfully",updatedCharacter));
     }
 

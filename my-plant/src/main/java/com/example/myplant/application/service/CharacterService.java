@@ -1,5 +1,7 @@
 package com.example.myplant.application.service;
 
+import com.example.myplant.adapter.in.web.CreateCharacterCommand;
+import com.example.myplant.adapter.in.web.UpdateCharacterCommand;
 import com.example.myplant.application.port.in.CreateCharacterUseCase;
 import com.example.myplant.application.port.in.UpdateCharacterUseCase;
 import com.example.myplant.application.port.out.LoadCharacterPort;
@@ -22,16 +24,20 @@ public class CharacterService implements CreateCharacterUseCase, UpdateCharacter
     }
 
     @Override
-    public Character createCharacter(Character character) {
+    public Character addCharacter(CreateCharacterCommand command) {
+        Character character = Character.builder()
+                .characterNo(command.getCharacterNo())
+                .characterName(command.getCharacterName())
+                .build();
         return saveCharacterPort.saveCharacter(character);
     }
 
     @Override
-    public Character updateCharacter(Long id, Character character) {
-        Character existingCharacter = loadCharacterPort.loadCharacterById(id)
+    public Character updateCharacter(UpdateCharacterCommand command) {
+        Character existingCharacter = loadCharacterPort.loadCharacterById(command.getId())
                 .orElseThrow(() -> new RuntimeException("Character not found"));
-        existingCharacter.setCharacterNo(character.getCharacterNo());
-        existingCharacter.setCharacterName(character.getCharacterName());
+        existingCharacter.setCharacterNo(command.getCharacterNo());
+        existingCharacter.setCharacterName(command.getCharacterName());
         return saveCharacterPort.saveCharacter(existingCharacter);
     }
 

@@ -61,7 +61,7 @@ public class PlantPersistenceAdapter implements SavePlantPort, FindPlantPort, Sa
 
     @Override
     public Optional<Character> findCharacterById(Long characterId) {
-        return plantRepository.findByCharacterId(characterId);
+        return characterRepository.findById(characterId);
     }
 
     @Override
