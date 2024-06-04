@@ -1,6 +1,7 @@
 package com.example.boardservice.adapter.in.web.command;
 
 import com.example.boardservice.domain.Location;
+import com.example.boardservice.util.validator.FreePriceValid;
 import com.example.common.baseentity.SelfValidating;
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
@@ -8,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 @Getter
+@FreePriceValid
 public class UpdateBuyAndSellCommand extends SelfValidating<UpdateBuyAndSellCommand> {
 
     private final Long articleId;
@@ -19,11 +21,12 @@ public class UpdateBuyAndSellCommand extends SelfValidating<UpdateBuyAndSellComm
     private final String sido;
     private final String sigungu;
     private final String eupmyundong;
+    private final Boolean isFree;
     private final List<String> hashTags;
     private List<MultipartFile> imageFiles;
 
     public UpdateBuyAndSellCommand(Long articleId, String title, String content, Integer price,
-                                   Location location, String sido, String sigungu, String eupmyundong,
+                                   Location location, String sido, String sigungu, String eupmyundong, Boolean isFree,
                                    List<String> hashTags, List<MultipartFile> imageFiles) {
         this.articleId = articleId;
         this.title = title;
@@ -33,6 +36,7 @@ public class UpdateBuyAndSellCommand extends SelfValidating<UpdateBuyAndSellComm
         this.sido = sido;
         this.sigungu = sigungu;
         this.eupmyundong = eupmyundong;
+        this.isFree = isFree;
         this.hashTags = hashTags;
         this.imageFiles = imageFiles;
         validateSelf();

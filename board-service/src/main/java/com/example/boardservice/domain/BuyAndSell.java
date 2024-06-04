@@ -50,6 +50,8 @@ public class BuyAndSell extends DeletedAtAbstractEntity {
 
     private Integer viewCount;
 
+    private Boolean isFree;
+
     @Convert(converter = JsonToStringListConverter.class)
     private List<String> imageUrls;
 
@@ -65,6 +67,7 @@ public class BuyAndSell extends DeletedAtAbstractEntity {
                 .location(new LocationToPointConverter().convertToDatabaseColumn(command.getLocation()))
                 .area(Address.of(command.getSido(), command.getSigungu(), command.getEupmyundong()))
                 .viewCount(0)
+                .isFree(command.getIsFree())
                 .imageUrls(imageUrls)
                 .hashtags(command.getHashTags())
                 .articleType(BUY_AND_SELL)
@@ -77,6 +80,7 @@ public class BuyAndSell extends DeletedAtAbstractEntity {
         this.price = command.getPrice();
         this.location = new LocationToPointConverter().convertToDatabaseColumn(command.getLocation());
         this.area = Address.of(command.getSido(), command.getSigungu(), command.getEupmyundong());
+        this.isFree = command.getIsFree();
         this.hashtags = command.getHashTags();
         this.imageUrls = imageUrls;
     }
