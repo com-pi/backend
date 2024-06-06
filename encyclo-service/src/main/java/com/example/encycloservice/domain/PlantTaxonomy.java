@@ -10,7 +10,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 public class PlantTaxonomy {
+    // 종
     private String species;
+    // 속
     private String genus;
+    // 과
     private String family;
 }
