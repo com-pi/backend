@@ -1,4 +1,4 @@
-package com.example.authserver.adapter.out;
+package com.example.authserver.adapter.out.command;
 
 import com.example.authserver.application.port.out.persistence.MemberCommand;
 import com.example.authserver.domain.Member;
@@ -27,4 +27,5 @@ public class MemberCommandAdapter implements MemberCommand {
 
         memberEntity.update(member);
     }
+
 }

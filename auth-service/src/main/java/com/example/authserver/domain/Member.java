@@ -1,6 +1,6 @@
 package com.example.authserver.domain;
 
-import com.example.authserver.adapter.out.MemberEntity;
+import com.example.authserver.adapter.out.command.MemberEntity;
 import com.example.common.domain.Address;
 import com.example.common.domain.Location;
 import com.example.common.domain.Role;
@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @Getter
 @AllArgsConstructor
 @Builder(toBuilder = true)
+// Todo record 클래스로 변경 검토
 public class Member {
     private final Long id;
     private final String kakaoId;

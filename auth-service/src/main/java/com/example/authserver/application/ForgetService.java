@@ -1,7 +1,7 @@
 package com.example.authserver.application;
 
 import com.example.authserver.adapter.in.request.*;
-import com.example.authserver.adapter.out.MemberEntity;
+import com.example.authserver.adapter.out.command.MemberEntity;
 import com.example.authserver.application.port.out.persistence.MemberCommand;
 import com.example.authserver.application.port.out.persistence.MemberQuery;
 import com.example.authserver.application.port.out.persistence.RedisPort;

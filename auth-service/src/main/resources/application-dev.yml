@@ -30,10 +30,14 @@ spring:
       port: 6379
       password: 1234
 
+    mongodb:
+      database: mongodb://root:1234@read-db:27017/auth
+
   jpa:
     properties:
       hibernate:
         show_sql: true
+
 
 --- # kafka 설정
 spring:

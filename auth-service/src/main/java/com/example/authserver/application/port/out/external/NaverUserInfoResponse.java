@@ -2,22 +2,13 @@ package com.example.authserver.application.port.out.external;
 
 
 import com.example.authserver.domain.MemberCreate;
-import lombok.Getter;
 
 import java.util.UUID;
 
-@Getter
-public class NaverUserInfoResponse {
-
-    private final String resultcode;
-    private final String message;
-    private final NaverProfile response;
-
-    public NaverUserInfoResponse(String resultcode, String message, NaverProfile response) {
-        this.resultcode = resultcode;
-        this.message = message;
-        this.response = response;
-    }
+public record NaverUserInfoResponse(
+        String resultcode,
+        String message,
+        NaverProfile response) {
 
     public record NaverProfile(
             String id,
@@ -29,7 +20,8 @@ public class NaverUserInfoResponse {
             String profile_image,
             String birthyear,
             String mobile
-    ){}
+    ) {
+    }
 
     public MemberCreate toDomain() {
         return MemberCreate.builder()

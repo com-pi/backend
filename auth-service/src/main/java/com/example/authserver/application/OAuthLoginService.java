@@ -41,6 +41,8 @@ public class OAuthLoginService implements OAuthLoginUseCase {
     private final RedisPort redisPort;
     private static final String GRANT_TYPE = "authorization_code";
 
+    // Todo clean 아키텍쳐 적용, port 에는 인터페이스만 둘 것.
+
     @Override
     @Transactional
     public LoginResponse kakaoLogin(
@@ -53,12 +55,12 @@ public class OAuthLoginService implements OAuthLoginUseCase {
 
         KakaoTokenResponse token = kakaoAuthClient.getAccessToken(KAKAO_APP_KEY, KAKAO_SECRET, code, redirectUrl, GRANT_TYPE);
         KakaoUserInfoResponse kakaoUserInfo = kakaoTokenClient.getUserInfo("Bearer " + token.access_token());
-        Optional<Member> kakaoMember = memberQuery.findByKakaoId(kakaoUserInfo.getId().toString());
+        Optional<Member> kakaoMember = memberQuery.findByKakaoId(kakaoUserInfo.id().toString());
 
         boolean isNewMember = kakaoMember.isEmpty();
 
         if(isNewMember) {
-            Optional<Member> byEmail = memberQuery.findByEmail(kakaoUserInfo.getKakao_account().email());
+            Optional<Member> byEmail = memberQuery.findByEmail(kakaoUserInfo.kakao_account().email());
 
             if (byEmail.isPresent()) {
                 if(byEmail.get().getKakaoId() != null) {
@@ -101,12 +103,12 @@ public class OAuthLoginService implements OAuthLoginUseCase {
             throw new OAuthLoginException(e);
         }
 
-        Optional<Member> naverMember = memberQuery.findByNaverId(naverUserInfo.getResponse().id());
+        Optional<Member> naverMember = memberQuery.findByNaverId(naverUserInfo.response().id());
         Boolean isNewMember = naverMember.isEmpty();
 
         // Todo: 서비스간 정합성 맞추기
         if(isNewMember) {
-            Optional<Member> byEmail = memberQuery.findByEmail(naverUserInfo.getResponse().email());
+            Optional<Member> byEmail = memberQuery.findByEmail(naverUserInfo.response().email());
             if (byEmail.isPresent()) {
                 if(byEmail.get().getNaverId() != null) {
                     throw new ConflictException("네이버 계정으로 가입된 회원입니다.");

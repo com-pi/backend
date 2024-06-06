@@ -2,7 +2,7 @@ package com.example.authserver.application;
 
 import com.example.authserver.adapter.in.response.MemberInfoResponse;
 import com.example.authserver.adapter.in.response.MyInfoResponse;
-import com.example.authserver.adapter.out.MemberEntity;
+import com.example.authserver.adapter.out.command.MemberEntity;
 import com.example.authserver.aop.filter.PassportHolder;
 import com.example.authserver.application.port.in.MemberUseCase;
 import com.example.authserver.application.port.out.external.AddressConverterPort;

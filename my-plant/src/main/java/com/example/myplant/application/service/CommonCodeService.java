@@ -1,7 +1,7 @@
 package com.example.myplant.application.service;
 
+import com.example.myplant.adapter.out.persistence.CommonCodeRepository;
 import com.example.myplant.domain.CommonCode;
-import com.example.myplant.adapter.out.repository.CommonCodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
