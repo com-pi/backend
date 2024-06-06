@@ -11,13 +11,19 @@ public record PlantDetailResult(String name,
                                 String description,
                                 String scientificName,
                                 @JsonAlias("info") List<PlantingInfo> plantingInfos,
+                                @JsonAlias("planting_condition") List<PlantingCondition> plantingConditions,
                                 List<String> imageUrls) {
 
-    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public record PlantingInfo(
              String name,
              String info1,
              String info2
-    ) {
-    }
+    ) {}
+
+    public record PlantingCondition(
+            String condition,
+            int min,
+            int max
+    ){}
+
 }
