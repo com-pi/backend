@@ -1,24 +1,20 @@
 package com.example.encycloservice.adapter.in;
 
-import com.example.common.annotation.Authenticate;
 import com.example.common.baseentity.CommonResponse;
-import com.example.common.domain.Role;
-import com.example.encycloservice.adapter.in.response.PlantIdentifyResponse;
+import com.example.encycloservice.adapter.out.external.PlantDetailResult;
+import com.example.encycloservice.adapter.out.external.SearchResultByScraper;
 import com.example.encycloservice.application.port.in.IdentifyPlantUseCase;
 import com.example.encycloservice.application.port.in.ScrapeUseCase;
-import com.example.encycloservice.adapter.out.PlantDetailResult;
-import com.example.encycloservice.adapter.out.SearchPlantResultList;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
@@ -31,20 +27,18 @@ public class ScrapingController {
     private final IdentifyPlantUseCase identifyPlantUseCase;
 
     @GetMapping("/search")
-    @Authenticate(Role.MEMBER)
-    public ResponseEntity<CommonResponse<SearchPlantResultList>> search(
+    public ResponseEntity<CommonResponse<SearchResultByScraper>> search(
             @RequestParam("keyword")
             @Valid
             @Size(min = 2, message = "검색어가 너무 짧습니다.")
             @Parameter(description = "검색 키워드") String keyword) {
 
-        SearchPlantResultList result = scrapeUseCase.searchPlant(keyword);
+        SearchResultByScraper result = scrapeUseCase.searchPlant(keyword);
 
         return CommonResponse.okWithMessage("검색 성공", result);
     }
 
     @GetMapping("/detail")
-    @Authenticate(Role.MEMBER)
     public ResponseEntity<CommonResponse<PlantDetailResult>> scrapeDetail(
             @RequestParam("plantName")
             @Valid

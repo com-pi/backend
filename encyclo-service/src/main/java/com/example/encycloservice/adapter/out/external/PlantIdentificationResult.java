@@ -1,4 +1,4 @@
-package com.example.encycloservice.adapter.out;
+package com.example.encycloservice.adapter.out.external;
 
 import com.example.encycloservice.adapter.in.response.PlantIdentifyResponse;
 import com.example.encycloservice.domain.PlantTaxonomy;

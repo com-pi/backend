@@ -1,12 +1,13 @@
 package com.example.common.baseentity;
 
-import jakarta.persistence.*;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 
 import java.time.LocalDateTime;
 
 @MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
 public abstract class BaseTimeAbstractEntity {
 
     @SuppressWarnings("unused")
@@ -16,8 +17,6 @@ public abstract class BaseTimeAbstractEntity {
     @SuppressWarnings("unused")
     @Column(name = "UPDATED_AT")
     private LocalDateTime updatedAt;
-
-
 
     @PrePersist
     protected void onCreate(){

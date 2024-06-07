@@ -1,12 +1,12 @@
 package com.example.encycloservice.application.port.in;
 
-import com.example.encycloservice.adapter.out.PlantDetailResult;
-import com.example.encycloservice.adapter.out.SearchPlantResultList;
+import com.example.encycloservice.adapter.out.external.PlantDetailResult;
+import com.example.encycloservice.adapter.out.external.SearchResultByScraper;
 
 public interface ScrapeUseCase {
 
     PlantDetailResult scrapePlantDetail(String plantName);
-    SearchPlantResultList searchPlant(String keyword);
+    SearchResultByScraper searchPlant(String keyword);
 
 
 }

@@ -1,6 +1,6 @@
-package com.example.encycloservice.adapter.out;
+package com.example.encycloservice.adapter.out.external;
 
-import com.example.encycloservice.application.port.out.SearchPlantQuery;
+import com.example.encycloservice.application.port.out.ScraperPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,7 +9,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class SearchPlantAdapter implements SearchPlantQuery {
+public class SearchPlantAdapter implements ScraperPort {
 
     private final PlantInfoScraper plantInfoScraper;
     private final PlantIdentifier plantIdentifier;
@@ -17,7 +17,7 @@ public class SearchPlantAdapter implements SearchPlantQuery {
     private final java.lang.String appKey = "2b10OsIi0nKjga2Wggytf9xmEu";
 
     @Override
-    public SearchPlantResultList searchPlant(String keyword){
+    public SearchResultByScraper searchPlant(String keyword){
         return plantInfoScraper.searchPlant(keyword);
     }
 

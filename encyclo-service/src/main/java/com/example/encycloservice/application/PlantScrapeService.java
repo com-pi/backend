@@ -1,10 +1,10 @@
 package com.example.encycloservice.application;
 
 import com.example.common.exception.CommonException;
-import com.example.encycloservice.adapter.out.PlantDetailResult;
-import com.example.encycloservice.adapter.out.SearchPlantResultList;
+import com.example.encycloservice.adapter.out.external.PlantDetailResult;
+import com.example.encycloservice.adapter.out.external.SearchResultByScraper;
 import com.example.encycloservice.application.port.in.ScrapeUseCase;
-import com.example.encycloservice.application.port.out.SearchPlantQuery;
+import com.example.encycloservice.application.port.out.ScraperPort;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,12 +14,12 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PlantScrapeService implements ScrapeUseCase {
 
-    private final SearchPlantQuery searchPlantQuery;
+    private final ScraperPort scraperPort;
 
     @Override
     public PlantDetailResult scrapePlantDetail(String plantName) {
         try {
-            return searchPlantQuery.plantDetail(plantName);
+            return scraperPort.plantDetail(plantName);
         } catch (FeignException e) {
             switch (e.status()) {
                 case 404:
@@ -31,9 +31,9 @@ public class PlantScrapeService implements ScrapeUseCase {
     }
 
     @Override
-    public SearchPlantResultList searchPlant(String keyword) {
+    public SearchResultByScraper searchPlant(String keyword) {
         try {
-            return searchPlantQuery.searchPlant(keyword);
+            return scraperPort.searchPlant(keyword);
         } catch (FeignException e) {
             switch (e.status()) {
                 case 404:

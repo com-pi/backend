@@ -1,4 +1,4 @@
-package com.example.encycloservice.adapter.out;
+package com.example.encycloservice.adapter.out.external;
 
 
 import org.springframework.cloud.openfeign.FeignClient;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface PlantInfoScraper {
 
     @GetMapping("/search/{keyword}")
-    SearchPlantResultList searchPlant(@PathVariable String keyword);
+    SearchResultByScraper searchPlant(@PathVariable String keyword);
 
     @GetMapping("/detail/{plantName}")
     PlantDetailResult plantDetail(@PathVariable String plantName);

@@ -1,4 +1,4 @@
-package com.example.encycloservice.adapter.out;
+package com.example.encycloservice.adapter.out.external;
 
 import com.example.encycloservice.configuration.FeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;

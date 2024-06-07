@@ -1,5 +1,6 @@
 package com.example.encycloservice.domain;
 
+import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Getter
+@Embeddable
 public class PlantTaxonomy {
     // 종
     private String species;
