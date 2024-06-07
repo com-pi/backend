@@ -6,6 +6,7 @@ import com.example.encycloservice.domain.PlantSpecies;
 import com.example.encycloservice.domain.PlantTaxonomy;
 import com.example.encycloservice.domain.PlantingCondition;
 import com.example.encycloservice.domain.PlantingInfo;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +20,7 @@ import java.util.List;
 @Getter
 @Builder
 @Entity
+@Table(name = "PLANT_SPECIES")
 public class PlantSpeciesEntity extends BaseTimeAbstractEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
