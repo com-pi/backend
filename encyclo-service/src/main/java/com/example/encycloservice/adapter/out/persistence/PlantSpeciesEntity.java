@@ -27,6 +27,11 @@ public class PlantSpeciesEntity extends BaseTimeAbstractEntity {
     private Long id;
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "species", column = @Column(name = "taxonomy_species")),
+            @AttributeOverride(name = "genus", column = @Column(name = "taxonomy_genus")),
+            @AttributeOverride(name = "family", column = @Column(name = "taxonomy_family"))
+    })
     private PlantTaxonomy plantTaxonomy;
 
     @Column(unique = true)
