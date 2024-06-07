@@ -1,5 +1,6 @@
 package com.example.boardservice.exception.handler;
 
+import com.example.boardservice.exception.DuplicateLikeException;
 import com.example.common.baseentity.CommonResponse;
 import com.example.common.exception.InternalServerException;
 import com.example.common.exception.NotFoundException;
@@ -33,4 +34,8 @@ public class GlobalExceptionHandler {
         return CommonResponse.internalServerErrorWithMessage(exception.getMessage());
     }
 
+    @ExceptionHandler(DuplicateLikeException.class)
+    public ResponseEntity<CommonResponse<Void>> handleDuplicatedLikeException(DuplicateLikeException exception) {
+        return CommonResponse.conflictWithMessage(exception.getMessage());
+    }
 }

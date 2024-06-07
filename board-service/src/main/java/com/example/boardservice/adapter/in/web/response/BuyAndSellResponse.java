@@ -12,7 +12,7 @@ public record BuyAndSellResponse(
 ) {
     public static BuyAndSellResponse from(BuyAndSell buyAndSell) {
         return new BuyAndSellResponse(
-                buyAndSell.getId(),
+                buyAndSell.getArticleId(),
                 buyAndSell.getTitle(),
                 buyAndSell.getImageUrls(),
                 buyAndSell.getPrice()

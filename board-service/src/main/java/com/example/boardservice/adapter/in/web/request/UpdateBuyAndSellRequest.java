@@ -1,18 +1,22 @@
-package com.example.boardservice.adapter.in.web.command;
+package com.example.boardservice.adapter.in.web.request;
 
+import com.example.boardservice.adapter.out.persistence.converter.LocationToPointConverter;
+import com.example.boardservice.domain.BuyAndSell;
 import com.example.boardservice.domain.Location;
 import com.example.boardservice.util.validator.FreePriceValid;
 import com.example.common.baseentity.SelfValidating;
+import com.example.common.domain.Address;
 import lombok.Getter;
-import org.springframework.web.multipart.MultipartFile;
+import lombok.Setter;
 
 import java.util.List;
 
 @Getter
 @FreePriceValid
-public class UpdateBuyAndSellCommand extends SelfValidating<UpdateBuyAndSellCommand> {
+public class UpdateBuyAndSellRequest extends SelfValidating<UpdateBuyAndSellRequest> {
 
     private final Long articleId;
+    @Setter
     private Long memberId;
     private final String title;
     private final String content;
@@ -23,11 +27,10 @@ public class UpdateBuyAndSellCommand extends SelfValidating<UpdateBuyAndSellComm
     private final String eupmyundong;
     private final Boolean isFree;
     private final List<String> hashTags;
-    private List<MultipartFile> imageFiles;
 
-    public UpdateBuyAndSellCommand(Long articleId, String title, String content, Integer price,
+    public UpdateBuyAndSellRequest(Long articleId, String title, String content, Integer price,
                                    Location location, String sido, String sigungu, String eupmyundong, Boolean isFree,
-                                   List<String> hashTags, List<MultipartFile> imageFiles) {
+                                   List<String> hashTags) {
         this.articleId = articleId;
         this.title = title;
         this.content = content;
@@ -38,12 +41,21 @@ public class UpdateBuyAndSellCommand extends SelfValidating<UpdateBuyAndSellComm
         this.eupmyundong = eupmyundong;
         this.isFree = isFree;
         this.hashTags = hashTags;
-        this.imageFiles = imageFiles;
         validateSelf();
     }
 
-    public void addValue(Long memberId, List<MultipartFile> imageFiles) {
-        this.memberId = memberId;
-        this.imageFiles = imageFiles;
+
+    public BuyAndSell toDomain() {
+        return BuyAndSell.builder()
+                .articleId(articleId)
+                .memberId(memberId)
+                .title(title)
+                .content(content)
+                .price(price)
+                .location(new LocationToPointConverter().convertToDatabaseColumn(location))
+                .area(Address.of(sido, sigungu, eupmyundong))
+                .isFree(isFree)
+                .hashtags(hashTags)
+                .build();
     }
 }

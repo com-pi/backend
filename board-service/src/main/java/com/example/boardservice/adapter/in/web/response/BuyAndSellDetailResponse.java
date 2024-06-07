@@ -19,7 +19,7 @@ public record BuyAndSellDetailResponse(
                 buyAndSell.getTitle(),
                 buyAndSell.getImageUrls(),
                 buyAndSell.getPrice(),
-                buyAndSell.getMember().getMemberId(),
+                buyAndSell.getMemberId(),
                 new LocationToPointConverter().convertToEntityAttribute(buyAndSell.getLocation()),
                 buyAndSell.getContent()
         );

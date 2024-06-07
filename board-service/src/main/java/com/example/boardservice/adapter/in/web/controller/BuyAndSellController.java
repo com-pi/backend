@@ -1,18 +1,27 @@
 package com.example.boardservice.adapter.in.web.controller;
 
-import com.example.boardservice.adapter.in.web.command.PostBuyAndSellCommand;
-import com.example.boardservice.adapter.in.web.command.UpdateBuyAndSellCommand;
-import com.example.boardservice.application.port.in.ArticleUseCase;
+import com.example.boardservice.adapter.in.web.request.DeleteBuyAndSellRequest;
+import com.example.boardservice.adapter.in.web.request.PostBuyAndSellRequest;
+import com.example.boardservice.adapter.in.web.request.UpdateBuyAndSellRequest;
+import com.example.boardservice.adapter.in.web.response.BuyAndSellDetailResponse;
+import com.example.boardservice.adapter.in.web.response.BuyAndSellListResponse;
+import com.example.boardservice.adapter.in.web.response.BuyAndSellResponse;
+import com.example.boardservice.application.port.in.BuyAndSellUseCase;
 import com.example.boardservice.security.PassportHolder;
 import com.example.common.annotation.Authenticate;
 import com.example.common.baseentity.CommonResponse;
 import com.example.common.domain.Role;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +34,7 @@ import java.util.List;
 @RequestMapping("/buy-and-sell")
 public class BuyAndSellController {
 
-    private final ArticleUseCase articleUseCase;
+    private final BuyAndSellUseCase buyAndSellUseCase;
     private final ObjectMapper objectMapper;
 
     @Tag(name = "식물거래 게시글 작성", description = "새로운 식물거래 게시글을 작성합니다.")
@@ -43,11 +52,9 @@ public class BuyAndSellController {
             @RequestPart("data") @Valid String requestJson,
             @RequestPart("imageFiles") List<MultipartFile> imageFiles) throws JsonProcessingException {
 
-        PostBuyAndSellCommand command = objectMapper.readValue(requestJson, PostBuyAndSellCommand.class);
-        command.setMemberId(PassportHolder.getPassport().memberId());
-        command.setImageFiles(imageFiles);
-
-        Long articleId = articleUseCase.postBuyAndSell(command);
+        PostBuyAndSellRequest request = objectMapper.readValue(requestJson, PostBuyAndSellRequest.class);
+        request.setMemberId(PassportHolder.getPassport().memberId());
+        Long articleId = buyAndSellUseCase.postBuyAndSell(request.toDomain(), imageFiles);
 
         return CommonResponse.okWithMessage("게시글 작성에 성공하였습니다.", articleId);
     }
@@ -65,18 +72,57 @@ public class BuyAndSellController {
             )
             @RequestPart("data") @Valid String requestJson,
             @RequestPart(value = "imageFiles", required = false) List<MultipartFile> imageFiles) throws JsonProcessingException {
-        UpdateBuyAndSellCommand command = objectMapper.readValue(requestJson, UpdateBuyAndSellCommand.class);
-        command.addValue(PassportHolder.getPassport().memberId(), imageFiles);
+        UpdateBuyAndSellRequest request = objectMapper.readValue(requestJson, UpdateBuyAndSellRequest.class);
+        request.setMemberId(PassportHolder.getPassport().memberId());
 
-        Long articleId = articleUseCase.updateBuyAndSell(command);
+        Long articleId = buyAndSellUseCase.updateBuyAndSell(request.toDomain(), imageFiles);
         return CommonResponse.okWithMessage("게시글 수정에 성공하였습니다.", articleId);
     }
 
     @Tag(name = "식물거래 게시글 삭제", description = "새로운 식물거래 게시글을 삭제합니다.")
     @Authenticate(Role.MEMBER)
     @DeleteMapping("/{articleId}")
-    public ResponseEntity<CommonResponse<Long>> deleteBuyAndSell(@PathVariable("articleId") Long articleId) {
-        Long deletedArticleId = articleUseCase.delete(articleId);
+    public ResponseEntity<CommonResponse<Long>> deleteBuyAndSell(@PathVariable Long articleId) {
+        DeleteBuyAndSellRequest request = DeleteBuyAndSellRequest.of(articleId);
+        request.addValue(PassportHolder.getPassport().memberId());
+
+        Long deletedArticleId = buyAndSellUseCase.delete(request.toDomain());
         return CommonResponse.okWithMessage("게시글 삭제에 성공하였습니다.", deletedArticleId);
+    }
+
+    @Tag(name = "식물거래 게시글 목록 조회", description = "식물거래 게시글 목록을 조회합니다.")
+    @Authenticate(Role.MEMBER)
+    @GetMapping(value = "/{page}")
+    public ResponseEntity<BuyAndSellListResponse> getBuyAndSellList(@PathVariable int page) {
+        List<BuyAndSellResponse> response = buyAndSellUseCase.getBuyAndSellList(page).stream()
+                .map(BuyAndSellResponse::from)
+                .toList();
+        return ResponseEntity.ok(BuyAndSellListResponse.of(response));
+    }
+
+    @Tag(name = "식물거래 게시글 상세 조회", description = "식물거래 게시글을 상세 조회합니다.")
+    @Authenticate(Role.MEMBER)
+    @GetMapping(value = "/detail/{id}")
+    public ResponseEntity<BuyAndSellDetailResponse> getBuyAndSell(@PathVariable Long id) {
+        BuyAndSellDetailResponse response = BuyAndSellDetailResponse.of(buyAndSellUseCase.getBuyAndSell(id));
+        return ResponseEntity.ok(response);
+    }
+
+    @Tag(name = "식물거래 게시글 작성자별 목록 조회", description = "식물거래 게시글을 목록을 작성자별로 조회합니다.")
+    @Authenticate(Role.MEMBER)
+    @Parameters({
+            @Parameter(name = "page", description = "페이지 번호", example = "0"),
+            @Parameter(name = "size", description = "페이지 크기", example = "4"),
+            @Parameter(name = "sort", description = "정렬 기준", example = "createdAt,DESC")
+    })
+    @GetMapping(value = "/member/{memberId}")
+    public ResponseEntity<BuyAndSellListResponse> getBuyAndSellListByMemberId(
+            @PageableDefault(size = 4, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            @PathVariable Long memberId
+    ) {
+        List<BuyAndSellResponse> response = buyAndSellUseCase.getBuyAndSellListByMemberId(memberId, pageable).stream()
+                .map(BuyAndSellResponse::from)
+                .toList();
+        return ResponseEntity.ok(BuyAndSellListResponse.of(response));
     }
 }

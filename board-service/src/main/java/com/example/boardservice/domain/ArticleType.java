@@ -19,7 +19,7 @@ public enum ArticleType {
 
     public static ArticleType fromString(String type) {
         return switch (type.toLowerCase()) {
-            case "buyandsell" -> BUY_AND_SELL;
+            case "buy_and_sell" -> BUY_AND_SELL;
             case "plantsitter" -> PLANT_SITTER;
             case "showoff" -> SHOW_OFF;
             case "qna" -> QNA;

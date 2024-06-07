@@ -1,16 +1,16 @@
 package com.example.boardservice.util.validator;
 
-import com.example.boardservice.adapter.in.web.command.PostBuyAndSellCommand;
-import com.example.boardservice.adapter.in.web.command.UpdateBuyAndSellCommand;
+import com.example.boardservice.adapter.in.web.request.PostBuyAndSellRequest;
+import com.example.boardservice.adapter.in.web.request.UpdateBuyAndSellRequest;
 
 public class FreePriceValidationStrategy implements ValidationStrategy {
 
     @Override
     public boolean validate(Object obj) {
-        if (obj instanceof PostBuyAndSellCommand command) {
+        if (obj instanceof PostBuyAndSellRequest command) {
             return validateFields(command.getIsFree(), command.getPrice());
         }
-        if (obj instanceof UpdateBuyAndSellCommand command) {
+        if (obj instanceof UpdateBuyAndSellRequest command) {
             return validateFields(command.getIsFree(), command.getPrice());
         }
         return false;

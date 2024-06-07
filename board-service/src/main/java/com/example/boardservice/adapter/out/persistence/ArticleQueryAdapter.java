@@ -1,27 +1,22 @@
 package com.example.boardservice.adapter.out.persistence;
 
+import com.example.boardservice.adapter.out.persistence.entity.CommonArticleEntity;
 import com.example.boardservice.application.port.out.ArticleQueryPort;
-import com.example.boardservice.domain.BuyAndSell;
+import com.example.boardservice.domain.Article;
+import com.example.common.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class ArticleQueryAdapter implements ArticleQueryPort {
 
-    private final BuyAndSellRepository buyAndSellRepository;
+    private final ArticleRepository articleRepository;
 
     @Override
-    public Page<BuyAndSell> getBuyAndSellList(int page) {
-        return buyAndSellRepository.findByDeletionYn("N", PageRequest.of(page, 10));
-    }
-
-    @Override
-    public Optional<BuyAndSell> getBuyAndSell(Long id) {
-        return buyAndSellRepository.findById(id);
+    public Article getArticleById(Long articleId) {
+        CommonArticleEntity articleEntity = articleRepository.findById(articleId)
+                .orElseThrow(() -> new NotFoundException(CommonArticleEntity.class));
+        return articleEntity.toArticle();
     }
 }

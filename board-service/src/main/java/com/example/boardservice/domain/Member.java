@@ -1,48 +1,39 @@
 package com.example.boardservice.domain;
 
-import com.example.common.domain.Passport;
-import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import java.util.Objects;
-
-@Entity
-@Table(name = "member")
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 public class Member {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
     private Long memberId;
+
     private String nickname;
+
     private String imageUrl;
 
-    private Member(Long id) {
-        this.id = id;
+    /**
+     * 생성자
+     */
+    @Builder
+    public Member(Long memberId, String nickname, String imageUrl) {
+        this.memberId = memberId;
+        this.nickname = nickname;
+        this.imageUrl = imageUrl;
     }
 
-    public static Member ofId(Long authorId){
+    private Member(Long memberId) {
+        this.memberId = memberId;
+    }
+
+    /**
+     *
+     */
+    public static Member ofId(Long authorId) {
         return new Member(authorId);
-    }
-
-    public static Member fromPassport(Passport passport){
-        return Member.builder()
-                .memberId(passport.memberId())
-                .nickname(passport.nickName())
-                .imageUrl(passport.thumbnail())
-                .build();
-    }
-
-    public void update(Passport passport){
-        this.nickname = passport.nickName();
-        this.imageUrl = passport.thumbnail();
-    }
-
-    public boolean isSameAs(Long id) {
-        return Objects.equals(this.memberId, id);
     }
 }

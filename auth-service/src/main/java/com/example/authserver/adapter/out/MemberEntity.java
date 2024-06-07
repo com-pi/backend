@@ -70,6 +70,7 @@ public class MemberEntity extends DeletedAtAbstractEntity {
                 .build();
     }
 
+
     public static Member toDomain(MemberEntity memberEntity) {
         return Member.builder()
                 .id(memberEntity.getId())

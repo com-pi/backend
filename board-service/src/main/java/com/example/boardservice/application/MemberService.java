@@ -1,7 +1,8 @@
 package com.example.boardservice.application;
 
-import com.example.boardservice.application.port.out.MemberPort;
-import com.example.boardservice.domain.Member;
+import com.example.boardservice.adapter.out.persistence.entity.MemberEntity;
+import com.example.boardservice.application.port.out.MemberCommandPort;
+import com.example.boardservice.application.port.out.MemberQueryPort;
 import com.example.common.domain.Passport;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -14,17 +15,21 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberService {
 
-    private final MemberPort memberPort;
+    private final MemberCommandPort memberCommandPort;
+    private final MemberQueryPort memberQueryPort;
 
+    @Transactional
     public void integrateMember(Passport passport) {
-        Optional<Member> storedMember = memberPort.findById(passport.memberId());
+        Optional<MemberEntity> storedMember = memberQueryPort.findById(passport.memberId());
 
         if (storedMember.isEmpty()) {
-            Member member = Member.fromPassport(passport);
-            memberPort.saveAndFlush(member);
+            MemberEntity member = MemberEntity.fromPassport(passport);
+            memberCommandPort.saveAndFlush(member);
 
         } else {
-            storedMember.get().update(passport);
+            MemberEntity member = storedMember.get();
+            member.update(passport);
+            memberCommandPort.save(member);
         }
     }
 
