@@ -44,9 +44,9 @@ public class EncyclopediaService {
     }
 
     @Transactional(readOnly = true)
-    public PlantSpecies getPlantDetailByName(String name) {
-        return encyclopediaQuery.findByName(name)
-                .orElseThrow(() -> new NotFoundException("Plant with name " + name + " not found"));
+    public PlantSpecies getPlantDetailByName(Long id) {
+        return encyclopediaQuery.findById(id)
+                .orElseThrow(() -> new NotFoundException("Plant with id " + id + " not found"));
     }
 
 }

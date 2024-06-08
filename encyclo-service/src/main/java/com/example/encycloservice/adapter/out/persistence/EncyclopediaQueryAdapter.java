@@ -27,8 +27,8 @@ public class EncyclopediaQueryAdapter implements EncyclopediaQuery {
     }
 
     @Override
-    public Optional<PlantSpecies> findByName(String name) {
-        return encyclopediaRepository.findByName(name)
+    public Optional<PlantSpecies> findById(Long id) {
+        return encyclopediaRepository.findById(id)
                 .flatMap(entity -> Optional.ofNullable(entity.toDomain()));
     }
 

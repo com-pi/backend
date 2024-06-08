@@ -9,6 +9,6 @@ public interface EncyclopediaQuery {
 
     SearchPlantQueryResult searchByKeyword(String keyword, int page, int size);
 
-    Optional<PlantSpecies> findByName(String name);
+    Optional<PlantSpecies> findById(Long id);
 
 }

@@ -6,7 +6,6 @@ import com.example.encycloservice.domain.PlantSpecies;
 import com.example.encycloservice.domain.PlantTaxonomy;
 import com.example.encycloservice.domain.PlantingCondition;
 import com.example.encycloservice.domain.PlantingInfo;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,6 +55,13 @@ public class PlantSpeciesEntity extends BaseTimeAbstractEntity {
 
     @Embedded
     @AttributeOverrides({
+            @AttributeOverride(name = "summary", column = @Column(name = "humidity_summary")),
+            @AttributeOverride(name = "description", column = @Column(name = "humidity_description"))
+    })
+    private PlantingInfo humidityInfo;
+
+    @Embedded
+    @AttributeOverrides({
             @AttributeOverride(name = "min", column = @Column(name = "temperature_min")),
             @AttributeOverride(name = "max", column = @Column(name = "temperature_max"))
     })
@@ -75,10 +81,12 @@ public class PlantSpeciesEntity extends BaseTimeAbstractEntity {
     public PlantSpecies toDomain(){
         return PlantSpecies.builder()
                 .id(id)
+                .plantTaxonomy(plantTaxonomy)
                 .commonName(commonName)
                 .description(description)
                 .wateringInfo(wateringInfo)
                 .environmentInfo(environmentInfo)
+                .humidityInfo(humidityInfo)
                 .temperatureCondition(temperatureCondition)
                 .humidCondition(humidCondition)
                 .imageUrls(imageUrls)
@@ -88,10 +96,12 @@ public class PlantSpeciesEntity extends BaseTimeAbstractEntity {
     public static PlantSpeciesEntity fromDomain(PlantSpecies plantSpecies){
         return PlantSpeciesEntity.builder()
                 .id(plantSpecies.getId())
+                .plantTaxonomy(plantSpecies.getPlantTaxonomy())
                 .commonName(plantSpecies.getCommonName())
                 .description(plantSpecies.getDescription())
                 .wateringInfo(plantSpecies.getWateringInfo())
                 .environmentInfo(plantSpecies.getEnvironmentInfo())
+                .humidityInfo(plantSpecies.getHumidityInfo())
                 .temperatureCondition(plantSpecies.getTemperatureCondition())
                 .humidCondition(plantSpecies.getHumidCondition())
                 .imageUrls(plantSpecies.getImageUrls())

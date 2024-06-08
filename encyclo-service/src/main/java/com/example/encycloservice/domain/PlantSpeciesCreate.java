@@ -11,6 +11,7 @@ public record PlantSpeciesCreate(
         String description,
         PlantingInfo wateringInfo,
         PlantingInfo environmentInfo,
+        PlantingInfo humidityInfo,
         PlantingCondition temperatureCondition,
         PlantingCondition humidCondition,
         List<String> imageUrls
