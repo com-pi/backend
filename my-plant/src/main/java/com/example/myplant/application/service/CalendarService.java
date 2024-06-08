@@ -1,17 +1,19 @@
 package com.example.myplant.application.service;
 
-import com.example.myplant.application.port.in.CreateCalendarUseCase;
-import com.example.myplant.application.port.in.UpdateCalendarUseCase;
+import com.example.myplant.adapter.in.web.command.CalendarCommand;
+import com.example.myplant.application.port.in.CalendarUseCase;
 import com.example.myplant.application.port.out.LoadCalendarPort;
 import com.example.myplant.application.port.out.SaveCalendarPort;
 import com.example.myplant.domain.Calendar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
-public class CalendarService implements CreateCalendarUseCase, UpdateCalendarUseCase {
+public class CalendarService implements CalendarUseCase {
     private final SaveCalendarPort saveCalendarPort;
     private final LoadCalendarPort loadCalendarPort;
 
@@ -22,21 +24,49 @@ public class CalendarService implements CreateCalendarUseCase, UpdateCalendarUse
     }
 
     @Override
-    public Calendar createCalendar(Calendar calendar) {
-        return saveCalendarPort.saveCalendar(calendar);
+    public Long createCalendar(CalendarCommand command) {
+        Calendar calendar = Calendar.builder()
+                .plantId(command.getPlantId())
+                .eventName(command.getEventName())
+                .description(command.getDescription())
+                .eventDate(command.getEventDate())
+                .build();
+        return saveCalendarPort.saveCalendar(calendar).getId();
     }
 
     @Override
-    public Calendar updateCalendar(Long id, Calendar calendar) {
-        Calendar existingCalendar = loadCalendarPort.loadCalendarById(id)
-                .orElseThrow(() -> new RuntimeException("Calendar not found"));
-        existingCalendar.setTitle(calendar.getTitle());
-        existingCalendar.setDescription(calendar.getDescription());
-        existingCalendar.setPlant(calendar.getPlant());
-        return saveCalendarPort.saveCalendar(existingCalendar);
+    public void updateCalendar(Long id, CalendarCommand command) {
+        Optional<Calendar> optionalCalendar = loadCalendarPort.loadCalendarById(id);
+        if (optionalCalendar.isPresent()) {
+            Calendar calendar = optionalCalendar.get();
+            calendar.setEventName(command.getEventName());
+            calendar.setDescription(command.getDescription());
+            calendar.setEventDate(command.getEventDate());
+            saveCalendarPort.saveCalendar(calendar);
+        } else {
+            throw new RuntimeException("Calendar not found");
+        }
     }
 
-    public List<Calendar> getAllCalendars() {
-        return loadCalendarPort.loadAllCalendars();
+    @Override
+    public void deleteCalendar(Long id) {
+        loadCalendarPort.loadCalendarById(id)
+                .ifPresent(calendar -> saveCalendarPort.deleteCalendar(calendar));
+    }
+
+    @Override
+    public Calendar getCalendarById(Long id) {
+        return loadCalendarPort.loadCalendarById(id)
+                .orElseThrow(() -> new RuntimeException("Calendar not found"));
+    }
+
+    @Override
+    public List<Calendar> getCalendarsByPlantId(Long plantId) {
+        return loadCalendarPort.loadCalendarsByPlantId(plantId);
+    }
+
+    @Override
+    public List<Calendar> getCalendarsByDate(LocalDate date) {
+        return loadCalendarPort.loadCalendarsByDate(date);
     }
 }

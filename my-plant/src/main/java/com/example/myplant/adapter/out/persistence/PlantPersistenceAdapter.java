@@ -1,5 +1,6 @@
 package com.example.myplant.adapter.out.persistence;
 
+import com.example.myplant.adapter.out.repository.*;
 import com.example.myplant.application.port.out.*;
 import com.example.myplant.domain.Character;
 import com.example.myplant.domain.*;
@@ -10,16 +11,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Component
-public class PlantPersistenceAdapter implements SavePlantPort, FindPlantPort, SaveCharacterPort, LoadCharacterPort, SaveCharacterIllustrationPort,
-        LoadCharacterIllustrationPort, SavePlantCharacterPort, LoadPlantCharacterPort, LoadCalendarPort, SaveCalendarPort, LoadPlantDiaryPort, SavePlantDiaryPort, LoadDiaryPort, SaveDiaryPort {
+public class PlantPersistenceAdapter implements PlantPort, SaveCharacterIllustrationPort,
+        LoadCharacterIllustrationPort, SavePlantCharacterPort, LoadPlantCharacterPort,LoadPlantDiaryPort, SavePlantDiaryPort{
 
     private final PlantRepository plantRepository;
     private final CharacterRepository characterRepository;
     private final CharacterIllustrationRepository characterIllustrationRepository;
     private final PlantCharacterRepository plantCharacterRepository;
-    private final CalendarRepository calendarRepository;
     private final PlantDiaryRepository plantDiaryRepository;
-    private final DiaryRepository diaryRepository;
 
     @Autowired
     public PlantPersistenceAdapter(
@@ -27,16 +26,12 @@ public class PlantPersistenceAdapter implements SavePlantPort, FindPlantPort, Sa
             CharacterRepository characterRepository,
             CharacterIllustrationRepository characterIllustrationRepository,
             PlantCharacterRepository plantCharacterRepository,
-            CalendarRepository calendarRepository,
-            PlantDiaryRepository plantDiaryRepository,
-            DiaryRepository diaryRepository) {
+            PlantDiaryRepository plantDiaryRepository) {
         this.plantRepository = plantRepository;
         this.characterRepository = characterRepository;
         this.characterIllustrationRepository = characterIllustrationRepository;
         this.plantCharacterRepository = plantCharacterRepository;
-        this.calendarRepository = calendarRepository;
         this.plantDiaryRepository = plantDiaryRepository;
-        this.diaryRepository = diaryRepository;
     }
 
     @Override
@@ -60,23 +55,13 @@ public class PlantPersistenceAdapter implements SavePlantPort, FindPlantPort, Sa
     }
 
     @Override
+    public void deletePlantById(Long id) {
+        plantRepository.deleteById(id);
+    }
+
+    @Override
     public Optional<Character> findCharacterById(Long characterId) {
         return characterRepository.findById(characterId);
-    }
-
-    @Override
-    public Character saveCharacter(Character character) {
-        return characterRepository.save(character);
-    }
-
-    @Override
-    public Optional<Character> loadCharacterById(Long id) {
-        return characterRepository.findById(id);
-    }
-
-    @Override
-    public List<Character> loadAllCharacters() {
-        return characterRepository.findAll();
     }
 
     @Override
@@ -110,21 +95,6 @@ public class PlantPersistenceAdapter implements SavePlantPort, FindPlantPort, Sa
     }
 
     @Override
-    public Calendar saveCalendar(Calendar calendar) {
-        return calendarRepository.save(calendar);
-    }
-
-    @Override
-    public Optional<Calendar> loadCalendarById(Long id) {
-        return calendarRepository.findById(id);
-    }
-
-    @Override
-    public List<Calendar> loadAllCalendars() {
-        return calendarRepository.findAll();
-    }
-
-    @Override
     public PlantDiary savePlantDiary(PlantDiary plantDiary) {
         return plantDiaryRepository.save(plantDiary);
     }
@@ -138,20 +108,4 @@ public class PlantPersistenceAdapter implements SavePlantPort, FindPlantPort, Sa
     public List<PlantDiary> loadAllPlantDiaries() {
         return plantDiaryRepository.findAll();
     }
-
-    @Override
-    public Diary saveDiary(Diary diary) {
-        return diaryRepository.save(diary);
-    }
-
-    @Override
-    public Optional<Diary> loadDiaryById(Long id) {
-        return diaryRepository.findById(id);
-    }
-
-    @Override
-    public List<Diary> loadAllDiaries() {
-        return diaryRepository.findAll();
-    }
-
 }

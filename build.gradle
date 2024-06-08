@@ -131,6 +131,7 @@ project(':board-service') {
 
 project(':my-plant'){
 	dependencies {
+		implementation project(":image-module")
 		implementation project(":common")
 		implementation 'org.springframework.boot:spring-boot-starter'
 		implementation 'org.springframework.boot:spring-boot-starter-web'

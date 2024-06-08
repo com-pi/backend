@@ -1,34 +1,34 @@
 package com.example.myplant.domain;
 
 import jakarta.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Diary {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private Long plantId;
     private String title;
     private String content;
-    private String imageUrl;
+
+    @ElementCollection
+    private List<String> managementTypes;
+
+    private LocalDate date;
+
+    @ElementCollection
+    private List<String> images;
 
     private boolean isPublic;
 
-    @OneToOne(mappedBy = "diary")
-    private PlantDiary plantDiary;
-
-    @Builder
-    public Diary(String title, String content, String imageUrl, boolean isPublic){
-        this.title = title;
-        this.content= content;
-        this.imageUrl = imageUrl;
-        this.isPublic = isPublic;
-    }
 }

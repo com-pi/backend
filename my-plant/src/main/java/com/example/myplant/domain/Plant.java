@@ -9,6 +9,7 @@ import java.util.Random;
 @Entity
 @Table(name = "plant")
 @Getter // Getter만 생성하여 불변성을 유지
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED) // 기본 생성자의 접근 레벨을 PROTECTED로 설정하여 직접 인스턴스화를 제한
 @AllArgsConstructor(access = AccessLevel.PRIVATE) // Builder를 통해서만 인스턴스를 생성하도록 설정
 public class Plant {
@@ -27,12 +28,7 @@ public class Plant {
     private LocalDate plantBirthday;
     private LocalDate lastWaterday;
     private String plantDescription;
-
-    @Embedded
-    private WateringInfo wateringInfo;
-
-    @Embedded
-    private MaintenanceSchedule maintenanceSchedule;
+    private int wateringIntervalInDays;
 
     private String plantLocation;
     private String potType;
@@ -45,16 +41,15 @@ public class Plant {
 
     @Builder
     public Plant(Long memberId, String plantName, String plantType, int plantAge, LocalDate plantBirthday,
-                 LocalDate lastWaterday, WateringInfo wateringInfo, MaintenanceSchedule maintenanceSchedule,
-                 String plantLocation, String potType, int intimacy, Character character) {
+                 LocalDate lastWaterday, int wateringIntervalInDays, String plantLocation, String potType,
+                 int intimacy, Character character) {
         this.memberId = memberId;
         this.plantName = plantName;
         this.plantType = plantType;
         this.plantAge = plantAge;
         this.plantBirthday = plantBirthday;
         this.lastWaterday = lastWaterday;
-        this.wateringInfo = wateringInfo;
-        this.maintenanceSchedule = maintenanceSchedule;
+        this.wateringIntervalInDays = wateringIntervalInDays;
         this.plantLocation = plantLocation;
         this.potType = potType;
         this.intimacy = intimacy;
@@ -68,15 +63,14 @@ public class Plant {
     }
 
     public void updatePlant(String plantName, String plantType, int plantAge, LocalDate plantBirthday,
-                            LocalDate lastWaterday, WateringInfo wateringInfo, MaintenanceSchedule maintenanceSchedule,
+                            LocalDate lastWaterday, int wateringIntervalInDays,
                             String plantLocation, String potType, Character character) {
         this.plantName = plantName;
         this.plantType = plantType;
         this.plantAge = plantAge;
         this.plantBirthday = plantBirthday;
         this.lastWaterday = lastWaterday;
-        this.wateringInfo = wateringInfo;
-        this.maintenanceSchedule = maintenanceSchedule;
+        this.wateringIntervalInDays = wateringIntervalInDays;
         this.plantLocation = plantLocation;
         this.potType = potType;
         this.character = character;

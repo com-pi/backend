@@ -4,4 +4,5 @@ import com.example.myplant.domain.Character;
 
 public interface SaveCharacterPort {
     Character saveCharacter(Character character);
+    void deleteCharacter(Character character);
 }
