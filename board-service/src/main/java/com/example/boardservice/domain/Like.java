@@ -10,13 +10,12 @@ public class Like {
 
     private Long likeId;
 
+    @Setter
     private Long articleId;
 
     private Long memberId;
 
     private Boolean isLiked;
-
-    private ArticleType articleType;
 
     /**
      * 생성자
@@ -24,14 +23,6 @@ public class Like {
     public Like(Long likeId, Boolean isLiked) {
         this.likeId = likeId;
         this.isLiked = isLiked;
-    }
-
-    /**
-     *
-     */
-    public void generate(ArticleType articleType) {
-        this.articleType = articleType;
-        this.isLiked = true;
     }
 
     public static Like ofStatus(Long likeId, Boolean isLiked) {
@@ -44,5 +35,13 @@ public class Like {
 
     public void unlike() {
         this.isLiked = false;
+    }
+
+    public boolean isLiked() {
+        return this.isLiked;
+    }
+
+    public void updateLikeId(Long likeId) {
+        this.likeId = likeId;
     }
 }

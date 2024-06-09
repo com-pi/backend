@@ -12,14 +12,14 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "article_type")
 @Table(name = "article")
-public abstract class CommonArticleEntity extends DeletedAtAbstractEntity {
+public class CommonArticleEntity extends DeletedAtAbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -41,6 +41,7 @@ public abstract class CommonArticleEntity extends DeletedAtAbstractEntity {
     @Transient
     protected ArticleType articleType;
 
+
     @PostLoad
     public void setArticleTypeAfterLoad() {
         this.articleType = ArticleType.fromString(this.getClass().getAnnotation(DiscriminatorValue.class).value());
@@ -57,4 +58,14 @@ public abstract class CommonArticleEntity extends DeletedAtAbstractEntity {
                 .articleType(this.articleType)
                 .build();
     }
+
+    public static CommonArticleEntity from(Long articleId) {
+        return new CommonArticleEntity(articleId);
+    }
+
+    public CommonArticleEntity(Long articleId) {
+        this.articleId = articleId;
+    }
+
+
 }

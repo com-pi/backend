@@ -27,4 +27,9 @@ public class Article {
 
     private ArticleType articleType;
 
+    public static Article from(Long articleId) {
+        return Article.builder()
+                .articleId(articleId)
+                .build();
+    }
 }

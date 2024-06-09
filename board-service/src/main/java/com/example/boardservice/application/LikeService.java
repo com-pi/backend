@@ -4,8 +4,8 @@ import com.example.boardservice.application.port.in.LikeUseCase;
 import com.example.boardservice.application.port.out.ArticleQueryPort;
 import com.example.boardservice.application.port.out.LikeCommandPort;
 import com.example.boardservice.application.port.out.LikeQueryPort;
-import com.example.boardservice.domain.Article;
 import com.example.boardservice.domain.Like;
+import com.example.boardservice.exception.DuplicateLikeException;
 import com.example.common.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,17 +25,15 @@ public class LikeService implements LikeUseCase {
     @Override
     @Transactional
     public Long like(Like like) {
-        return likeQueryPort.findLikeByArticleIdAndMemberId(like.getArticleId(), like.getMemberId())
-                .map(originLike -> {
-                    originLike.like();
-                    likeCommandPort.save(originLike);
-                    return originLike.getLikeId();
-                })
-                .orElseGet(() -> {
-                    Article article = articleQueryPort.getArticleById(like.getArticleId());
-                    like.generate(article.getArticleType());
-                    return likeCommandPort.save(like).getLikeId();
+        likeQueryPort.findLikeByArticleIdAndMemberId(like.getArticleId(), like.getMemberId())
+                .ifPresent(originLike -> {
+                    if(originLike.isLiked()) {
+                        throw new DuplicateLikeException("이미 찜을 등록한 게시물 입니다.");
+                    }
+                    like.updateLikeId(originLike.getLikeId());
                 });
+        like.like();
+        return likeCommandPort.save(like).getLikeId();
     }
 
     @Override

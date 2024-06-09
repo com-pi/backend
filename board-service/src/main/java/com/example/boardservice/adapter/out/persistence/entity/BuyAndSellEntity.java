@@ -35,24 +35,23 @@ public class BuyAndSellEntity extends CommonArticleEntity {
     @Convert(converter = JsonToStringListConverter.class)
     private List<String> hashtags;
 
+
     /**
      * 생성자
      */
+    public BuyAndSellEntity(Long articleId) {
+        this.articleId = articleId;
+    }
+
     @Builder
-    public BuyAndSellEntity(Long articleId, MemberEntity member, String title, String content,
-                            Integer viewCount, List<String> imageUrls, Integer price, Point location,
-                            Address area, Integer likeCount, Boolean isFree, List<String> hashtags) {
-        super(articleId, member, title, content, viewCount, imageUrls, ArticleType.BUY_AND_SELL);
+    public BuyAndSellEntity(Long articleId, MemberEntity member, String title, String content, Integer viewCount, List<String> imageUrls, ArticleType articleType, Integer price, Point location, Address area, Integer likeCount, Boolean isFree, List<String> hashtags) {
+        super(articleId, member, title, content, viewCount, imageUrls, articleType);
         this.price = price;
         this.location = location;
         this.area = area;
         this.likeCount = likeCount;
         this.isFree = isFree;
         this.hashtags = hashtags;
-    }
-
-    public BuyAndSellEntity(Long articleId) {
-        this.articleId = articleId;
     }
 
     /**

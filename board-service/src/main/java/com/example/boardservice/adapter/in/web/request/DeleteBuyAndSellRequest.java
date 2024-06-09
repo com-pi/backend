@@ -2,11 +2,13 @@ package com.example.boardservice.adapter.in.web.request;
 
 import com.example.boardservice.domain.BuyAndSell;
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 public class DeleteBuyAndSellRequest {
 
     private final Long articleId;
+    @Setter
     private Long memberId;
 
     public DeleteBuyAndSellRequest(Long articleId) {
@@ -15,10 +17,6 @@ public class DeleteBuyAndSellRequest {
 
     public static DeleteBuyAndSellRequest of(Long articleId) {
         return new DeleteBuyAndSellRequest(articleId);
-    }
-
-    public void addValue(Long memberId) {
-        this.memberId = memberId;
     }
 
     public BuyAndSell toDomain() {

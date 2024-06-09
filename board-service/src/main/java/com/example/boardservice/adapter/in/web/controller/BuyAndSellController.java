@@ -5,7 +5,6 @@ import com.example.boardservice.adapter.in.web.request.PostBuyAndSellRequest;
 import com.example.boardservice.adapter.in.web.request.UpdateBuyAndSellRequest;
 import com.example.boardservice.adapter.in.web.response.BuyAndSellDetailResponse;
 import com.example.boardservice.adapter.in.web.response.BuyAndSellListResponse;
-import com.example.boardservice.adapter.in.web.response.BuyAndSellResponse;
 import com.example.boardservice.application.port.in.BuyAndSellUseCase;
 import com.example.boardservice.security.PassportHolder;
 import com.example.common.annotation.Authenticate;
@@ -84,7 +83,7 @@ public class BuyAndSellController {
     @DeleteMapping("/{articleId}")
     public ResponseEntity<CommonResponse<Long>> deleteBuyAndSell(@PathVariable Long articleId) {
         DeleteBuyAndSellRequest request = DeleteBuyAndSellRequest.of(articleId);
-        request.addValue(PassportHolder.getPassport().memberId());
+        request.setMemberId(PassportHolder.getPassport().memberId());
 
         Long deletedArticleId = buyAndSellUseCase.delete(request.toDomain());
         return CommonResponse.okWithMessage("게시글 삭제에 성공하였습니다.", deletedArticleId);
@@ -94,10 +93,8 @@ public class BuyAndSellController {
     @Authenticate(Role.MEMBER)
     @GetMapping(value = "/{page}")
     public ResponseEntity<BuyAndSellListResponse> getBuyAndSellList(@PathVariable int page) {
-        List<BuyAndSellResponse> response = buyAndSellUseCase.getBuyAndSellList(page).stream()
-                .map(BuyAndSellResponse::from)
-                .toList();
-        return ResponseEntity.ok(BuyAndSellListResponse.of(response));
+        BuyAndSellListResponse response = BuyAndSellListResponse.from(buyAndSellUseCase.getBuyAndSellList(page));
+        return ResponseEntity.ok(response);
     }
 
     @Tag(name = "식물거래 게시글 상세 조회", description = "식물거래 게시글을 상세 조회합니다.")
@@ -120,9 +117,7 @@ public class BuyAndSellController {
             @PageableDefault(size = 4, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
             @PathVariable Long memberId
     ) {
-        List<BuyAndSellResponse> response = buyAndSellUseCase.getBuyAndSellListByMemberId(memberId, pageable).stream()
-                .map(BuyAndSellResponse::from)
-                .toList();
-        return ResponseEntity.ok(BuyAndSellListResponse.of(response));
+        BuyAndSellListResponse response = BuyAndSellListResponse.from(buyAndSellUseCase.getBuyAndSellListByMemberId(memberId, pageable));
+        return ResponseEntity.ok(response);
     }
 }

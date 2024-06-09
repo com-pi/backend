@@ -1,7 +1,6 @@
 package com.example.boardservice.adapter.out.persistence.entity;
 
 
-import com.example.boardservice.domain.ArticleType;
 import com.example.boardservice.domain.Like;
 import jakarta.persistence.*;
 import lombok.*;
@@ -30,22 +29,13 @@ public class LikeEntity {
 
     private Boolean isLiked;
 
-    @Enumerated(EnumType.STRING)
-    private ArticleType articleType;
 
     public static LikeEntity from(Like like) {
-        CommonArticleEntity article = null;
-        
-        ArticleType articleType = like.getArticleType();
-        if(articleType == ArticleType.BUY_AND_SELL) {
-            article = BuyAndSellEntity.from(like.getArticleId());
-        }
         return LikeEntity.builder()
                 .likeId(like.getLikeId())
-                .article(article)
+                .article(CommonArticleEntity.from(like.getArticleId()))
                 .member(MemberEntity.from(like.getMemberId()))
                 .isLiked(like.getIsLiked())
-                .articleType(articleType)
                 .build();
     }
 
@@ -55,7 +45,6 @@ public class LikeEntity {
                 .articleId(this.article.getArticleId())
                 .memberId(this.member.getMemberId())
                 .isLiked(this.isLiked)
-                .articleType(this.articleType)
                 .build();
     }
 }
