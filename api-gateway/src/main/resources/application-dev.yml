@@ -3,7 +3,8 @@ server:
 
 eureka:
   instance:
-    appname: api-gateway
+    hostname: api-gateway
+
   client:
     fetch-registry: true
     register-with-eureka: true
