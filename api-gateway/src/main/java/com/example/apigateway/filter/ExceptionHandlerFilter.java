@@ -50,6 +50,7 @@ public class ExceptionHandlerFilter extends AbstractGatewayFilterFactory<Excepti
         DataBuffer bodyBuffer = exchange.getResponse().bufferFactory().wrap(responseBodyJson.getBytes(StandardCharsets.UTF_8));
         exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
         exchange.getResponse().getHeaders().add("Content-Type", "application/json");
+        log.info("Gateway Exception 발생", e);
         return exchange.getResponse().writeWith(Mono.just(bodyBuffer));
     }
 
