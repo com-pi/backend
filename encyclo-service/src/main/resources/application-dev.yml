@@ -32,6 +32,8 @@ eureka:
     register-with-eureka: true
     service-url:
       defaultZone: http://discovery-eureka:8761/eureka
+  instance:
+    hostname: encyclo-service # 쿠버네티스 서비스 명
 
 --- # 파일 업로드 용량 설정
 spring:

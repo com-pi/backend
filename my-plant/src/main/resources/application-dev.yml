@@ -7,3 +7,5 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://discovery-eureka:8761/eureka
+  instance:
+    hostname: my-plant # 쿠버네티스 서비스 명

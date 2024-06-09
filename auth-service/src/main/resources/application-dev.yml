@@ -12,6 +12,9 @@ eureka:
     register-with-eureka: true
     service-url:
       defaultZone: http://discovery-eureka:8761/eureka
+  instance:
+    hostname: auth-service # 쿠버네티스 서비스 명
+
 
 --- ## db 설정
 spring:
