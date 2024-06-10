@@ -5,6 +5,6 @@ import com.example.encycloservice.domain.PlantSpecies;
 public interface EncyclopediaCommand {
 
     Long savePlantSpecies(PlantSpecies plantSpecies);
-    int syncDatabaseFromExternal(String id);
+    void syncDatabaseFromExternal(String id);
 
 }

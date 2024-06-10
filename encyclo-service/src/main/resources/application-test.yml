@@ -1,0 +1,62 @@
+--- # 기본 설정
+spring:
+  application:
+    name: encyclo-service
+
+server:
+  port: 8080
+
+
+--- # DB 설정
+spring:
+  datasource:
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
+    url: jdbc:tc:mysql://mysql:3306/encyclopedia
+    username: root
+    password: 1234
+
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+
+--- # 상수 관리
+scraping-target:
+  drfull:
+    url: http://scraper:8080
+
+--- # discovery 설정
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://discovery-eureka:8761/eureka
+  instance:
+    hostname: encyclo-service # 쿠버네티스 서비스 명
+
+--- # 파일 업로드 용량 설정
+spring:
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+
+--- # 기타 설정
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+
+springdoc:
+  swagger-ui:
+    display-request-duration: true
+    tags-sorter: alpha
+    operations-sorter: alpha
+    doc-expansion: none
+    syntax-highlight:
+      theme: nord
+    persist-authorization: true
+  pre-loading-enabled: true
+

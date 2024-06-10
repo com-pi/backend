@@ -8,7 +8,6 @@ import java.util.Optional;
 public interface EncyclopediaQuery {
 
     SearchPlantQueryResult searchByKeyword(String keyword, int page, int size);
-
     Optional<PlantSpecies> findById(Long id);
 
 }

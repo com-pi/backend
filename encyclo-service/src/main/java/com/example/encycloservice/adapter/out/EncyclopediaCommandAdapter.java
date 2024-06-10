@@ -25,17 +25,15 @@ public class EncyclopediaCommandAdapter implements EncyclopediaCommand {
     }
 
     @Override
-    public int syncDatabaseFromExternal(String id) {
+    public void syncDatabaseFromExternal(String id) {
         try {
             PlantDetailResult plantDetailResult = plantInfoScraper.plantDetail(id);
             if(encyclopediaRepository.existsByCommonName(plantDetailResult.name())){
-                return 0;
+                return;
             }
             PlantSpecies plantSpecies = PlantSpecies.create(plantDetailResult.toDomainCreate());
             encyclopediaRepository.save(PlantSpeciesEntity.fromDomain(plantSpecies));
-        } catch (FeignException e) {
-            return 0;
+        } catch (FeignException ignored) {
         }
-        return 1;
     }
 }

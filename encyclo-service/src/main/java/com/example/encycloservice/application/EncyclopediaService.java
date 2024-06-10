@@ -8,8 +8,8 @@ import com.example.encycloservice.application.port.out.ScraperPort;
 import com.example.encycloservice.domain.PlantSpecies;
 import com.example.encycloservice.domain.PlantSpeciesCreate;
 import com.example.encycloservice.domain.SearchPlantQueryResult;
-import feign.FeignException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,15 +27,10 @@ public class EncyclopediaService {
     }
 
     @Transactional
-    public int syncDatabase(String keyword) {
-        try {
-            SearchResultByScraper searchResultByScraper = scraperPort.searchPlant(keyword);
-            return searchResultByScraper.results().stream()
-                    .mapToInt(r -> encyclopediaCommand.syncDatabaseFromExternal(r.id()))
-                    .sum();
-        } catch (FeignException e) {
-            return 0;
-        }
+    @Async
+    public void syncDatabase(String keyword) {
+        SearchResultByScraper searchResultByScraper = scraperPort.searchPlant(keyword);
+        searchResultByScraper.results().forEach(r -> encyclopediaCommand.syncDatabaseFromExternal(r.id()));
     }
 
     @Transactional(readOnly = true)

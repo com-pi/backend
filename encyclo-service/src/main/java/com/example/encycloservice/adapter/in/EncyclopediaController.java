@@ -28,8 +28,8 @@ public class EncyclopediaController {
             @Parameter(description = "검색어", example = "장미")
             @Valid @Size(min = 2)
             @RequestParam("keyword") String keyword) {
-        int i = encyclopediaService.syncDatabase(keyword);
-        return CommonResponse.okWithMessage(i + "건 동기화 되었습니다.", null);
+        encyclopediaService.syncDatabase(keyword);
+        return CommonResponse.okWithMessage("동기화 되었습니다. 키워드 : " + keyword, null);
     }
 
     @GetMapping("/plant")
