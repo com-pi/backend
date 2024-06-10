@@ -1,9 +1,13 @@
 package com.example.boardservice.application;
 
 import com.example.boardservice.application.port.in.BuyAndSellUseCase;
+import com.example.boardservice.application.port.out.ArticleHashtagCommandPort;
 import com.example.boardservice.application.port.out.BuyAndSellCommandPort;
 import com.example.boardservice.application.port.out.BuyAndSellQueryPort;
+import com.example.boardservice.application.port.out.HashtagCommandPort;
 import com.example.boardservice.domain.BuyAndSell;
+import com.example.boardservice.domain.BuyAndSellCreate;
+import com.example.boardservice.domain.Hashtag;
 import com.example.boardservice.security.PassportHolder;
 import com.example.common.exception.UnauthorizedException;
 import com.example.imagemodule.application.port.ImageCommand;
@@ -31,13 +35,19 @@ public class BuyAndSellService implements BuyAndSellUseCase {
     private final ImageCommand imageCommand;
     private final BuyAndSellCommandPort buyAndSellCommandPort;
     private final BuyAndSellQueryPort buyAndSellQueryPort;
+    private final ArticleHashtagCommandPort articleHashtagCommandPort;
+    private final HashtagCommandPort hashtagCommandPort;
     private final ObjectUrlMapper objectUrlMapper;
 
     @Override
     @Transactional
-    public Long postBuyAndSell(BuyAndSell buyAndSell, List<MultipartFile> imageFiles) {
+    public Long postBuyAndSell(BuyAndSellCreate buyAndSell, List<MultipartFile> imageFiles) {
         // Todo 이미지 순서 관련 기획 논의
         // Todo 임시저장 관련 기획
+
+        List<Hashtag> hashtagList = buyAndSell.getHashtagNameList().stream().map(Hashtag::ofName).toList();
+        hashtagCommandPort.save(hashtagList);
+        articleHashtagCommandPort.save()
         buyAndSell.updateImageUrls(getImageUrls(imageFiles));
         return buyAndSellCommandPort.save(buyAndSell).getArticleId();
     }

@@ -1,7 +1,7 @@
 package com.example.boardservice.adapter.in.web.request;
 
 import com.example.boardservice.adapter.out.persistence.converter.LocationToPointConverter;
-import com.example.boardservice.domain.BuyAndSell;
+import com.example.boardservice.domain.BuyAndSellCreate;
 import com.example.boardservice.domain.Location;
 import com.example.boardservice.util.validator.FreePriceValid;
 import com.example.common.baseentity.SelfValidating;
@@ -29,11 +29,11 @@ public class PostBuyAndSellRequest extends SelfValidating<PostBuyAndSellRequest>
     private final String sigungu;
     private final String eupmyundong;
     private final Boolean isFree;
-    private final List<String> hashTags;
+    private final List<String> hashtagList;
 
     public PostBuyAndSellRequest(Long memberId, String title, String content, Integer price,
                                  Location location, String sido, String sigungu, String eupmyundong, Boolean isFree,
-                                 List<String> hashTags) {
+                                 List<String> hashtagList) {
         this.memberId = memberId;
         this.title = title;
         this.content = content;
@@ -43,12 +43,12 @@ public class PostBuyAndSellRequest extends SelfValidating<PostBuyAndSellRequest>
         this.sigungu = sigungu;
         this.eupmyundong = eupmyundong;
         this.isFree = isFree;
-        this.hashTags = hashTags;
+        this.hashtagList = hashtagList;
         validateSelf();
     }
 
-    public BuyAndSell toDomain() {
-        return BuyAndSell.builder()
+    public BuyAndSellCreate toDomain() {
+        return BuyAndSellCreate.builder()
                 .memberId(memberId)
                 .title(title)
                 .content(content)
@@ -57,7 +57,7 @@ public class PostBuyAndSellRequest extends SelfValidating<PostBuyAndSellRequest>
                 .area(Address.of(sido, sigungu, eupmyundong))
                 .viewCount(0)
                 .isFree(isFree)
-                .hashtags(hashTags)
+                .hashtagNameList(hashtagList)
                 .build();
     }
 

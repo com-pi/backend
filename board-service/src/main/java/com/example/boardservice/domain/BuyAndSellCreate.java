@@ -15,7 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BuyAndSell {
+public class BuyAndSellCreate {
 
     private Long articleId;
 
@@ -40,17 +40,6 @@ public class BuyAndSell {
     @Convert(converter = JsonToStringListConverter.class)
     private List<String> imageUrls;
 
-    private List<ArticleHashtag> articleHashtags;
-
-
-    public void updateImageUrls (final List<String> imageUrls) {
-        this.imageUrls = imageUrls;
-    }
-
-    public void incrementViewCount(Long currentMemberId) {
-        if(memberId.equals(currentMemberId)) {
-            this.viewCount++;
-        }
-    }
-
+    @Convert(converter = JsonToStringListConverter.class)
+    private List<String> hashtagNameList;
 }
