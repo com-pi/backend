@@ -47,13 +47,13 @@ public class JoinService implements JoinUseCase {
     }
 
     @Override
-    public boolean checkEmailDupliction(String email) {
+    public boolean checkEmailDuplication(String email) {
         return memberQuery.findByEmail(email).isPresent();
     }
 
     @Override
     public String requestNumberVerification(VerifyPhoneNumberRequest request) {
-        if(checkEmailDupliction(request.email())){
+        if(checkEmailDuplication(request.email())){
             throw new ConflictException("이미 가입된 이메일 주소 입니다.");
         }
         Optional<Member> findByPhoneNumber = memberQuery.findByPhoneNumber(request.phoneNumber());

@@ -65,7 +65,7 @@ public class JoinController {
             @Valid @Email
             @RequestParam String email) {
 
-        boolean isDuplicated = joinUseCase.checkEmailDupliction(email);
+        boolean isDuplicated = joinUseCase.checkEmailDuplication(email);
 
         return CommonResponse.okWithMessage(
                 isDuplicated ? "이미 존재하는 이메일 주소입니다." : "중복되지 않은 이메일 주소입니다."
