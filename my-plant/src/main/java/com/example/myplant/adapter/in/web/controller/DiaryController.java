@@ -1,12 +1,12 @@
 package com.example.myplant.adapter.in.web.controller;
 
 import com.example.common.annotation.Authenticate;
+import com.example.common.baseentity.CommonResponse;
 import com.example.common.domain.Role;
 import com.example.myplant.adapter.in.web.command.DiaryCommand;
 import com.example.myplant.adapter.in.web.command.UpdateDiaryCommand;
 import com.example.myplant.application.port.in.DiaryUseCase;
 import com.example.myplant.domain.Diary;
-import com.example.common.baseentity.CommonResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;

@@ -1,7 +1,6 @@
 package com.example.myplant.adapter.in.web.command;
 
 import com.example.common.baseentity.SelfValidating;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
