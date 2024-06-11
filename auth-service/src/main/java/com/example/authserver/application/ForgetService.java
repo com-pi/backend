@@ -1,7 +1,6 @@
 package com.example.authserver.application;
 
 import com.example.authserver.adapter.in.request.*;
-import com.example.authserver.adapter.out.command.MemberEntity;
 import com.example.authserver.application.port.out.persistence.MemberCommand;
 import com.example.authserver.application.port.out.persistence.MemberQuery;
 import com.example.authserver.application.port.out.persistence.RedisPort;
@@ -36,7 +35,7 @@ public class ForgetService {
 
     public String findId(FindIdRequest request){
         Member foundMember = memberQuery.findByPhoneNumber(request.phoneNumber())
-                .orElseThrow(() -> new NotFoundException(MemberEntity.class));
+                .orElseThrow(() -> new NotFoundException(Member.class));
 
         if(foundMember.isSocialAccount()) {
             throw new BadRequestException("소셜 로그인 계정입니다. 로셜 로그인을 이용해 주세요");
@@ -56,7 +55,7 @@ public class ForgetService {
         }
 
         Member foundMember = memberQuery.findByPhoneNumber(request.phoneNumber())
-                .orElseThrow(() -> new NotFoundException(MemberEntity.class));
+                .orElseThrow(() -> new NotFoundException(Member.class));
         return foundMember.getEmail();
     }
 
@@ -64,7 +63,7 @@ public class ForgetService {
         memberQuery.findByPhoneNumberAndEmail(
                 request.phoneNumber(),
                 request.email())
-                .orElseThrow(() -> new NotFoundException(MemberEntity.class));
+                .orElseThrow(() -> new NotFoundException(Member.class));
 
         String verificationCode = String.valueOf(random.nextInt(900000) + 100000);
 
@@ -88,7 +87,7 @@ public class ForgetService {
         }
 
         Member member = memberQuery.findByPhoneNumber(request.phoneNumber())
-                .orElseThrow(() -> new NotFoundException(MemberEntity.class));
+                .orElseThrow(() -> new NotFoundException(Member.class));
 
         ComPToken passwordChangeToken = jwtUtil.generateToken(member, TokenType.PASSWORD_CHANGE_TOKEN);
         redisPort.setChangePasswordCode(request.phoneNumber(), request.email(), passwordChangeToken);
@@ -102,7 +101,7 @@ public class ForgetService {
                 .orElseThrow(() -> new InvalidTokenException(TokenType.PASSWORD_CHANGE_TOKEN));
 
         Member member = memberQuery.findById(passport.memberId())
-                .orElseThrow(() -> new NotFoundException(MemberEntity.class));
+                .orElseThrow(() -> new NotFoundException(Member.class));
 
         boolean isMatch = redisPort.verifyChangePasswordToken(
                 member.getPhoneNumber(),

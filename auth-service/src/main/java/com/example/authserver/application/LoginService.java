@@ -2,7 +2,6 @@ package com.example.authserver.application;
 
 import com.example.authserver.adapter.in.request.LoginRequest;
 import com.example.authserver.adapter.in.response.LoginResponse;
-import com.example.authserver.adapter.out.command.MemberEntity;
 import com.example.authserver.adapter.util.JwtUtilImpl;
 import com.example.authserver.application.port.in.LoginUseCase;
 import com.example.authserver.application.port.out.persistence.MemberQuery;
@@ -32,7 +31,7 @@ public class LoginService implements LoginUseCase {
     public LoginResponse login(LoginRequest loginRequest, HttpServletResponse response) {
 
         Member member = memberQuery.findByEmail(loginRequest.email()).orElseThrow(() ->
-                new NotFoundException(MemberEntity.class));
+                new NotFoundException(Member.class));
 
         member.authenticateWithPassword(loginRequest.password(), passwordEncoder);
 

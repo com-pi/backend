@@ -1,5 +1,6 @@
 package com.example.authserver.adapter.out.command;
 
+import com.example.authserver.adapter.out.MemberEntity;
 import com.example.authserver.domain.Event;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;

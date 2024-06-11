@@ -4,9 +4,11 @@ package com.example.authserver.adapter.in.request;
 import com.example.authserver.domain.MemberCreate;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 
 import java.util.UUID;
 
+@Builder
 public record MemberCreateRequest(
         @Email String email,
         @Size(min = 9, message = "비밀번호는 9자 이상이어야 합니다.") String password,

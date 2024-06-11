@@ -1,5 +1,6 @@
 package com.example.authserver.adapter.out.command;
 
+import com.example.authserver.adapter.out.MemberEntity;
 import com.example.authserver.domain.Event;
 import com.example.authserver.domain.EventType;
 import com.example.authserver.domain.Member;
@@ -18,8 +19,8 @@ public class MemberEntityListener {
     private final MemberEventPublisher eventPublisher;
 
     @PrePersist
-    public void prePersist(MemberEntity employee) {
-        eventPublisher.publishEvent(createEvent(EventType.CREATE, employee));
+    public void prePersist(MemberEntity member) {
+        eventPublisher.publishEvent(createEvent(EventType.CREATE, member));
     }
 
     @PostUpdate
