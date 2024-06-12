@@ -1,9 +1,9 @@
 package com.example.authserver.adapter.out.command;
 
-import com.example.authserver.adapter.out.MemberEntity;
 import com.example.authserver.domain.Event;
 import com.example.authserver.domain.EventType;
 import com.example.authserver.domain.Member;
+import com.example.authserver.event.MemberEventPublisher;
 import jakarta.persistence.PostUpdate;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreRemove;

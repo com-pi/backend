@@ -6,5 +6,7 @@ public interface MemberCommand {
 
     void save(Member member);
     void update(Member member);
+    void saveRead(Member member);
+    void updateRead(Member member);
 
 }

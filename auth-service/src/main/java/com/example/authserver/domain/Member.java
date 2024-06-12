@@ -1,6 +1,6 @@
 package com.example.authserver.domain;
 
-import com.example.authserver.adapter.out.MemberEntity;
+import com.example.authserver.adapter.out.command.MemberEntity;
 import com.example.common.domain.Address;
 import com.example.common.domain.Location;
 import com.example.common.domain.Role;

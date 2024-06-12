@@ -1,11 +1,10 @@
 package com.example.authserver.adapter.out.query;
 
 import com.example.authserver.domain.Member;
-import com.example.authserver.util.GeomUtil;
 import com.example.common.domain.Address;
+import com.example.common.domain.Location;
 import com.example.common.domain.Role;
 import lombok.*;
-import org.locationtech.jts.geom.Point;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -49,7 +48,7 @@ public class MemberDocument {
     @Field("thumbnail_url")
     private String thumbnailUrl;
 
-    private Point location;
+    private Location location;
 
     private Address address;
 
@@ -69,10 +68,41 @@ public class MemberDocument {
                 .introduction(memberDocument.getIntroduction())
                 .imageUrl(memberDocument.getImageUrl())
                 .thumbnailUrl(memberDocument.getThumbnailUrl())
-                .location(GeomUtil.createLocation(memberDocument.getLocation()))
+                .location(memberDocument.getLocation())
                 .address(memberDocument.getAddress())
                 .lastLogin(memberDocument.getLastLogin())
                 .build();
+    }
+
+    public static MemberDocument fromDomain(Member member) {
+        return MemberDocument.builder()
+                .id(member.getId().toString())
+                .kakaoId(member.getKakaoId())
+                .naverId(member.getNaverId())
+                .email(member.getEmail())
+                .phoneNumber(member.getPhoneNumber())
+                .password(member.getPassword())
+                .role(member.getRole())
+                .nickname(member.getNickname())
+                .introduction(member.getIntroduction())
+                .imageUrl(member.getImageUrl())
+                .thumbnailUrl(member.getThumbnailUrl())
+                .location(member.getLocation())
+                .address(member.getAddress())
+                .lastLogin(member.getLastLogin())
+                .build();
+    }
+
+    public void update(Member member){
+        password = member.getPassword();
+        role = member.getRole();
+        nickname = member.getNickname();
+        introduction = member.getIntroduction();
+        imageUrl = member.getImageUrl();
+        thumbnailUrl = member.getThumbnailUrl();
+        location = member.getLocation();
+        address = member.getAddress();
+        lastLogin = member.getLastLogin();
     }
 
 }

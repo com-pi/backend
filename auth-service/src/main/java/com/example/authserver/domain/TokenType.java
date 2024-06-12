@@ -1,6 +1,6 @@
 package com.example.authserver.domain;
 
-import com.example.authserver.adapter.util.JwtUtilImpl;
+import com.example.authserver.util.JwtUtilImpl;
 import lombok.Getter;
 
 import java.time.Instant;

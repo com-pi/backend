@@ -1,4 +1,4 @@
-package com.example.authserver.adapter.out;
+package com.example.authserver.adapter.out.command;
 
 import com.example.authserver.domain.Member;
 import com.example.authserver.util.GeomUtil;
@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
+@EntityListeners(MemberEntityListener.class)
 public class MemberEntity extends DeletedAtAbstractEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

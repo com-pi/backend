@@ -1,6 +1,6 @@
 package com.example.authserver.application;
 
-import com.example.authserver.adapter.util.JwtUtilImpl;
+import com.example.authserver.util.JwtUtilImpl;
 import com.example.authserver.application.port.out.persistence.RedisPort;
 import com.example.authserver.domain.TokenType;
 import com.example.authserver.util.CookieUtil;

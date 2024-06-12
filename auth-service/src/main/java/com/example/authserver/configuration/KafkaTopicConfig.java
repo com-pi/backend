@@ -10,7 +10,15 @@ public class KafkaTopicConfig {
 
     @Bean
     public NewTopic memberTopic(){
-        return TopicBuilder.name("member.cqrs")
+        return TopicBuilder
+                .name(KafkaTopic.MEMBER_CQRS)
+                .build();
+    }
+
+    @Bean
+    public NewTopic cqrsTopic(){
+        return TopicBuilder
+                .name(KafkaTopic.MEMBER)
                 .build();
     }
 

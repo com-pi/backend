@@ -190,6 +190,7 @@ project(':auth-service') {
 
 		// h2
 		runtimeOnly 'com.h2database:h2'
+		testImplementation 'org.springframework.kafka:spring-kafka-test'
 	}
 }
 

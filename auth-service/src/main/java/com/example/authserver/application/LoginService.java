@@ -2,7 +2,7 @@ package com.example.authserver.application;
 
 import com.example.authserver.adapter.in.request.LoginRequest;
 import com.example.authserver.adapter.in.response.LoginResponse;
-import com.example.authserver.adapter.util.JwtUtilImpl;
+import com.example.authserver.util.JwtUtilImpl;
 import com.example.authserver.application.port.in.LoginUseCase;
 import com.example.authserver.application.port.out.persistence.MemberQuery;
 import com.example.authserver.domain.ComPToken;

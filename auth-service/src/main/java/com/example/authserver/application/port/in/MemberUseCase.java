@@ -9,11 +9,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface MemberUseCase {
 
-    MemberInfoResponse getMemberInfo(Long memberId);
-
-    MyInfoResponse getMyInfo();
     void modifyMyInfo(String nickName, String introduction);
     ImageAndThumbnail postProfileImage(MultipartFile profileImage);
     Address modifyLocation(Location locationModify);
+
+
+    MemberInfoResponse getMemberInfo(Long memberId);
+    MyInfoResponse getMyInfo();
 
 }

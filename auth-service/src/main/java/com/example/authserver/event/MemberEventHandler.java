@@ -1,6 +1,8 @@
-package com.example.authserver.adapter.out.command;
+package com.example.authserver.event;
 
+import com.example.authserver.adapter.out.command.KafkaMessageProducer;
 import com.example.authserver.application.EventRecordService;
+import com.example.authserver.configuration.KafkaTopic;
 import com.example.authserver.domain.Event;
 import com.example.authserver.domain.EventRecord;
 import com.example.authserver.domain.EventStatus;
@@ -38,7 +40,7 @@ public class MemberEventHandler {
             return;
         }
 
-        kafkaMessageProducer.sendMessage("member.cqrs", event);
+        kafkaMessageProducer.sendMessage(KafkaTopic.MEMBER_CQRS, event);
         eventRecordService.markAsPublished(foundEvent.id());
     }
 

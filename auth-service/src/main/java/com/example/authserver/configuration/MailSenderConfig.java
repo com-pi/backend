@@ -7,10 +7,11 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 import java.util.Properties;
 
+/**
+ * Deprecated
+ */
 @Configuration
 public class MailSenderConfig {
-
-    // Todo 상수 관리
 
     @Bean
     public JavaMailSender getJavaMailSender() {
