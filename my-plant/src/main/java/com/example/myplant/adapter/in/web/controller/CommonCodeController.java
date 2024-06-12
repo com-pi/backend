@@ -1,10 +1,10 @@
 package com.example.myplant.adapter.in.web.controller;
 
-import com.example.common.annotation.Authenticate;
-import com.example.common.baseentity.CommonResponse;
-import com.example.common.domain.Role;
-import com.example.myplant.application.service.CommonCodeService;
 import com.example.myplant.domain.CommonCode;
+import com.example.myplant.application.service.CommonCodeService;
+import com.example.common.baseentity.CommonResponse;
+import com.example.common.annotation.Authenticate;
+import com.example.common.domain.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
