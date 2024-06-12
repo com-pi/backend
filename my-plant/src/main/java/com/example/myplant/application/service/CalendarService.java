@@ -49,12 +49,6 @@ public class CalendarService implements CalendarUseCase {
     }
 
     @Override
-    public void deleteCalendar(Long id) {
-        loadCalendarPort.loadCalendarById(id)
-                .ifPresent(calendar -> saveCalendarPort.deleteCalendar(calendar));
-    }
-
-    @Override
     public Calendar getCalendarById(Long id) {
         return loadCalendarPort.loadCalendarById(id)
                 .orElseThrow(() -> new RuntimeException("Calendar not found"));
