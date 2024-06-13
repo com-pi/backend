@@ -20,7 +20,7 @@ public class EncyclopediaQueryAdapter implements EncyclopediaQuery {
     public SearchPlantQueryResult searchByKeyword(String keyword, int page, int size) {
         var queryResult = encyclopediaRepository.searchUsingNamePattern(keyword, PageRequest.of(page, size));
         return SearchPlantQueryResult.builder()
-                .totalElement(queryResult.getTotalPages())
+                .totalElement(queryResult.getTotalElements())
                 .totalPage(queryResult.getTotalPages())
                 .results(queryResult.get().map(DomainMapper::toDomain).toList())
                 .build();

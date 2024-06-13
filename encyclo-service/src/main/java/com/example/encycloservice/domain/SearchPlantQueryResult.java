@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 public class SearchPlantQueryResult {
 
-    private int totalElement;
+    private long totalElement;
     private int totalPage;
     private List<SingleSearchPlantResult> results;
 
