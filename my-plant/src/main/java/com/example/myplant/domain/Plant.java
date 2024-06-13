@@ -6,7 +6,6 @@ import lombok.*;
 import java.time.LocalDate;
 import java.util.Random;
 
-@Entity
 @Table(name = "plant")
 @Getter // Getter만 생성하여 불변성을 유지
 @Setter
