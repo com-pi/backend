@@ -1,28 +1,24 @@
 package com.example.myplant.domain;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Entity
 @Getter
-@Setter
-@NoArgsConstructor
+@Builder
 public class PlantCharacter {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "plant_id")
-    private Plant plant;
+    private Long plantCharacterId;
 
-    @ManyToOne
-    @JoinColumn(name = "character_id")
-    private Character character;
+    private String imageUrl;
 
-    @ManyToOne
-    @JoinColumn(name = "illustration_id")
-    private CharacterIllustration illustration;
+    private String characterName;
+
+    /**
+     *
+     */
+    public static PlantCharacter ofId(Long plantCharacterId) {
+        return PlantCharacter.builder()
+                .plantCharacterId(plantCharacterId)
+                .build();
+    }
 }

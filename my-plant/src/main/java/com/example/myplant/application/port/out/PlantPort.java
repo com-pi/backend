@@ -1,6 +1,6 @@
 package com.example.myplant.application.port.out;
 
-import com.example.myplant.domain.Character;
+import com.example.myplant.domain.PlantCharacter;
 import com.example.myplant.domain.Plant;
 
 import java.util.List;
@@ -12,5 +12,5 @@ public interface PlantPort {
     List<Plant> findPlantsByMemberId(Long memberId);
     void deletePlantById(Long id);
     Optional<Plant> findPlantByPlantId(Long plantId);
-    Optional<Character> findCharacterById(Long characterId);
+    Optional<PlantCharacter> findCharacterById(Long characterId);
 }

@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
@@ -20,5 +19,5 @@ public class CharacterIllustration {
 
     @ManyToOne
     @JoinColumn(name = "character_id")
-    private Character character;
+    private PlantCharacter plantCharacter;
 }

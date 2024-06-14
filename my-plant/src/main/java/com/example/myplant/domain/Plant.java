@@ -6,7 +6,6 @@ import lombok.*;
 import java.time.LocalDate;
 import java.util.Random;
 
-@Entity
 @Table(name = "plant")
 @Getter // Getter만 생성하여 불변성을 유지
 @Setter
@@ -27,7 +26,6 @@ public class Plant {
     private int plantAge;
     private LocalDate plantBirthday;
     private LocalDate lastWaterday;
-    private String plantDescription;
     private int wateringIntervalInDays;
 
     private String plantLocation;
@@ -36,13 +34,13 @@ public class Plant {
 
     @ManyToOne
     @JoinColumn(name ="character_id")
-    private Character character;
+    private PlantCharacter plantCharacter;
 
 
     @Builder
     public Plant(Long memberId, String plantName, String plantType, int plantAge, LocalDate plantBirthday,
                  LocalDate lastWaterday, int wateringIntervalInDays, String plantLocation, String potType,
-                 int intimacy, Character character) {
+                 int intimacy, PlantCharacter plantCharacter) {
         this.memberId = memberId;
         this.plantName = plantName;
         this.plantType = plantType;
@@ -53,7 +51,7 @@ public class Plant {
         this.plantLocation = plantLocation;
         this.potType = potType;
         this.intimacy = intimacy;
-        this.character = character;
+        this.plantCharacter = plantCharacter;
     }
 
     @PrePersist
@@ -64,7 +62,7 @@ public class Plant {
 
     public void updatePlant(String plantName, String plantType, int plantAge, LocalDate plantBirthday,
                             LocalDate lastWaterday, int wateringIntervalInDays,
-                            String plantLocation, String potType, Character character) {
+                            String plantLocation, String potType, PlantCharacter plantCharacter) {
         this.plantName = plantName;
         this.plantType = plantType;
         this.plantAge = plantAge;
@@ -73,7 +71,7 @@ public class Plant {
         this.wateringIntervalInDays = wateringIntervalInDays;
         this.plantLocation = plantLocation;
         this.potType = potType;
-        this.character = character;
+        this.plantCharacter = plantCharacter;
     }
 }
 

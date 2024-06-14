@@ -6,7 +6,6 @@ import lombok.*;
 import java.time.LocalDate;
 import java.util.List;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
@@ -33,6 +32,6 @@ public class Calendar {
     @JoinColumn(name = "plant_id", insertable = false, updatable = false)
     private Plant plant;
 
-    @OneToMany(mappedBy = "calendar")
-    private List<PlantDiary> plantDiaries;
+//    @OneToMany(mappedBy = "calendar")
+//    private List<PlantDiary> plantDiaries;
 }
