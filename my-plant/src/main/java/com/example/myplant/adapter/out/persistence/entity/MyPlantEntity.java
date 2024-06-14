@@ -1,5 +1,6 @@
 package com.example.myplant.adapter.out.persistence.entity;
 
+import com.example.common.baseentity.DeletedAtAbstractEntity;
 import com.example.myplant.domain.MyPlant;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -11,7 +12,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "my_plant")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class MyPlantEntity {
+public class MyPlantEntity extends DeletedAtAbstractEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long myPlantId;
@@ -34,13 +35,17 @@ public class MyPlantEntity {
 
     private String potType;
 
-    private Long characterId;
+    private Integer relationshipScore;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "plant_character_id")
+    private PlantCharacterEntity plantCharacterEntity;
 
     /**
      * 생성자
      */
     @Builder
-    public MyPlantEntity(Long myPlantId, Long memberId, String plantName, String plantType, LocalDate plantBirthday, LocalDate lastWateringDate, String plantDescription, Integer wateringIntervalInDays, String plantSpot, String potType, Long characterId) {
+    public MyPlantEntity(Long myPlantId, Long memberId, String plantName, String plantType, LocalDate plantBirthday, LocalDate lastWateringDate, String plantDescription, Integer wateringIntervalInDays, String plantSpot, String potType, Integer relationshipScore, PlantCharacterEntity plantCharacterEntity) {
         this.myPlantId = myPlantId;
         this.memberId = memberId;
         this.plantName = plantName;
@@ -51,7 +56,8 @@ public class MyPlantEntity {
         this.wateringIntervalInDays = wateringIntervalInDays;
         this.plantSpot = plantSpot;
         this.potType = potType;
-        this.characterId = characterId;
+        this.relationshipScore = relationshipScore;
+        this.plantCharacterEntity = plantCharacterEntity;
     }
 
     /**
@@ -69,7 +75,8 @@ public class MyPlantEntity {
                 .wateringIntervalInDays(this.wateringIntervalInDays)
                 .plantSpot(this.plantSpot)
                 .potType(this.potType)
-                .characterId(this.characterId)
+                .relationshipScore(this.relationshipScore)
+                .plantCharacter(this.plantCharacterEntity.toDomain())
                 .build();
     }
 
@@ -84,7 +91,8 @@ public class MyPlantEntity {
                 .wateringIntervalInDays(myPlant.getWateringIntervalInDays())
                 .plantSpot(myPlant.getPlantSpot())
                 .potType(myPlant.getPotType())
-                .characterId(myPlant.getCharacterId())
+                .relationshipScore(myPlant.getRelationshipScore())
+                .plantCharacterEntity(PlantCharacterEntity.fromDomain(myPlant.getPlantCharacter()))
                 .build();
     }
 

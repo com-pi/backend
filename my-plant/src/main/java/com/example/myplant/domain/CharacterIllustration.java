@@ -19,5 +19,5 @@ public class CharacterIllustration {
 
     @ManyToOne
     @JoinColumn(name = "character_id")
-    private Character character;
+    private PlantCharacter plantCharacter;
 }

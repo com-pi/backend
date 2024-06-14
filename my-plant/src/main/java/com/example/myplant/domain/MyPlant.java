@@ -33,8 +33,8 @@ public class MyPlant {
 
     private String potType;
 
-    private Long characterId;
+    private Integer relationshipScore;
 
-    private String characterIllustrationUrl;
+    private PlantCharacter plantCharacter;
 
 }
