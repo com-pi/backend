@@ -4,6 +4,9 @@ import com.example.myplant.domain.MyPlant;
 
 public interface MyPlantCommandPort {
 
-    MyPlant save(MyPlant myPlant);
+    Long save(MyPlant myPlant);
 
+    void update(MyPlant myPlant);
+
+    void delete(Long myPlantId);
 }

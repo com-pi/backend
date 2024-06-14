@@ -25,8 +25,6 @@ public class MyPlant {
 
     private LocalDate lastWateringDate;
 
-    private String plantDescription;
-
     private Integer wateringIntervalInDays;
 
     private String plantSpot;
@@ -38,9 +36,5 @@ public class MyPlant {
     private String deletionYn;
 
     private PlantCharacter plantCharacter;
-
-    public void updateRelationshipScore(Integer relationshipScore) {
-        this.relationshipScore = relationshipScore;
-    }
 
 }

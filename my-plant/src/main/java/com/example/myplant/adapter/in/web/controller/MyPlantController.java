@@ -48,7 +48,7 @@ public class MyPlantController {
     @PatchMapping
     public ResponseEntity<CommonResponse<Long>> updatePlant(
             @Schema(
-                    example = "{\"myPlantId\":\"1\",\"plantName\":\"테스트 식물\",\"plantType\":\"장미\"," +
+                    example = "{\"myPlantId\":\"1\",\"plantName\":\"수정 식물\",\"plantType\":\"들국화\"," +
                             "\"plantBirthday\":\"2024-06-05\",\"lastWaterday\":\"2024-06-06\"," +
                             "\"wateringIntervalInDays\":10,\"plantLocation\":\"dark\",\"potType\":\"hydro\"," +
                             "\"characterId\":1}"
@@ -57,6 +57,15 @@ public class MyPlantController {
         Long plantId = myPlantUseCase.updateMyPlant(request.toDomain(PassportHolder.getPassport().memberId()));
         return ResponseEntity.ok(new CommonResponse<>("내 식물이 수정되었습니다.", plantId));
     }
+
+    @Operation(summary = "내 식물 삭제", description = "기존 식물을 삭제합니다.")
+    @Authenticate(Role.MEMBER)
+    @PatchMapping("/{myPlantId}")
+    public ResponseEntity<CommonResponse<Long>> deletePlant(@PathVariable("myPlantId") Long myPlantId) {
+        Long plantId = myPlantUseCase.deletePlant(PassportHolder.getPassport().memberId(), myPlantId);
+        return ResponseEntity.ok(new CommonResponse<>("내 식물이 삭제되었습니다.", plantId));
+    }
+
 
     @Operation(summary = "내 식물 목록 조회", description = "내 식물을 목록으로 조회합니다.")
     @Authenticate(Role.MEMBER)

@@ -27,8 +27,6 @@ public class MyPlantEntity extends DeletedAtAbstractEntity {
 
     private LocalDate lastWateringDate;
 
-    private String plantDescription;
-
     private Integer wateringIntervalInDays;
 
     private String plantSpot;
@@ -45,14 +43,13 @@ public class MyPlantEntity extends DeletedAtAbstractEntity {
      * 생성자
      */
     @Builder
-    public MyPlantEntity(Long myPlantId, Long memberId, String plantName, String plantType, LocalDate plantBirthday, LocalDate lastWateringDate, String plantDescription, Integer wateringIntervalInDays, String plantSpot, String potType, Integer relationshipScore, PlantCharacterEntity plantCharacterEntity) {
+    public MyPlantEntity(Long myPlantId, Long memberId, String plantName, String plantType, LocalDate plantBirthday, LocalDate lastWateringDate, Integer wateringIntervalInDays, String plantSpot, String potType, Integer relationshipScore, PlantCharacterEntity plantCharacterEntity) {
         this.myPlantId = myPlantId;
         this.memberId = memberId;
         this.plantName = plantName;
         this.plantType = plantType;
         this.plantBirthday = plantBirthday;
         this.lastWateringDate = lastWateringDate;
-        this.plantDescription = plantDescription;
         this.wateringIntervalInDays = wateringIntervalInDays;
         this.plantSpot = plantSpot;
         this.potType = potType;
@@ -71,7 +68,6 @@ public class MyPlantEntity extends DeletedAtAbstractEntity {
                 .plantType(this.plantType)
                 .plantBirthday(this.plantBirthday)
                 .lastWateringDate(this.lastWateringDate)
-                .plantDescription(this.plantDescription)
                 .wateringIntervalInDays(this.wateringIntervalInDays)
                 .plantSpot(this.plantSpot)
                 .potType(this.potType)
@@ -88,7 +84,6 @@ public class MyPlantEntity extends DeletedAtAbstractEntity {
                 .plantType(myPlant.getPlantType())
                 .plantBirthday(myPlant.getPlantBirthday())
                 .lastWateringDate(myPlant.getLastWateringDate())
-                .plantDescription(myPlant.getPlantDescription())
                 .wateringIntervalInDays(myPlant.getWateringIntervalInDays())
                 .plantSpot(myPlant.getPlantSpot())
                 .potType(myPlant.getPotType())
@@ -97,4 +92,18 @@ public class MyPlantEntity extends DeletedAtAbstractEntity {
                 .build();
     }
 
+    public void update(MyPlant myPlant) {
+        this.plantName = myPlant.getPlantName();
+        this.plantType = myPlant.getPlantType();
+        this.plantBirthday = myPlant.getPlantBirthday();
+        this.lastWateringDate = myPlant.getLastWateringDate();
+        this.wateringIntervalInDays = myPlant.getWateringIntervalInDays();
+        this.plantSpot = myPlant.getPlantSpot();
+        this.potType = myPlant.getPotType();
+    }
+
+    @Override
+    public void delete() {
+        super.delete();
+    }
 }

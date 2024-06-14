@@ -1,7 +1,6 @@
 package com.example.myplant.application.service;
 
 import com.example.common.exception.UnauthorizedException;
-import com.example.myplant.adapter.in.web.response.MyPlantDetailResponse;
 import com.example.myplant.application.port.in.MyPlantUseCase;
 import com.example.myplant.application.port.out.MyPlantCommandPort;
 import com.example.myplant.application.port.out.MyPlantQueryPort;
@@ -25,7 +24,7 @@ public class MyPlantService implements MyPlantUseCase {
     @Override
     @Transactional
     public Long createPlant(MyPlant myPlant) {
-        return myPlantCommandPort.save(myPlant).getMyPlantId();
+        return myPlantCommandPort.save(myPlant);
     }
 
     @Override
@@ -33,8 +32,15 @@ public class MyPlantService implements MyPlantUseCase {
     public Long updateMyPlant(MyPlant myPlant) {
         MyPlant originMyPlant = myPlantQueryPort.getMyPlantByMyPlantId(myPlant.getMyPlantId());
         validatePermission(originMyPlant.getMemberId(),  myPlant.getMemberId());
-        myPlant.updateRelationshipScore(originMyPlant.getRelationshipScore());
-        return myPlantCommandPort.save(myPlant).getMyPlantId();
+        myPlantCommandPort.update(myPlant);
+        return myPlant.getMyPlantId();
+    }
+
+    @Override
+    @Transactional
+    public Long deletePlant(Long memberId, Long myPlantId) {
+        myPlantCommandPort.delete(myPlantId);
+        return myPlantId;
     }
 
     @Override

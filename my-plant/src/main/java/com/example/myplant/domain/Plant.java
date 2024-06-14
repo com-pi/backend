@@ -26,7 +26,6 @@ public class Plant {
     private int plantAge;
     private LocalDate plantBirthday;
     private LocalDate lastWaterday;
-    private String plantDescription;
     private int wateringIntervalInDays;
 
     private String plantLocation;
