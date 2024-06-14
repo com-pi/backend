@@ -35,6 +35,12 @@ public class MyPlant {
 
     private Integer relationshipScore;
 
+    private String deletionYn;
+
     private PlantCharacter plantCharacter;
+
+    public void updateRelationshipScore(Integer relationshipScore) {
+        this.relationshipScore = relationshipScore;
+    }
 
 }

@@ -82,6 +82,7 @@ public class MyPlantEntity extends DeletedAtAbstractEntity {
 
     public static MyPlantEntity fromDomain(MyPlant myPlant) {
         return MyPlantEntity.builder()
+                .myPlantId(myPlant.getMyPlantId())
                 .memberId(myPlant.getMemberId())
                 .plantName(myPlant.getPlantName())
                 .plantType(myPlant.getPlantType())

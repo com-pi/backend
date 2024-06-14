@@ -1,5 +1,6 @@
 package com.example.myplant.application.service;
 
+import com.example.common.exception.UnauthorizedException;
 import com.example.myplant.adapter.in.web.response.MyPlantDetailResponse;
 import com.example.myplant.application.port.in.MyPlantUseCase;
 import com.example.myplant.application.port.out.MyPlantCommandPort;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -27,6 +29,15 @@ public class MyPlantService implements MyPlantUseCase {
     }
 
     @Override
+    @Transactional
+    public Long updateMyPlant(MyPlant myPlant) {
+        MyPlant originMyPlant = myPlantQueryPort.getMyPlantByMyPlantId(myPlant.getMyPlantId());
+        validatePermission(originMyPlant.getMemberId(),  myPlant.getMemberId());
+        myPlant.updateRelationshipScore(originMyPlant.getRelationshipScore());
+        return myPlantCommandPort.save(myPlant).getMyPlantId();
+    }
+
+    @Override
     public List<MyPlant> getMyPlantList(Long memberId) {
         return myPlantQueryPort.getMyPlantListByMemberId(memberId);
     }
@@ -34,5 +45,11 @@ public class MyPlantService implements MyPlantUseCase {
     @Override
     public MyPlant getMyPlantByMyPlantId(Long myPlantId) {
         return myPlantQueryPort.getMyPlantByMyPlantId(myPlantId);
+    }
+
+    private void validatePermission(final Long originMemberId, final Long memberId) {
+        if(!Objects.equals(originMemberId, memberId)) {
+            throw new UnauthorizedException("식물을 수정하거나 삭제할 권한이 없습니다.");
+        }
     }
 }
