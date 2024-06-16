@@ -19,7 +19,7 @@ public class SearchPlantQueryResult {
     @AllArgsConstructor
     @Builder
     public static class SingleSearchPlantResult {
-        private Long id;
+        private Long plantSpeciesId;
         private String commonName;
         private String imageUrl;
     }

@@ -9,7 +9,7 @@ public class DomainMapper {
 
     public static SearchPlantQueryResult.SingleSearchPlantResult toDomain(PlantSpeciesEntity entity) {
         return SearchPlantQueryResult.SingleSearchPlantResult.builder()
-                .id(entity.getId())
+                .plantSpeciesId(entity.getId())
                 .commonName(entity.getCommonName())
                 .imageUrl(entity.getImageUrls().get(0))
                 .build();

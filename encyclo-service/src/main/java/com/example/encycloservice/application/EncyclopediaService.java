@@ -2,6 +2,8 @@ package com.example.encycloservice.application;
 
 import com.example.common.exception.NotFoundException;
 import com.example.encycloservice.adapter.out.external.SearchResultByScraper;
+import com.example.encycloservice.application.port.in.EncyclopediaUseCase;
+import com.example.encycloservice.application.port.out.EncyclopediaStatCommand;
 import com.example.encycloservice.application.port.out.EncyclopediaCommand;
 import com.example.encycloservice.application.port.out.EncyclopediaQuery;
 import com.example.encycloservice.application.port.out.ScraperPort;
@@ -15,10 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class EncyclopediaService {
+public class EncyclopediaService implements EncyclopediaUseCase {
 
     private final EncyclopediaCommand encyclopediaCommand;
     private final EncyclopediaQuery encyclopediaQuery;
+    private final EncyclopediaStatCommand encyclopediaStatCommand;
     private final ScraperPort scraperPort;
 
     @Transactional
@@ -35,13 +38,16 @@ public class EncyclopediaService {
 
     @Transactional(readOnly = true)
     public SearchPlantQueryResult searchByName(String keyword, int page, int size) {
+        encyclopediaStatCommand.recordRecentSearchKeyword(keyword, System.currentTimeMillis());
         return encyclopediaQuery.searchByKeyword(keyword, page, size);
     }
 
     @Transactional(readOnly = true)
-    public PlantSpecies getPlantDetailByName(Long id) {
-        return encyclopediaQuery.findById(id)
+    public PlantSpecies getPlantDetailById(Long id) {
+        PlantSpecies plantSpecies = encyclopediaQuery.findById(id)
                 .orElseThrow(() -> new NotFoundException("Plant with id " + id + " not found"));
+        encyclopediaStatCommand.recordRecentPlantDetails(plantSpecies, System.currentTimeMillis());
+        return plantSpecies;
     }
 
 }

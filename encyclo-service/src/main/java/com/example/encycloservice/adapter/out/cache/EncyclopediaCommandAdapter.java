@@ -1,4 +1,4 @@
-package com.example.encycloservice.adapter.out;
+package com.example.encycloservice.adapter.out.cache;
 
 import com.example.encycloservice.adapter.out.external.PlantDetailResult;
 import com.example.encycloservice.adapter.out.external.PlantInfoScraper;

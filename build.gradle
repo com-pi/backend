@@ -201,6 +201,7 @@ project(':encyclo-service'){
 		implementation 'org.springframework.boot:spring-boot-starter'
 		implementation 'org.springframework.boot:spring-boot-starter-web'
 		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+		implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 		implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 
 		// minio
@@ -221,11 +222,12 @@ project(':encyclo-service'){
 		// h2
 		runtimeOnly 'com.h2database:h2'
 
-		testImplementation 'org.testcontainers:testcontainers:1.19.8'
-		testImplementation 'org.testcontainers:junit-jupiter:1.19.8'
-		testImplementation 'org.testcontainers:mysql:1.19.8'
-		testImplementation 'org.testcontainers:mongodb:1.19.8'
-		implementation 'org.testcontainers:jdbc:1.19.8'
+		//  통합 테스트 시 테스트 컨테이너 띄울 목적으로 추가 하였는데, 추후 추가
+//		testImplementation 'org.testcontainers:testcontainers:1.19.8'
+//		testImplementation 'org.testcontainers:junit-jupiter:1.19.8'
+//		testImplementation 'org.testcontainers:mysql:1.19.8'
+//		testImplementation 'org.testcontainers:mongodb:1.19.8'
+//		implementation 'org.testcontainers:jdbc:1.19.8'
 	}
 }
 

@@ -1,6 +1,7 @@
 package com.example.encycloservice.adapter.in;
 
 import com.example.common.baseentity.CommonResponse;
+import com.example.encycloservice.adapter.in.response.PlantSpeciesDetailResponse;
 import com.example.encycloservice.application.EncyclopediaService;
 import com.example.encycloservice.domain.PlantSpecies;
 import com.example.encycloservice.domain.SearchPlantQueryResult;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping
-@Tag(name = "싹싹도감 서비스", description = "식물 정보를 검색합니다.")
+@Tag(name = "싹싹도감 서비스", description = "식물 정보를 검색 또는 동기화합니다.")
 public class EncyclopediaController {
 
     private final EncyclopediaService encyclopediaService;
@@ -29,7 +30,7 @@ public class EncyclopediaController {
             @Valid @Size(min = 2)
             @RequestParam("keyword") String keyword) {
         encyclopediaService.syncDatabase(keyword);
-        return CommonResponse.okWithMessage("동기화 되었습니다. 키워드 : " + keyword, null);
+        return CommonResponse.okWithMessage("동기화 요청되었습니다. 키워드 : " + keyword, null);
     }
 
     @GetMapping("/plant")
@@ -49,9 +50,9 @@ public class EncyclopediaController {
 
     @GetMapping("/plant/detail/{id}")
     @Operation(summary = "식물 상세 정보 조회", description = "식물의 id 값으로 상세 정보를 조회 합니다.")
-    public ResponseEntity<CommonResponse<PlantSpecies>> getDetail(@PathVariable Long id){
-        PlantSpecies plantDetailByName = encyclopediaService.getPlantDetailByName(id);
-        return CommonResponse.okWithMessage("조회 성공", plantDetailByName);
+    public ResponseEntity<CommonResponse<PlantSpeciesDetailResponse>> getPlantDetailsById(@PathVariable Long id){
+        PlantSpecies plantSpecies = encyclopediaService.getPlantDetailById(id);
+        return CommonResponse.okWithMessage("조회 성공", PlantSpeciesDetailResponse.toResponse(plantSpecies));
     }
 
 
