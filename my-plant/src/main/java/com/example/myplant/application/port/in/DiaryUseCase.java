@@ -1,14 +1,25 @@
 package com.example.myplant.application.port.in;
 
-import com.example.myplant.adapter.in.web.command.DiaryCommand;
-import com.example.myplant.adapter.in.web.command.UpdateDiaryCommand;
+import com.example.myplant.adapter.in.web.command.GetDiaryStatusCommand;
 import com.example.myplant.domain.Diary;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
 public interface DiaryUseCase {
-    Long createDiary(DiaryCommand command);
-    void updateDiary(UpdateDiaryCommand command);
-    void deleteDiary(Long id);
-    List<Diary> getAllDiaries();
+
+    Long registerDiary(Diary diary, List<MultipartFile> imageFiles);
+
+    Long updateDiary(Diary diary, List<MultipartFile> imageFiles);
+
+    Long deleteDiary(Diary diary);
+
+    List<Diary> getDiaryStatus(GetDiaryStatusCommand command);
+
+    List<Diary> getDiaryByMemberId(Long memberId, Pageable pageable);
+
+    Diary getDiaryByDiaryId(Long diaryId);
+
+    Diary getPersonalDiaryByDiaryId(Diary diary);
 }

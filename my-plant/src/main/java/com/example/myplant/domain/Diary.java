@@ -1,33 +1,53 @@
 package com.example.myplant.domain;
 
-import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class Diary {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    private Long plantId;
+    private Long diaryId;
+
+    private Long memberId;
+
+    private Long myPlantId;
+
     private String title;
+
     private String content;
 
-    @ElementCollection
-    private List<String> managementTypes;
+    private LocalDate createdDate;
 
-    private LocalDate date;
+    private List<PlantCare> plantCareList;
 
-    @ElementCollection
-    private List<String> images;
+    private List<String> imageUrlList;
 
-    private boolean isPublic;
+    private Boolean isPublished;
+
+    private Boolean isPublic;
+
+    public void updateImageUrlList(List<String> imageUrlList) {
+        this.imageUrlList = imageUrlList;
+    }
+    
+    public static Diary empty() {
+        return Diary.builder()
+                .diaryId(0L)
+                .myPlantId(0L)
+                .title("")
+                .content("")
+                .plantCareList(new ArrayList<>())
+                .imageUrlList(new ArrayList<>())
+                .build();
+    }
 
 }

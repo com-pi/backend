@@ -5,19 +5,22 @@ import com.example.myplant.domain.PlantCare;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
 @Builder
-public class UpdateDiaryCommand {
+public class RegisterDiaryCommand {
 
-    private Long diaryId;
+    private Long myPlantId;
 
     private Long memberId;
 
     private String title;
 
     private String content;
+
+    private LocalDate createdDate;
 
     private List<PlantCare> plantCareList;
 
@@ -29,13 +32,13 @@ public class UpdateDiaryCommand {
         this.memberId = memberId;
     }
 
-
     public Diary toDomain() {
         return Diary.builder()
-                .diaryId(this.diaryId)
+                .myPlantId(this.myPlantId)
                 .memberId(this.memberId)
                 .title(this.title)
                 .content(this.content)
+                .createdDate(this.createdDate)
                 .plantCareList(this.plantCareList)
                 .isPublished(this.isPublished)
                 .isPublic(this.isPublic)
