@@ -37,10 +37,4 @@ public class MyPlant {
 
     private PlantCharacter plantCharacter;
 
-    public static MyPlant ofId(Long myPlantId) {
-        return MyPlant.builder()
-                .myPlantId(myPlantId)
-                .build();
-    }
-
 }

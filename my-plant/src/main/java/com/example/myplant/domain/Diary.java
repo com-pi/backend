@@ -38,16 +38,5 @@ public class Diary {
     public void updateImageUrlList(List<String> imageUrlList) {
         this.imageUrlList = imageUrlList;
     }
-    
-    public static Diary empty() {
-        return Diary.builder()
-                .diaryId(0L)
-                .myPlantId(0L)
-                .title("")
-                .content("")
-                .plantCareList(new ArrayList<>())
-                .imageUrlList(new ArrayList<>())
-                .build();
-    }
 
 }

@@ -119,7 +119,7 @@ public class DiaryController {
     @Authenticate(Role.MEMBER)
     @GetMapping("/public/{diaryId}")
     public ResponseEntity<DiaryResponse> getDiaryByDiaryId(@PathVariable Long diaryId) {
-        Diary diary = diaryUseCase.getDiaryByDiaryId(diaryId);
+        Diary diary = diaryUseCase.getDiaryById(diaryId);
         return ResponseEntity.ok(DiaryResponse.from(diary));
     }
 
@@ -128,7 +128,7 @@ public class DiaryController {
     @GetMapping("/personal/{diaryId}")
     public ResponseEntity<DiaryResponse> getPersonalDiaryByDiaryId(@PathVariable Long diaryId) {
         GetPersonalDiaryCommand command = GetPersonalDiaryCommand.of(diaryId, PassportHolder.getPassport().memberId());
-        Diary diary = diaryUseCase.getPersonalDiaryByDiaryId(command.toDomain());
+        Diary diary = diaryUseCase.getPersonalDiaryById(command.toDomain());
         return ResponseEntity.ok(DiaryResponse.from(diary));
     }
 

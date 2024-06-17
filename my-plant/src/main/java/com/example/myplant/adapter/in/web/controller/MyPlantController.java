@@ -22,6 +22,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/plants")
 @Tag(name = "식물 관리", description = "식물 등록 및 관리를 위한 API")
 public class MyPlantController {
 
@@ -60,7 +61,7 @@ public class MyPlantController {
 
     @Operation(summary = "내 식물 삭제", description = "기존 식물을 삭제합니다.")
     @Authenticate(Role.MEMBER)
-    @PatchMapping("/{myPlantId}")
+    @DeleteMapping("/{myPlantId}")
     public ResponseEntity<CommonResponse<Long>> deletePlant(@PathVariable("myPlantId") Long myPlantId) {
         Long plantId = myPlantUseCase.deletePlant(PassportHolder.getPassport().memberId(), myPlantId);
         return ResponseEntity.ok(new CommonResponse<>("내 식물이 삭제되었습니다.", plantId));
@@ -79,8 +80,8 @@ public class MyPlantController {
 
     @Operation(summary = "내 식물 상세 조회", description = "내 식물을 상세 조회합니다.")
     @Authenticate(Role.MEMBER)
-    @GetMapping("/detail")
-    public ResponseEntity<MyPlantDetailResponse> getMyPlantByMyPlantId(@RequestParam("myPlantId") Long myPlantId) {
+    @GetMapping("/detail/{myPlantId}")
+    public ResponseEntity<MyPlantDetailResponse> getMyPlantByMyPlantId(@PathVariable("myPlantId") Long myPlantId) {
         MyPlant myPlant = myPlantUseCase.getMyPlantByMyPlantId(myPlantId);
         return ResponseEntity.ok(MyPlantDetailResponse.from(myPlant));
     }

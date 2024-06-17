@@ -73,12 +73,12 @@ public class DiaryService implements DiaryUseCase {
     }
 
     @Override
-    public Diary getDiaryByDiaryId(Long diaryId) {
+    public Diary getDiaryById(Long diaryId) {
         return diaryQueryPort.getPublicDiaryByDiaryId(diaryId);
     }
 
     @Override
-    public Diary getPersonalDiaryByDiaryId(Diary diary) {
+    public Diary getPersonalDiaryById(Diary diary) {
         return diaryQueryPort.getPersonalDiaryByDiaryId(diary.getDiaryId(), diary.getMemberId());
     }
 

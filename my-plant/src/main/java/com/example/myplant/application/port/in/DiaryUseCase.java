@@ -19,7 +19,7 @@ public interface DiaryUseCase {
 
     List<Diary> getDiaryByMemberId(Long memberId, Pageable pageable);
 
-    Diary getDiaryByDiaryId(Long diaryId);
+    Diary getDiaryById(Long diaryId);
 
-    Diary getPersonalDiaryByDiaryId(Diary diary);
+    Diary getPersonalDiaryById(Diary diary);
 }
