@@ -3,12 +3,6 @@ plugins {
 	id 'org.springframework.boot' version '3.2.5'
 }
 
-ext {
-	springCloudVersion = '20230.1'
-	dockerRepo = 'utopiandrmer'
-	projectComP = 'com-p'
-}
-
 bootJar {
 	enabled = false
 }
@@ -23,8 +17,10 @@ subprojects {
 	sourceCompatibility = JavaVersion.VERSION_17
 	targetCompatibility = JavaVersion.VERSION_17
 
-	tasks.register('cleanOut', Delete) {
-		delete "${projectDir}/out"
+	ext {
+		springCloudVersion = '20230.1'
+		dockerRepo = 'utopiandrmer'
+		projectComP = 'com-p'
 	}
 
 	apply plugin: 'java'
@@ -71,6 +67,10 @@ subprojects {
 
 	jar {
 		enabled = false
+	}
+
+	tasks.register('cleanOut', Delete) {
+		delete "${projectDir}/out"
 	}
 }
 
