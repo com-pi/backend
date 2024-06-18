@@ -3,13 +3,19 @@ plugins {
 	id 'org.springframework.boot' version '3.2.5'
 }
 
+ext {
+	springCloudVersion = '20230.1'
+	dockerRepo = 'utopiandrmer'
+	projectComP = 'com-p'
+}
+
 bootJar {
 	enabled = false
 }
+
 jar {
 	enabled = false
 }
-
 
 subprojects {
 	group = 'com.comp'
@@ -25,10 +31,6 @@ subprojects {
 	apply plugin: 'java-library'
 	apply plugin: 'org.springframework.boot'
 	apply plugin: 'io.spring.dependency-management'
-
-	ext {
-		set('springCloudVersion', "2023.0.1")
-	}
 
 	dependencyManagement {
 		imports {
@@ -67,7 +69,7 @@ subprojects {
 		gradleVersion = '8.7'
 	}
 
-	tasks.named('jar') {
+	jar {
 		enabled = false
 	}
 }
@@ -89,6 +91,14 @@ project(':api-gateway') {
 
 		testImplementation 'io.projectreactor:reactor-test'
 	}
+
+	bootBuildImage {
+		imageName = "${dockerRepo}/${projectComP}-${project.name}"
+		builder = 'paketobuildpacks/builder:base'
+		environment = [
+		        'SPRING_PROFILES_ACTIVE': 'dev'
+		]
+	}
 }
 
 // 각 서비스의 주소(포트) 를 등록하고 로드밸런싱을 해주는 서비스 입니다.
@@ -96,6 +106,14 @@ project(':discovery-eureka') {
 	dependencies {
 		implementation 'org.springframework.boot:spring-boot-starter'
 		implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
+	}
+
+	bootBuildImage {
+		imageName = "${dockerRepo}/${projectComP}-${project.name}"
+		builder = 'paketobuildpacks/builder:base'
+		environment = [
+				'SPRING_PROFILES_ACTIVE': 'dev'
+		]
 	}
 }
 
@@ -126,6 +144,14 @@ project(':board-service') {
 
 		runtimeOnly 'com.h2database:h2'
 	}
+
+	bootBuildImage {
+		imageName = "${dockerRepo}/${projectComP}-${project.name}"
+		builder = 'paketobuildpacks/builder:base'
+		environment = [
+				'SPRING_PROFILES_ACTIVE': 'dev'
+		]
+	}
 }
 
 
@@ -148,6 +174,13 @@ project(':my-plant'){
 		implementation 'com.mysql:mysql-connector-j'
 		// h2
 		runtimeOnly 'com.h2database:h2'
+	}
+	bootBuildImage {
+		imageName = "${dockerRepo}/${projectComP}-${project.name}"
+		builder = 'paketobuildpacks/builder:base'
+		environment = [
+				'SPRING_PROFILES_ACTIVE': 'dev'
+		]
 	}
 }
 
@@ -192,6 +225,13 @@ project(':auth-service') {
 		runtimeOnly 'com.h2database:h2'
 		testImplementation 'org.springframework.kafka:spring-kafka-test'
 	}
+	bootBuildImage {
+		imageName = "${dockerRepo}/${projectComP}-${project.name}"
+		builder = 'paketobuildpacks/builder:base'
+		environment = [
+				'SPRING_PROFILES_ACTIVE': 'dev'
+		]
+	}
 }
 
 project(':encyclo-service'){
@@ -228,6 +268,13 @@ project(':encyclo-service'){
 //		testImplementation 'org.testcontainers:mysql:1.19.8'
 //		testImplementation 'org.testcontainers:mongodb:1.19.8'
 //		implementation 'org.testcontainers:jdbc:1.19.8'
+	}
+	bootBuildImage {
+		imageName = "${dockerRepo}/${projectComP}-${project.name}"
+		builder = 'paketobuildpacks/builder:base'
+		environment = [
+				'SPRING_PROFILES_ACTIVE': 'dev'
+		]
 	}
 }
 
