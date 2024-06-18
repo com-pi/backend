@@ -3,6 +3,12 @@ plugins {
 	id 'org.springframework.boot' version '3.2.5'
 }
 
+ext {
+	springCloudVersion = '2023.0.1'
+	dockerRepo = 'utopiandrmer'
+	projectComP = 'com-p'
+}
+
 bootJar {
 	enabled = false
 }
@@ -16,12 +22,6 @@ subprojects {
 
 	sourceCompatibility = JavaVersion.VERSION_17
 	targetCompatibility = JavaVersion.VERSION_17
-
-	ext {
-		springCloudVersion = '20230.1'
-		dockerRepo = 'utopiandrmer'
-		projectComP = 'com-p'
-	}
 
 	apply plugin: 'java'
 	apply plugin: 'java-library'
