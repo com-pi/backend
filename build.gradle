@@ -6,7 +6,7 @@ plugins {
 ext {
 	springCloudVersion = '2023.0.1'
 	dockerRepo = 'utopiandrmer'
-	projectComP = 'com-p'
+	projectComP = 'comp'
 }
 
 bootJar {
