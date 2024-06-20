@@ -96,7 +96,7 @@ project(':api-gateway') {
 		imageName = "${dockerRepo}/${projectComP}-${project.name}"
 		builder = 'paketobuildpacks/builder:base'
 		environment = [
-		        'SPRING_PROFILES_ACTIVE': 'dev'
+		        'SPRING_PROFILES_ACTIVE': project.findProperty('active_profile')
 		]
 	}
 }
@@ -112,9 +112,10 @@ project(':discovery-eureka') {
 		imageName = "${dockerRepo}/${projectComP}-${project.name}"
 		builder = 'paketobuildpacks/builder:base'
 		environment = [
-				'SPRING_PROFILES_ACTIVE': 'dev'
+				'SPRING_PROFILES_ACTIVE': project.findProperty('active_profile')
 		]
 	}
+
 }
 
 project(':board-service') {
@@ -149,7 +150,7 @@ project(':board-service') {
 		imageName = "${dockerRepo}/${projectComP}-${project.name}"
 		builder = 'paketobuildpacks/builder:base'
 		environment = [
-				'SPRING_PROFILES_ACTIVE': 'dev'
+				'SPRING_PROFILES_ACTIVE': project.findProperty('active_profile')
 		]
 	}
 }
@@ -175,11 +176,12 @@ project(':my-plant'){
 		// h2
 		runtimeOnly 'com.h2database:h2'
 	}
+
 	bootBuildImage {
 		imageName = "${dockerRepo}/${projectComP}-${project.name}"
 		builder = 'paketobuildpacks/builder:base'
 		environment = [
-				'SPRING_PROFILES_ACTIVE': 'dev'
+				'SPRING_PROFILES_ACTIVE': project.findProperty('active_profile')
 		]
 	}
 }
@@ -225,11 +227,12 @@ project(':auth-service') {
 		runtimeOnly 'com.h2database:h2'
 		testImplementation 'org.springframework.kafka:spring-kafka-test'
 	}
+
 	bootBuildImage {
 		imageName = "${dockerRepo}/${projectComP}-${project.name}"
 		builder = 'paketobuildpacks/builder:base'
 		environment = [
-				'SPRING_PROFILES_ACTIVE': 'dev'
+				'SPRING_PROFILES_ACTIVE': project.findProperty('active_profile')
 		]
 	}
 }
@@ -269,11 +272,12 @@ project(':encyclo-service'){
 //		testImplementation 'org.testcontainers:mongodb:1.19.8'
 //		implementation 'org.testcontainers:jdbc:1.19.8'
 	}
+
 	bootBuildImage {
 		imageName = "${dockerRepo}/${projectComP}-${project.name}"
 		builder = 'paketobuildpacks/builder:base'
 		environment = [
-				'SPRING_PROFILES_ACTIVE': 'dev'
+				'SPRING_PROFILES_ACTIVE': project.findProperty('active_profile')
 		]
 	}
 }
