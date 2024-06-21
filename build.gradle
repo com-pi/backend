@@ -22,6 +22,7 @@ tasks.register('buildAllImages') {
 	dependsOn ':auth-service:bootBuildImage'
 	dependsOn ':encyclo-service:bootBuildImage'
 	dependsOn ':my-plant:bootBuildImage'
+	dependsOn ':board-service:bootBuildImage'
 	dependsOn ':discovery-eureka:bootBuildImage'
 }
 
