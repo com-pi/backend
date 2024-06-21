@@ -85,9 +85,6 @@ subprojects {
 	bootBuildImage {
 		imageName = "${dockerRepo}/${projectComP}-${project.name}"
 		builder = 'paketobuildpacks/builder:base'
-		environment = [
-				'SPRING_PROFILES_ACTIVE': project.findProperty('active_profile') ?:'dev'
-		]
 	}
 }
 
