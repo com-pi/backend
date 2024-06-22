@@ -83,7 +83,7 @@ subprojects {
 	}
 
 	bootBuildImage {
-		imageName = "${dockerRepo}/${projectComP}-${project.name}"
+		imageName = "${dockerRepo}/${projectComP}-${project.name}:${findProperty('tag') ?: 'latest'}"
 		builder = 'paketobuildpacks/builder:base'
 	}
 }
