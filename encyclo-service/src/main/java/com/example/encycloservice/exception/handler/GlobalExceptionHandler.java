@@ -2,6 +2,7 @@ package com.example.encycloservice.exception.handler;
 
 import com.example.common.baseentity.CommonResponse;
 import com.example.common.exception.CommonException;
+import com.example.common.exception.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,8 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+
+
     @ExceptionHandler(CommonException.class)
     public ResponseEntity<CommonResponse<Void>> handleNotFoundException(CommonException exception) {
         log.info(exception.getMessage(), exception);
@@ -27,6 +30,12 @@ public class GlobalExceptionHandler {
             case INTERNAL_SERVER_ERROR -> CommonResponse.internalServerErrorWithMessage(exception.getMessage());
             default -> CommonResponse.okWithMessage("에러 발생");
         };
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<CommonResponse<Void>> handleNotFoundException(NotFoundException exception) {
+        log.info(exception.getMessage(), exception);
+        return CommonResponse.notFoundWithMessage(exception.getMessage());
     }
 
     @ExceptionHandler(BindException.class)

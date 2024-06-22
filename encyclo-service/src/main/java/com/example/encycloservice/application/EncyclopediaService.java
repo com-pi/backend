@@ -45,7 +45,7 @@ public class EncyclopediaService implements EncyclopediaUseCase {
     @Transactional(readOnly = true)
     public PlantSpecies getPlantDetailById(Long id) {
         PlantSpecies plantSpecies = encyclopediaQuery.findById(id)
-                .orElseThrow(() -> new NotFoundException("Plant with id " + id + " not found"));
+                .orElseThrow(() -> new NotFoundException("해당 식물을 찾을 수 없습니다."));
         encyclopediaStatCommand.recordRecentPlantDetails(plantSpecies, System.currentTimeMillis());
         return plantSpecies;
     }
