@@ -17,13 +17,8 @@ jar {
 	enabled = false
 }
 
-tasks.register('buildAllImages') {
-	dependsOn ':api-gateway:bootBuildImage'
-	dependsOn ':auth-service:bootBuildImage'
-	dependsOn ':encyclo-service:bootBuildImage'
-	dependsOn ':my-plant:bootBuildImage'
-	dependsOn ':board-service:bootBuildImage'
-	dependsOn ':discovery-eureka:bootBuildImage'
+bootBuildImage {
+	enabled = false
 }
 
 subprojects {
@@ -82,15 +77,24 @@ subprojects {
 		delete "${projectDir}/out"
 	}
 
-	bootBuildImage {
+	tasks.register('buildDockerImage') {
 		def tag = findProperty('tag')
 		if (tag == null || tag.trim().isEmpty()) {
 			throw new GradleException("이미지 태그 설정이 필요합니다. -Ptag 옵션을 추가하여 빌드")
 		}
-		imageName = "${dockerRepo}/${projectComP}-${project.name}:${tag}"
-		builder = 'paketobuildpacks/builder:base'
+
+		doFirst {
+			tasks.named('bootBuildImage').configure {
+				enabled = true // ensure the task is enabled
+				imageName = "${dockerRepo}/${projectComP}-${project.name}:${tag}"
+				builder = 'paketobuildpacks/builder:base'
+			}
+		}
+
+		finalizedBy tasks.named('bootBuildImage') // Ensure bootBuildImage runs after this task
 	}
 }
+
 
 project(':api-gateway') {
 	dependencies {
