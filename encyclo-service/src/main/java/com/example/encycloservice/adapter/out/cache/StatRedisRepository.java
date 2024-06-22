@@ -1,17 +1,14 @@
 package com.example.encycloservice.adapter.out.cache;
 
-import com.example.common.exception.InternalServerException;
-import com.example.encycloservice.adapter.in.RecentSearchKeywordStat;
 import com.example.encycloservice.domain.RecentPlantDetailStat;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
 
 @Repository
@@ -19,19 +16,31 @@ import java.util.stream.IntStream;
 public class StatRedisRepository implements StatRepository {
 
     private final RedisTemplate<String, String> redisTemplate;
-    private final ObjectMapper objectMapper;
+    private final PopularityRecordRepository popularityRecordRepository;
 
     @Override
-    public void recordRecentSearchKeyword(String keyword, long epochTimeStamp) {
-        redisTemplate.opsForZSet().add(RedisKey.recentSearchKeyword, keyword, epochTimeStamp);
+    public void recordRecentPlantDetails(Long plantId, long epochTimeStamp) {
+        redisTemplate.opsForZSet().add(RedisKey.recentPlantDetails, plantId.toString(), epochTimeStamp);
     }
 
     @Override
-    public void recordRecentPlantDetails(RecentPlantDetailRecord plantSpeciesRecord, long epochTimeStamp) {
-        try {
-            redisTemplate.opsForZSet()
-                    .add(RedisKey.recentPlantDetails, objectMapper.writeValueAsString(plantSpeciesRecord), epochTimeStamp);
-        } catch (JsonProcessingException ignored) {
+    public void recordPopularPlant(Long plantId, String time, Long memberId) {
+        String plantIdTimeKey = String.format("popularity:%s:%s", plantId, time);
+        String plantIdKey = String.format("popularity:%s", plantId);
+
+        createSetIfAbsent(plantIdTimeKey);
+        createSetIfAbsent(plantIdKey);
+
+        redisTemplate.opsForSet().add(plantIdTimeKey, memberId.toString());
+        redisTemplate.opsForSet().add(plantIdKey, plantIdTimeKey);
+    }
+
+    private void createSetIfAbsent(String key) {
+        int expirationTimeInDay = 5;
+        if(Boolean.FALSE.equals(redisTemplate.hasKey(key))){
+            redisTemplate.opsForSet().add(key, "dummy");
+            redisTemplate.expire(key, expirationTimeInDay, TimeUnit.DAYS);
+            redisTemplate.opsForSet().remove(key, "dummy");
         }
     }
 
@@ -40,25 +49,20 @@ public class StatRedisRepository implements StatRepository {
         int start = (page - 1) * size;
         int end = start + size - 1;
 
-        Long totalElement_ = redisTemplate.opsForZSet().zCard(RedisKey.recentPlantDetails);
-        int totalElement = totalElement_ == null ? 0 : totalElement_.intValue();
+        Long totalElementLong = redisTemplate.opsForZSet().zCard(RedisKey.recentPlantDetails);
+        int totalElement = totalElementLong == null ? 0 : totalElementLong.intValue();
         int totalPage = (totalElement + size - 1) / size;
 
-        Set<String> recordSet = redisTemplate.opsForZSet()
-                .reverseRange(RedisKey.recentPlantDetails, start, end);
+        Set<String> recordSet = redisTemplate.opsForZSet().reverseRange(RedisKey.recentPlantDetails, start, end);
         List<String> recordList = recordSet == null ? new ArrayList<>() : recordSet.stream().toList();
 
         List<RecentPlantDetailStat.RecentPlantDetailRank> result = IntStream.range(0, recordList.size())
-                .mapToObj(rank -> {
-                    try {
-                        return RecentPlantDetailStat.RecentPlantDetailRank.builder()
+                .mapToObj(rank ->
+                        RecentPlantDetailStat.RecentPlantDetailRank.builder()
                                 .rank(rank)
-                                .recentPlantDetailRecord(objectMapper.readValue(recordList.get(rank), RecentPlantDetailRecord.class))
-                                .build();
-                    } catch (JsonProcessingException e) {
-                        throw new InternalServerException("파싱 에러 발생", e);
-                    }
-                }).toList();
+                                .plantId(Long.valueOf(recordList.get(rank)))
+                                .build()
+                ).toList();
 
         return RecentPlantDetailStat.builder()
                 .totalPage(totalPage)
@@ -68,31 +72,38 @@ public class StatRedisRepository implements StatRepository {
     }
 
     @Override
-    public RecentSearchKeywordStat getRecentSearchKeyword(int page, int size) {
-        int start = (page - 1) * size;
-        int end = start + size - 1;
+    public void updatePopularPlantStat(LocalDateTime now) {
 
-        Long totalElement_ = redisTemplate.opsForZSet().zCard(RedisKey.recentSearchKeyword);
-        int totalElement = totalElement_ == null ? 0 : totalElement_.intValue();
-        int totalPage = (totalElement + size - 1) / size;
+        double epochNow = getEpochMillis(now);
+        double epochPast = getEpochMillis(now.minusDays(3));
 
-        Set<String> keywordSet = redisTemplate.opsForZSet()
-                .reverseRange(RedisKey.recentSearchKeyword, start, end);
-        List<String> keywordList = keywordSet == null ? new ArrayList<>() : keywordSet.stream().toList();
+        Set<String> plantIdWithinPast = redisTemplate.opsForZSet()
+                .reverseRangeByScore(RedisKey.recentPlantDetails, epochPast, epochNow);
 
-        List<RecentSearchKeywordStat.RecentSearchKeywordRank> result = IntStream.range(0, keywordList.size())
-                .mapToObj(rank ->
-                        RecentSearchKeywordStat.RecentSearchKeywordRank.builder()
-                                .rank(rank)
-                                .keyword(keywordList.get(rank))
-                                .build()
-                ).toList();
+        if(plantIdWithinPast == null) {
+            plantIdWithinPast = new HashSet<>();
+        }
 
-        return RecentSearchKeywordStat.builder()
-                .totalPage(totalPage)
-                .totalElement(totalElement)
-                .results(result)
-                .build();
+        TreeMap<Long, String> plantViewStat = new TreeMap<>();
+
+        for (String plantId : plantIdWithinPast){
+            String plantIdKey = String.format("popularity:%s", plantId);
+            Set<String> plantIdTimeKeys = redisTemplate.opsForSet().members(plantIdKey);
+            if(plantIdTimeKeys == null) {
+                plantIdTimeKeys = new HashSet<>();
+            }
+            Long viewWithinPast = 0L;
+            for (String plantIdTimeKey : plantIdTimeKeys){
+                viewWithinPast += redisTemplate.opsForSet().size(plantIdTimeKey);
+            }
+            plantViewStat.put(viewWithinPast, plantId);
+        }
+
+        popularityRecordRepository.updateRecord(plantViewStat);
+    }
+
+    private double getEpochMillis(LocalDateTime time){
+        return (double) time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
 }

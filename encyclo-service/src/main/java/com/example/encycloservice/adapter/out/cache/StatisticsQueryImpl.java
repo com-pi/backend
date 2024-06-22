@@ -1,6 +1,6 @@
 package com.example.encycloservice.adapter.out.cache;
 
-import com.example.encycloservice.adapter.in.RecentSearchKeywordStat;
+import com.example.encycloservice.adapter.in.response.PopularPlantStatResponse;
 import com.example.encycloservice.application.port.out.StatisticsQuery;
 import com.example.encycloservice.domain.RecentPlantDetailStat;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,10 @@ public class StatisticsQueryImpl implements StatisticsQuery {
     }
 
     @Override
-    public RecentSearchKeywordStat getRecentSearchKeywordStat(Integer page, Integer size) {
-        return statRepository.getRecentSearchKeyword(page, size);
+    public PopularPlantStatResponse getPopularPlantStat() {
+
+        return null;
     }
+
+
 }

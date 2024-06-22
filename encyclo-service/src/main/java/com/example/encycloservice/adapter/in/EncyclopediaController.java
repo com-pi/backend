@@ -1,6 +1,8 @@
 package com.example.encycloservice.adapter.in;
 
+import com.example.common.annotation.Authenticate;
 import com.example.common.baseentity.CommonResponse;
+import com.example.common.domain.Role;
 import com.example.encycloservice.adapter.in.response.PlantSpeciesDetailResponse;
 import com.example.encycloservice.application.EncyclopediaService;
 import com.example.encycloservice.domain.PlantSpecies;
@@ -50,10 +52,10 @@ public class EncyclopediaController {
 
     @GetMapping("/plant/detail/{id}")
     @Operation(summary = "식물 상세 정보 조회", description = "식물의 id 값으로 상세 정보를 조회 합니다.")
+    @Authenticate(Role.MEMBER)
     public ResponseEntity<CommonResponse<PlantSpeciesDetailResponse>> getPlantDetailsById(@PathVariable Long id){
         PlantSpecies plantSpecies = encyclopediaService.getPlantDetailById(id);
         return CommonResponse.okWithMessage("조회 성공", PlantSpeciesDetailResponse.toResponse(plantSpecies));
     }
-
 
 }

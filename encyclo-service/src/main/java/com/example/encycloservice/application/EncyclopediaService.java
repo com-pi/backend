@@ -1,12 +1,14 @@
 package com.example.encycloservice.application;
 
+import com.example.common.domain.Passport;
 import com.example.common.exception.NotFoundException;
 import com.example.encycloservice.adapter.out.external.SearchResultByScraper;
+import com.example.encycloservice.aop.filter.PassportHolder;
 import com.example.encycloservice.application.port.in.EncyclopediaUseCase;
-import com.example.encycloservice.application.port.out.EncyclopediaStatCommand;
 import com.example.encycloservice.application.port.out.EncyclopediaCommand;
 import com.example.encycloservice.application.port.out.EncyclopediaQuery;
 import com.example.encycloservice.application.port.out.ScraperPort;
+import com.example.encycloservice.application.port.out.StatisticsCommand;
 import com.example.encycloservice.domain.PlantSpecies;
 import com.example.encycloservice.domain.PlantSpeciesCreate;
 import com.example.encycloservice.domain.SearchPlantQueryResult;
@@ -15,13 +17,15 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class EncyclopediaService implements EncyclopediaUseCase {
 
     private final EncyclopediaCommand encyclopediaCommand;
     private final EncyclopediaQuery encyclopediaQuery;
-    private final EncyclopediaStatCommand encyclopediaStatCommand;
+    private final StatisticsCommand statisticsCommand;
     private final ScraperPort scraperPort;
 
     @Transactional
@@ -38,7 +42,6 @@ public class EncyclopediaService implements EncyclopediaUseCase {
 
     @Transactional(readOnly = true)
     public SearchPlantQueryResult searchByName(String keyword, int page, int size) {
-        encyclopediaStatCommand.recordRecentSearchKeyword(keyword, System.currentTimeMillis());
         return encyclopediaQuery.searchByKeyword(keyword, page, size);
     }
 
@@ -46,7 +49,10 @@ public class EncyclopediaService implements EncyclopediaUseCase {
     public PlantSpecies getPlantDetailById(Long id) {
         PlantSpecies plantSpecies = encyclopediaQuery.findById(id)
                 .orElseThrow(() -> new NotFoundException("해당 식물을 찾을 수 없습니다."));
-        encyclopediaStatCommand.recordRecentPlantDetails(plantSpecies, System.currentTimeMillis());
+        Passport passport = PassportHolder.getPassport();
+        LocalDateTime now = LocalDateTime.now();
+        statisticsCommand.recordRecentPlantDetails(plantSpecies, now);
+        statisticsCommand.recordPopularPlant(plantSpecies, passport.memberId(), now);
         return plantSpecies;
     }
 

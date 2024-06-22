@@ -1,6 +1,5 @@
 package com.example.encycloservice.domain;
 
-import com.example.encycloservice.adapter.out.cache.RecentPlantDetailRecord;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,7 +18,7 @@ public class RecentPlantDetailStat {
     @Builder
     public record RecentPlantDetailRank(
          int rank,
-         RecentPlantDetailRecord recentPlantDetailRecord
+         Long plantId
     ) {
     }
 
