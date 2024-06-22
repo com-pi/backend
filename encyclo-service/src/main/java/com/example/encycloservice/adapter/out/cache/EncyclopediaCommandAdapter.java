@@ -28,7 +28,7 @@ public class EncyclopediaCommandAdapter implements EncyclopediaCommand {
     public void syncDatabaseFromExternal(String id) {
         try {
             PlantDetailResult plantDetailResult = plantInfoScraper.plantDetail(id);
-            if(encyclopediaRepository.existsByCommonName(plantDetailResult.name())){
+            if (encyclopediaRepository.existsByCommonName(plantDetailResult.name())){
                 return;
             }
             PlantSpecies plantSpecies = PlantSpecies.create(plantDetailResult.toDomainCreate());

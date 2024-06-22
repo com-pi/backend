@@ -44,8 +44,8 @@ public record PlantDetailResult(String name,
                 .wateringInfo(new PlantingInfo(plantingInfos.get(0).info1, plantingInfos.get(0).info2))
                 .environmentInfo(new PlantingInfo(plantingInfos.get(1).info1, plantingInfos.get(1).info2))
                 .humidityInfo(new PlantingInfo(plantingInfos.get(2).info1, plantingInfos.get(2).info2))
-                .temperatureCondition(new PlantingCondition(plantingConditions.get(0).min, plantingConditions.get(0).max))
-                .humidCondition(new PlantingCondition(plantingConditions.get(1).min, plantingConditions.get(1).max))
+                .humidCondition(new PlantingCondition(plantingConditions.get(0).min, plantingConditions.get(0).max))
+                .temperatureCondition(new PlantingCondition(plantingConditions.get(1).min, plantingConditions.get(1).max))
                 .imageUrls(imageUrls)
                 .build();
     }

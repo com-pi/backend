@@ -23,6 +23,7 @@ public record PlantSpeciesDetailResponse(
 
     public static PlantSpeciesDetailResponse toResponse(PlantSpecies plantSpecies){
         return PlantSpeciesDetailResponse.builder()
+                .plantTaxonomy(plantSpecies.getPlantTaxonomy())
                 .commonName(plantSpecies.getCommonName())
                 .description(plantSpecies.getDescription())
                 .wateringInfo(plantSpecies.getWateringInfo())
