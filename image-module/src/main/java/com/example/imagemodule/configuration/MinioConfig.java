@@ -31,6 +31,7 @@ public class MinioConfig {
         } else {
             activeProfile = activeProfiles[0];
         }
+        // Todo: secret 관리
         if (activeProfile.equals("local")) {
             endpoint = "http://localhost:9000";
             credential = "compcomp!!";
