@@ -1,5 +1,6 @@
 package com.example.encycloservice.adapter.out.cache;
 
+import com.example.encycloservice.application.port.out.PopularPlantStat;
 import com.example.encycloservice.domain.RecentPlantDetailStat;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -84,7 +85,7 @@ public class StatRedisRepository implements StatRepository {
             plantIdWithinPast = new HashSet<>();
         }
 
-        TreeMap<Long, String> plantViewStat = new TreeMap<>();
+        Map<String, Long> plantViewStat = new HashMap<>();
 
         for (String plantId : plantIdWithinPast){
             String plantIdKey = String.format("popularity:%s", plantId);
@@ -92,14 +93,19 @@ public class StatRedisRepository implements StatRepository {
             if(plantIdTimeKeys == null) {
                 plantIdTimeKeys = new HashSet<>();
             }
-            Long viewWithinPast = 0L;
+            Long views = 0L;
             for (String plantIdTimeKey : plantIdTimeKeys){
-                viewWithinPast += redisTemplate.opsForSet().size(plantIdTimeKey);
+                views += redisTemplate.opsForSet().size(plantIdTimeKey);
             }
-            plantViewStat.put(viewWithinPast, plantId);
+            plantViewStat.put(plantId, views);
         }
 
         popularityRecordRepository.updateRecord(plantViewStat);
+    }
+
+    @Override
+    public PopularPlantStat getPopularPlantList() {
+        return popularityRecordRepository.getPopularPlantStat();
     }
 
     private double getEpochMillis(LocalDateTime time){
