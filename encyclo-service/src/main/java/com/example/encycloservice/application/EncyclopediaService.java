@@ -47,8 +47,10 @@ public class EncyclopediaService implements EncyclopediaUseCase {
 
     @Transactional(readOnly = true)
     public PlantSpecies getPlantDetailById(Long id) {
-        PlantSpecies plantSpecies = encyclopediaQuery.findById(id)
-                .orElseThrow(() -> new NotFoundException("해당 식물을 찾을 수 없습니다."));
+        PlantSpecies plantSpecies = encyclopediaQuery.getById(id);
+        if (plantSpecies == null) {
+            throw new NotFoundException("해당 식물을 찾을 수 없습니다.");
+        }
         Passport passport = PassportHolder.getPassport();
         LocalDateTime now = LocalDateTime.now();
         statisticsCommand.recordRecentPlantDetails(plantSpecies, now);

@@ -5,6 +5,8 @@ import com.example.encycloservice.application.port.out.EncyclopediaQuery;
 import com.example.encycloservice.domain.PlantSpecies;
 import com.example.encycloservice.domain.SearchPlantQueryResult;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.Nullable;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
@@ -26,10 +28,13 @@ public class EncyclopediaQueryAdapter implements EncyclopediaQuery {
                 .build();
     }
 
+    @Nullable
     @Override
-    public Optional<PlantSpecies> findById(Long id) {
+    @Cacheable(cacheManager = "redisCacheManager", cacheNames = "plant_species", key = "#id")
+    public PlantSpecies getById(Long id) {
         return encyclopediaRepository.findById(id)
-                .flatMap(entity -> Optional.ofNullable(entity.toDomain()));
+                .flatMap(entity -> Optional.ofNullable(entity.toDomain()))
+                .orElse(null);
     }
 
 }
