@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class MemberQueryAdapter implements MemberQuery {
+public class MongodbMemberQueryImpl implements MemberQuery {
 
     private final MemberMongoRepository repository;
 

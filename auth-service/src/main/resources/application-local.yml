@@ -38,11 +38,11 @@ spring:
       uri: mongodb://root:1234@localhost:27017/auth?authSource=admin
 
 --- # kafka 설정
-spring:
-  kafka:
-    bootstrap-servers: localhost:9092
-    consumer:
-      auto-offset-reset: earliest
+#spring:
+#  kafka:
+#    bootstrap-servers: localhost:9092
+#    consumer:
+#      auto-offset-reset: earliest
 
 --- ## secret
 oauth:
