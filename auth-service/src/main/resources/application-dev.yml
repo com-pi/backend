@@ -40,11 +40,11 @@ spring:
 
 
 --- # kafka 설정
-spring:
-  kafka:
-    bootstrap-servers: kafka:9092
-    consumer:
-      auto-offset-reset: earliest
+#spring:
+#  kafka:
+#    bootstrap-servers: kafka:9092
+#    consumer:
+#      auto-offset-reset: earliest
 
 --- ## secret
 oauth:
