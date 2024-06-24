@@ -45,7 +45,7 @@ public class MinioConfig {
     public MinioClient minioClient(){
         MinioClient minioClient = MinioClient.builder()
                 .endpoint(endpoint)
-                .credentials("ADMIN", credential)
+                .credentials("admin", credential)
                 .build();
         bucketInitialize(minioClient);
         return minioClient;
