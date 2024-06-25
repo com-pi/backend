@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface DiaryQueryPort {
     Diary getDiaryByDiaryId(Long diaryId);
@@ -16,4 +17,6 @@ public interface DiaryQueryPort {
     Diary getPersonalDiaryByDiaryId(Long diaryId, Long memberId);
 
     Diary getPublicDiaryByDiaryId(Long diaryId);
+
+    Optional<Diary> getDiaryByIdAndCreatedDate(Long myPlantId, LocalDate createdDate);
 }

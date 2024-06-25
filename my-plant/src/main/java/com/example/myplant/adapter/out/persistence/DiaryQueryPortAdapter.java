@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -52,5 +53,11 @@ public class DiaryQueryPortAdapter implements DiaryQueryPort {
         DiaryEntity diaryEntity = diaryRepository.findByDiaryIdAndIsPublishedAndIsPublicAndDeletionYn(diaryId, true, true, "N")
                 .orElseThrow(() -> new NotFoundException(DiaryEntity.class));
         return diaryEntity.toDomain();
+    }
+
+    @Override
+    public Optional<Diary> getDiaryByIdAndCreatedDate(Long myPlantId, LocalDate createdDate) {
+        Optional<DiaryEntity> diaryEntity = diaryRepository.findByDiaryIdAndCreatedDate(myPlantId, createdDate);
+        return diaryEntity.map(DiaryEntity::toDomain);
     }
 }

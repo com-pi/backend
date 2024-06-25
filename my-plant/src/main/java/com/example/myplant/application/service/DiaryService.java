@@ -1,5 +1,6 @@
 package com.example.myplant.application.service;
 
+import com.example.common.exception.ConflictException;
 import com.example.common.exception.UnauthorizedException;
 import com.example.imagemodule.application.port.ImageCommand;
 import com.example.imagemodule.application.port.SaveImagesCommand;
@@ -17,8 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +36,8 @@ public class DiaryService implements DiaryUseCase {
     @Override
     @Transactional
     public Long registerDiary(Diary diary, List<MultipartFile> imageFiles) {
+        isPostAlreadyPublished(diary.getMyPlantId(), diary.getCreatedDate());
+
         diary.updateImageUrlList(getImageUrls(imageFiles));
         return diaryCommandPort.save(diary);
     }
@@ -86,6 +91,13 @@ public class DiaryService implements DiaryUseCase {
     /**
      * private
      */
+    private void isPostAlreadyPublished(final Long myPlantId, LocalDate createdDate) {
+        Optional<Diary> originDiary = diaryQueryPort.getDiaryByIdAndCreatedDate(myPlantId, createdDate);
+        if (originDiary.isPresent()) {
+            throw new ConflictException("이미 작성된 일지가 존재합니다.");
+        }
+    }
+
     private List<String> getImageUrls(List<MultipartFile> imageFiles) {
         List<String> objectNames = imageCommand.saveImages(
                 new SaveImagesCommand(imageFiles, MinioBucket.DIARY_IMAGES)
