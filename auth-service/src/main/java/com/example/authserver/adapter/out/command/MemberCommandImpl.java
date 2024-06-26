@@ -3,7 +3,6 @@ package com.example.authserver.adapter.out.command;
 import com.example.authserver.application.port.out.persistence.MemberCommand;
 import com.example.authserver.domain.Member;
 import com.example.common.exception.InternalServerException;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class MemberCommandImpl implements MemberCommand {
 
     private final MemberJpaRepository jpaRepository;
-    private final EntityManager entityManager;
 
     @Override
     @Transactional

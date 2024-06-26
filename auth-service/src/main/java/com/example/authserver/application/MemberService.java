@@ -17,11 +17,9 @@ import com.example.imagemodule.application.port.ImageCommand;
 import com.example.imagemodule.domain.ImageAndThumbnail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class MemberService implements MemberUseCase {
 
     private final MemberQuery memberQuery;

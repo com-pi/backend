@@ -37,6 +37,14 @@ public record AddressConvertResponse(
                         .findFirst()
                         .orElse(addressResult.get(0));
 
+        if(hResult.sido.isBlank() && hResult.sigungu.isBlank() && hResult.eupmyundong.isBlank()) {
+            return Optional.of(Address.of(
+                    "-",
+                    "-",
+                    "주소지불명"
+            ));
+        }
+
         return Optional.of(Address.of(
            hResult.sido,
            hResult.sigungu,
