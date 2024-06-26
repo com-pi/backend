@@ -9,6 +9,7 @@ public record ModifyMemberInfoCommand(
         Long memberId,
         String nickName,
         String introduction,
+        Boolean isPicUploaded,
         String profileImageUrl,
         String thumbnailUrl,
         Location location,

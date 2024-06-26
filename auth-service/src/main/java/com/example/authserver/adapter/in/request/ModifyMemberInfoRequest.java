@@ -20,22 +20,27 @@ public final class ModifyMemberInfoRequest extends SelfValidating<ModifyMemberIn
     private final Long memberId;
 
     @NotNull
-    private final @Size(max = 10) @NotBlank String nickname;
+    @NotBlank(message = "닉넴임은 공백일 수 없습니다.")
+    @Size(max = 10, message = "닉네임은 10자를 넘을 수 없습니다.")
+    private final String nickname;
 
-    @NotNull
-    private final @Size(max = 3000) @NotBlank String introduction;
+    @Size(max = 1000, message = "소개글은 300 자를 넘길 수 없습니다.")
+    private final String introduction;
 
-    @NotNull
     private final LocationRequest location;
+
+    @NotNull
+    private final Boolean isPicUploaded;
 
     private final MultipartFile profileImage;
 
     @Builder
-    public ModifyMemberInfoRequest(Long memberId, String nickname, String introduction, LocationRequest location, MultipartFile profileImage) {
+    public ModifyMemberInfoRequest(Long memberId, String nickname, String introduction, LocationRequest location, Boolean isPicUploaded, MultipartFile profileImage) {
         this.memberId = memberId;
         this.nickname = nickname;
         this.introduction = introduction;
         this.location = location;
+        this.isPicUploaded = isPicUploaded;
         this.profileImage = profileImage;
         super.validateSelf();
     }
@@ -46,6 +51,7 @@ public final class ModifyMemberInfoRequest extends SelfValidating<ModifyMemberIn
                 .location(location.toDomain())
                 .introduction(introduction)
                 .nickName(nickname)
+                .isPicUploaded(isPicUploaded)
                 .profileImage(profileImage)
                 .build();
     }

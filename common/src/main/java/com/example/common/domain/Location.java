@@ -1,5 +1,6 @@
 package com.example.common.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.locationtech.jts.geom.Point;
 
@@ -19,8 +20,13 @@ public class Location {
         return new Location(point.getX(), point.getY());
     }
 
-    public static Location of(double latitude, double longitude) {
+    public static Location of(Double latitude, Double longitude) {
         return new Location(latitude, longitude);
+    }
+
+    @JsonIgnore
+    public boolean isNull(){
+        return latitude == null && longitude == null;
     }
 
 }

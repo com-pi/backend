@@ -12,6 +12,7 @@ import com.example.authserver.application.port.out.persistence.MemberQuery;
 import com.example.authserver.domain.Member;
 import com.example.authserver.exception.BadRequestException;
 import com.example.common.domain.Address;
+import com.example.common.domain.Location;
 import com.example.common.exception.NotFoundException;
 import com.example.imagemodule.application.port.ImageCommand;
 import com.example.imagemodule.domain.ImageAndThumbnail;
@@ -38,15 +39,20 @@ public class MemberService implements MemberUseCase {
     @Override
     public void modifyMemberInfoRequest(ModifyMemberInfoRequest request) {
         ImageAndThumbnail imageAndThumbnail = new ImageAndThumbnail(null, null);
-        if(request.getProfileImage() != null){
+
+        if(request.getIsPicUploaded() && request.getProfileImage() != null){
             imageAndThumbnail = imageCommand.saveProfileImage(request.getProfileImage());
         }
 
         Member member = memberQuery.findById(request.getMemberId())
                 .orElseThrow(() -> new NotFoundException(MemberEntity.class));
 
+        Location location = request.getLocation().toDomain();
         Address address = member.getAddress();
-        if(!request.getLocation().toDomain().equals(member.getLocation())) {
+
+        if(location.isNull()){
+            address = Address.empty();
+        } else if(!location.equals(member.getLocation())) {
             address = addressConverter.convertToAddress(request.getLocation().toDomain())
                     .orElseThrow(() -> new BadRequestException("주소 변환에 실패 했습니다."));
         }
@@ -55,9 +61,10 @@ public class MemberService implements MemberUseCase {
                 .memberId(request.getMemberId())
                 .nickName(request.getNickname())
                 .introduction(request.getIntroduction())
+                .isPicUploaded(request.getIsPicUploaded())
                 .profileImageUrl(imageAndThumbnail.imageUrl())
                 .thumbnailUrl(imageAndThumbnail.thumbnailUrl())
-                .location(request.getLocation().toDomain())
+                .location(location)
                 .address(address)
                 .build();
 
@@ -74,7 +81,5 @@ public class MemberService implements MemberUseCase {
 
         return MemberInfoResponse.from(foundMember);
     }
-
-
 
 }

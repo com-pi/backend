@@ -18,4 +18,8 @@ public class Address {
         return new Address(sido, sigungu, eupmyundong);
     }
 
+    public static Address empty() {
+        return new Address("", "", "");
+    }
+
 }

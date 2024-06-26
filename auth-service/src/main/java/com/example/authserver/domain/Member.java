@@ -73,10 +73,10 @@ public class Member {
 
     public Member updateInfo(ModifyMemberInfoCommand command){
         return this.toBuilder()
-                .nickname(command.nickName())
-                .introduction(command.introduction())
-                .imageUrl(command.profileImageUrl() == null? null : command.profileImageUrl())
-                .thumbnailUrl(command.thumbnailUrl() == null? null : command.thumbnailUrl())
+                .nickname(command.nickName() == null ? nickname : command.nickName())
+                .introduction(command.introduction() == null ? introduction : command.introduction())
+                .imageUrl(command.isPicUploaded() ? command.profileImageUrl() : imageUrl)
+                .thumbnailUrl(command.isPicUploaded() ? command.thumbnailUrl() : thumbnailUrl)
                 .location(command.location())
                 .address(command.address())
                 .build();

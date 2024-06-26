@@ -10,7 +10,7 @@ public class GeomUtil {
     private final static GeometryFactory geometryFactory = new GeometryFactory();
 
     public static Point createPoint(Location location) {
-        if(location == null){
+        if(location == null || location.isNull()){
             return null;
         }
         return geometryFactory.createPoint(

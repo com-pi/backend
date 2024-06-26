@@ -51,19 +51,20 @@ public class MemberController {
     
     @Operation(summary = "회원 정보 변경")
     @Authenticate(Role.MEMBER)
-    @PostMapping(value = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CommonResponse<Void>> modifyMember(
             @Parameter(description = "닉네임, 12 자 이내", required = true)
             @RequestPart(value = "nickName") String nickName,
-            @Parameter(description = "소개글, 3,000 자 이내", required = true)
-            @RequestPart(value = "introduction") String introduction,
-            @Parameter(description = "위도, 33 ~ 38", required = true)
-            @RequestPart("latitude") String latitude,
-            @Parameter(description = "경도, 125 ~ 132", required = true)
-            @RequestPart("longitude") String longitude,
+            @Parameter(description = "소개글, 3,000 자 이내")
+            @RequestPart(value = "introduction", required = false) String introduction,
+            @Parameter(description = "위도, 33 ~ 38")
+            @RequestPart(value = "latitude", required = false) String latitude,
+            @Parameter(description = "경도, 125 ~ 132")
+            @RequestPart(value = "longitude", required = false) String longitude,
+            @Parameter(description = "프로필 사진 업로드 여부")
+            @RequestPart(value = "isPicUploaded") String isPicUploaded,
             @Parameter(description = "사진")
             @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
-
         Passport passport = PassportHolder.getPassport();
 
         LocationRequest location = LocationRequest.builder()
@@ -76,6 +77,7 @@ public class MemberController {
                 .nickname(nickName)
                 .introduction(introduction)
                 .location(location)
+                .isPicUploaded(Boolean.valueOf(isPicUploaded))
                 .profileImage(profileImage)
                 .build();
 

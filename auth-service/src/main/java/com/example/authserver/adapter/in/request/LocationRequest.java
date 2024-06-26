@@ -14,18 +14,23 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = false)
 public class LocationRequest extends SelfValidating<LocationRequest> {
 
-    @Min(value = 33, message = "대한민국 위도 한계를 벗어났습니다. (33 ~ 38")
-    @Max(value = 38, message = "대한민국 위도 한계를 벗어났습니다. (33 ~ 38")
+    @Min(value = 33, message = "대한민국 위도 한계를 벗어났습니다. (33 ~ 38)")
+    @Max(value = 38, message = "대한민국 위도 한계를 벗어났습니다. (33 ~ 38)")
     private final Double latitude;
 
-    @Min(value = 125, message = "대한민국 경도 한계를 벗어났습니다. (33 ~ 38")
-    @Max(value = 132, message = "대한민국 경도 한계를 벗어났습니다. (33 ~ 38")
+    @Min(value = 125, message = "대한민국 경도 한계를 벗어났습니다. (125 ~ 132)")
+    @Max(value = 132, message = "대한민국 경도 한계를 벗어났습니다. (125 ~ 132)")
     private final Double longitude;
 
     @Builder
     public LocationRequest(String latitude, String longitude) {
-        this.latitude = Double.valueOf(latitude);
-        this.longitude = Double.valueOf(longitude);
+        if(latitude == null || longitude == null) {
+            this.latitude = null;
+            this.longitude = null;
+        } else {
+            this.latitude = Double.valueOf(latitude);
+            this.longitude = Double.valueOf(longitude);
+        }
         super.validateSelf();
     }
 

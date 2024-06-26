@@ -7,9 +7,10 @@ import org.springframework.web.multipart.MultipartFile;
 @Builder
 public record ModifyMemberRequest(
         Long memberId,
-        MultipartFile profileImage,
         Location location,
         String nickName,
-        String introduction
+        String introduction,
+        Boolean isPicUploaded,
+        MultipartFile profileImage
 ) {
 }
