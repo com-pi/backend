@@ -1,19 +1,18 @@
 package com.example.authserver.adapter.in;
 
-import com.example.authserver.adapter.in.request.ModifyInfoRequest;
-import com.example.authserver.adapter.in.request.ModifyLocationRequest;
+import com.example.authserver.adapter.in.request.LocationRequest;
+import com.example.authserver.adapter.in.request.ModifyMemberInfoRequest;
 import com.example.authserver.adapter.in.response.MemberInfoResponse;
 import com.example.authserver.adapter.in.response.MyInfoResponse;
+import com.example.authserver.aop.filter.PassportHolder;
 import com.example.authserver.application.port.in.MemberUseCase;
 import com.example.common.annotation.Authenticate;
 import com.example.common.baseentity.CommonResponse;
-import com.example.common.domain.Address;
+import com.example.common.domain.Passport;
 import com.example.common.domain.Role;
-import com.example.imagemodule.domain.ImageAndThumbnail;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -49,44 +48,40 @@ public class MemberController {
 
         return CommonResponse.okWithMessage("내 정보를 조회하였습니다.", memberInfo);
     }
-
-    @Operation(summary = "닉네임, 소개글 변경")
-    @PutMapping(value = "/info")
+    
+    @Operation(summary = "회원 정보 변경")
     @Authenticate(Role.MEMBER)
+    @PostMapping(value = "/", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<CommonResponse<Void>> modifyMember(
-            @RequestBody @Valid ModifyInfoRequest request
-    ) {
+            @Parameter(description = "닉네임, 12 자 이내", required = true)
+            @RequestPart(value = "nickName") String nickName,
+            @Parameter(description = "소개글, 3,000 자 이내", required = true)
+            @RequestPart(value = "introduction") String introduction,
+            @Parameter(description = "위도, 33 ~ 38", required = true)
+            @RequestPart("latitude") String latitude,
+            @Parameter(description = "경도, 125 ~ 132", required = true)
+            @RequestPart("longitude") String longitude,
+            @Parameter(description = "사진")
+            @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
 
-        memberUseCase.modifyMyInfo(
-                request.nickname(),
-                request.introduction()
-        );
+        Passport passport = PassportHolder.getPassport();
 
-        return CommonResponse.okWithMessage("회원 정보가 변경되었습니다.");
-    }
+        LocationRequest location = LocationRequest.builder()
+                .latitude(latitude)
+                .longitude(longitude)
+                .build();
 
-    @Operation(summary = "프로필 사진 변경")
-    @PostMapping(value = "/profileImage", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @Authenticate(Role.MEMBER)
-    public ResponseEntity<CommonResponse<ImageAndThumbnail>> modifyMember(
-            @Parameter(description = "프로필 사진")
-            @RequestPart("profileImage") MultipartFile profileImage) {
+        ModifyMemberInfoRequest modifyMemberInfoRequest = ModifyMemberInfoRequest.builder()
+                .memberId(passport.memberId())
+                .nickname(nickName)
+                .introduction(introduction)
+                .location(location)
+                .profileImage(profileImage)
+                .build();
 
-        ImageAndThumbnail imageAndThumbnail = memberUseCase.postProfileImage(profileImage);
+        memberUseCase.modifyMemberInfoRequest(modifyMemberInfoRequest);
 
-        return CommonResponse.okWithMessage("회원 사진이 변경되었습니다.", imageAndThumbnail);
-    }
-
-
-    @Operation(summary = "회원 위치 변경")
-    @PatchMapping("/location")
-    @Authenticate(Role.MEMBER)
-    public ResponseEntity<CommonResponse<Address>> modifyMemberLocation(
-            @RequestBody @Valid ModifyLocationRequest request
-    ) {
-        Address address = memberUseCase.modifyLocation(request.location().toDomain());
-
-        return CommonResponse.okWithMessage("회원 위치 정보가 변경되었습니다.", address);
+        return CommonResponse.okWithMessage("회원 정보 변경 성공", null);
     }
 
 

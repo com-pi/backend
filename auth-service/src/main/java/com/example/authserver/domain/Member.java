@@ -1,11 +1,11 @@
 package com.example.authserver.domain;
 
 import com.example.authserver.adapter.out.command.MemberEntity;
+import com.example.authserver.application.ModifyMemberInfoCommand;
 import com.example.common.domain.Address;
 import com.example.common.domain.Location;
 import com.example.common.domain.Role;
 import com.example.common.exception.NotFoundException;
-import com.example.imagemodule.domain.ImageAndThumbnail;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -71,10 +71,14 @@ public class Member {
         }
     }
 
-    public Member updateInfo(String nickname, String introduction){
+    public Member updateInfo(ModifyMemberInfoCommand command){
         return this.toBuilder()
-                .nickname(nickname)
-                .introduction(introduction)
+                .nickname(command.nickName())
+                .introduction(command.introduction())
+                .imageUrl(command.profileImageUrl() == null? null : command.profileImageUrl())
+                .thumbnailUrl(command.thumbnailUrl() == null? null : command.thumbnailUrl())
+                .location(command.location())
+                .address(command.address())
                 .build();
     }
 
@@ -99,20 +103,6 @@ public class Member {
                 .naverId(null)
                 .email(null)
                 .phoneNumber(null)
-                .build();
-    }
-
-    public Member updateProfileImage(ImageAndThumbnail imageAndThumbnail) {
-        return this.toBuilder()
-                .imageUrl(imageAndThumbnail.imageUrl())
-                .imageUrl(imageAndThumbnail.thumbnailUrl())
-                .build();
-    }
-
-    public Member updateLocation(Location location, Address address) {
-        return this.toBuilder()
-                .location(location)
-                .address(address)
                 .build();
     }
 

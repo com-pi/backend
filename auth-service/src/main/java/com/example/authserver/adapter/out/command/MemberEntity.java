@@ -104,4 +104,5 @@ public class MemberEntity extends DeletedAtAbstractEntity {
         address = member.getAddress();
         lastLogin = member.getLastLogin();
     }
+
 }

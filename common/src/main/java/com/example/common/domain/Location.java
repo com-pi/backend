@@ -1,12 +1,12 @@
 package com.example.common.domain;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.*;
 import org.locationtech.jts.geom.Point;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
+@ToString
+@EqualsAndHashCode
 public class Location {
 
     private Double latitude;

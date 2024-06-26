@@ -1,7 +1,7 @@
 package com.example.authserver.application;
 
 import com.example.authserver.application.port.in.MessageConsumeUseCase;
-import com.example.authserver.application.port.out.persistence.MemberCommand;
+import com.example.authserver.application.port.out.persistence.MemberSyncCommand;
 import com.example.authserver.domain.Event;
 import com.example.authserver.domain.EventType;
 import com.example.authserver.domain.Member;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class MessageConsumeService implements MessageConsumeUseCase {
 
     private final ObjectMapper objectMapper;
-    private final MemberCommand memberCommand;
+    private final MemberSyncCommand memberSyncCommand;
 
     @Override
     public void consumeMemberCqrsMessage(ConsumerRecord<String, String> message) {
@@ -27,9 +27,9 @@ public class MessageConsumeService implements MessageConsumeUseCase {
             Event<Member> event = objectMapper.readValue(messageString,  new TypeReference<>() {});
             EventType eventType = event.getEventType();
             if(EventType.CREATE.equals(eventType)) {
-                memberCommand.saveRead(event.getData());
+                memberSyncCommand.save(event.getData());
             } else if(EventType.UPDATE.equals(eventType)) {
-                memberCommand.updateRead(event.getData());
+                memberSyncCommand.update(event.getData());
             }
 
         } catch (JsonProcessingException e) {

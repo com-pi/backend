@@ -1,5 +1,6 @@
 package com.example.authserver.application;
 
+import com.example.authserver.adapter.in.request.ModifyMemberInfoRequest;
 import com.example.authserver.adapter.in.response.MemberInfoResponse;
 import com.example.authserver.adapter.in.response.MyInfoResponse;
 import com.example.authserver.adapter.out.command.MemberEntity;
@@ -11,14 +12,12 @@ import com.example.authserver.application.port.out.persistence.MemberQuery;
 import com.example.authserver.domain.Member;
 import com.example.authserver.exception.BadRequestException;
 import com.example.common.domain.Address;
-import com.example.common.domain.Location;
 import com.example.common.exception.NotFoundException;
 import com.example.imagemodule.application.port.ImageCommand;
 import com.example.imagemodule.domain.ImageAndThumbnail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -28,8 +27,7 @@ public class MemberService implements MemberUseCase {
     private final MemberQuery memberQuery;
     private final MemberCommand memberCommand;
     private final ImageCommand imageCommand;
-    private final AddressConverterPort addressConverterPort;
-
+    private final AddressConverterPort addressConverter;
 
     @Override
     public MyInfoResponse getMyInfo() {
@@ -40,43 +38,34 @@ public class MemberService implements MemberUseCase {
     }
 
     @Override
-    @Transactional
-    public void modifyMyInfo(String nickName, String introduction) {
-        Member member = memberQuery.findById(PassportHolder.getPassport().memberId())
-                .orElseThrow(() -> new NotFoundException(Member.class));
+    public void modifyMemberInfoRequest(ModifyMemberInfoRequest request) {
+        ImageAndThumbnail imageAndThumbnail = new ImageAndThumbnail(null, null);
+        if(request.getProfileImage() != null){
+            imageAndThumbnail = imageCommand.saveProfileImage(request.getProfileImage());
+        }
 
-        Member modifiedMember = member.updateInfo(nickName, introduction);
+        Member member = memberQuery.findById(request.getMemberId())
+                .orElseThrow(() -> new NotFoundException(MemberEntity.class));
+
+        Address address = member.getAddress();
+        if(!request.getLocation().toDomain().equals(member.getLocation())) {
+            address = addressConverter.convertToAddress(request.getLocation().toDomain())
+                    .orElseThrow(() -> new BadRequestException("주소 변환에 실패 했습니다."));
+        }
+
+        ModifyMemberInfoCommand command = ModifyMemberInfoCommand.builder()
+                .memberId(request.getMemberId())
+                .nickName(request.getNickname())
+                .introduction(request.getIntroduction())
+                .profileImageUrl(imageAndThumbnail.imageUrl())
+                .thumbnailUrl(imageAndThumbnail.thumbnailUrl())
+                .location(request.getLocation().toDomain())
+                .address(address)
+                .build();
+
+        Member modifiedMember = member.updateInfo(command);
 
         memberCommand.update(modifiedMember);
-    }
-
-    @Override
-    @Transactional
-    public ImageAndThumbnail postProfileImage(MultipartFile profileImage) {
-        Member member = memberQuery.findById(PassportHolder.getPassport().memberId())
-                .orElseThrow(() -> new NotFoundException(MemberEntity.class));
-
-        ImageAndThumbnail imageAndThumbnail = imageCommand.saveProfileImage(profileImage);
-
-        Member imageUpdatedMe = member.updateProfileImage(imageAndThumbnail);
-        memberCommand.update(imageUpdatedMe);
-
-        return imageAndThumbnail;
-    }
-
-    @Override
-    @Transactional
-    public Address modifyLocation(Location location) {
-        Member member = memberQuery.findById(PassportHolder.getPassport().memberId())
-                .orElseThrow(() -> new NotFoundException(MemberEntity.class));
-
-        Address address = addressConverterPort.convertToAddress(location)
-                .orElseThrow(() -> new BadRequestException("주소 변환에 실패 했습니다."));
-
-        Member locationUpdatedMember = member.updateLocation(location, address);
-
-        memberCommand.update(locationUpdatedMember);
-        return address;
     }
 
 
@@ -87,5 +76,7 @@ public class MemberService implements MemberUseCase {
 
         return MemberInfoResponse.from(foundMember);
     }
+
+
 
 }

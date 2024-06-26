@@ -13,6 +13,7 @@ public record AddressConvertResponse(
     private static final String 행정동_코드 = "H";
 
     public record AddressConvertResult(
+            @JsonAlias("region_type")
             String regionType,
             String addressName,
             @JsonAlias("region_1depth_name")
