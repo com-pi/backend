@@ -40,4 +40,13 @@ public class PlantSpecies {
                 .build();
     }
 
+    public static PlantBrief toBrief(PlantSpecies plantSpecies) {
+        return PlantBrief.builder()
+                .plantSpeciesId(plantSpecies.getId())
+                .commonName(plantSpecies.getCommonName())
+                .scientificName(String.format("%s %s", plantSpecies.getPlantTaxonomy().getSpecies(), plantSpecies.getPlantTaxonomy().getFamily()))
+                .ImageUrl(plantSpecies.getImageUrls().get(0))
+                .build();
+    }
+
 }
