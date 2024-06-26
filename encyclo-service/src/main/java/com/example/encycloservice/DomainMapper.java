@@ -1,6 +1,6 @@
 package com.example.encycloservice;
 
-import com.example.encycloservice.adapter.out.persistence.PlantSpeciesEntity;
+import com.example.encycloservice.adapter.out.persistence.entity.PlantSpeciesEntity;
 import com.example.encycloservice.domain.SearchPlantQueryResult;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +11,7 @@ public class DomainMapper {
         return SearchPlantQueryResult.SingleSearchPlantResult.builder()
                 .plantSpeciesId(entity.getId())
                 .commonName(entity.getCommonName())
-                .imageUrl(entity.getImageUrls().get(0))
+                .imageUrl(entity.getImageUrls().getFirst())
                 .build();
     }
 

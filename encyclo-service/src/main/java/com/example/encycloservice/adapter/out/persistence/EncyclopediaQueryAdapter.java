@@ -1,6 +1,7 @@
 package com.example.encycloservice.adapter.out.persistence;
 
 import com.example.encycloservice.DomainMapper;
+import com.example.encycloservice.adapter.out.persistence.entity.PlantSpeciesEntity;
 import com.example.encycloservice.application.port.out.EncyclopediaQuery;
 import com.example.encycloservice.domain.PlantBrief;
 import com.example.encycloservice.domain.PlantSpecies;
@@ -42,7 +43,7 @@ public class EncyclopediaQueryAdapter implements EncyclopediaQuery {
     @Cacheable(cacheManager = "redisCacheManager", cacheNames = "plant_brief", key = "#id")
     public PlantBrief getBriefById(Long id) {
         return encyclopediaRepository.findById(id)
-                .flatMap(entity -> Optional.ofNullable(entity.toBrief()))
+                .map(PlantSpeciesEntity::toBrief)
                 .orElse(null);
     }
 

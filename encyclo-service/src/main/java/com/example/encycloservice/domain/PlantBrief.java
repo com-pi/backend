@@ -15,4 +15,7 @@ public class PlantBrief {
     private String scientificName;
     private String imageUrl;
 
+    public PlantBrief(Long plantSpeciesId) {
+        this.plantSpeciesId = plantSpeciesId;
+    }
 }

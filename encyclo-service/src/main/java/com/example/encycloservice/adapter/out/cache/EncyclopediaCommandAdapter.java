@@ -3,7 +3,7 @@ package com.example.encycloservice.adapter.out.cache;
 import com.example.encycloservice.adapter.out.external.PlantDetailResult;
 import com.example.encycloservice.adapter.out.external.PlantInfoScraper;
 import com.example.encycloservice.adapter.out.persistence.EncyclopediaRepository;
-import com.example.encycloservice.adapter.out.persistence.PlantSpeciesEntity;
+import com.example.encycloservice.adapter.out.persistence.entity.PlantSpeciesEntity;
 import com.example.encycloservice.application.port.out.EncyclopediaCommand;
 import com.example.encycloservice.domain.PlantSpecies;
 import feign.FeignException;
