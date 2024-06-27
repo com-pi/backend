@@ -69,7 +69,7 @@ public class DiaryService implements DiaryUseCase {
 
     @Override
     public List<Diary> getDiaryStatus(GetDiaryStatusCommand command) {
-        return diaryQueryPort.getDiaryStatus(command.getStartDate(), command.getEndDate(), command.getMemberId());
+        return diaryQueryPort.getDiaryStatus(command.getStartDate(), command.getEndDate(), command.getMyPlantId(), command.getMemberId());
     }
 
     @Override

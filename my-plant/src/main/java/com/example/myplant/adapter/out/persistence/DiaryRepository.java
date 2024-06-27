@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface DiaryRepository extends JpaRepository<DiaryEntity, Long> {
 
-    List<DiaryEntity> findByCreatedDateBetweenAndMemberIdAndDeletionYn(LocalDate startDate, LocalDate endDate, Long memberId, String deletionYn);
+    List<DiaryEntity> findByCreatedDateBetweenAndMemberIdAndMyPlantIdAndDeletionYn(LocalDate startDate, LocalDate endDate, Long myPlantId, Long memberId, String deletionYn);
 
     List<DiaryEntity> findByMemberIdAndIsPublicAndIsPublishedAndDeletionYn(Long memberId, boolean isPublic, boolean isPublished, String deletionYn, Pageable pageable);
 

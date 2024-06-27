@@ -88,9 +88,12 @@ public class DiaryController {
     @Parameters({
             @Parameter(name = "startDate", description = "조회 조건 시작 날짜", example = "2024-06-01"),
             @Parameter(name = "endDate", description = "조회 조건 종료 날짜", example = "2024-06-30"),
+            @Parameter(name = "myPlantId", description = "식물 아이디", example = "1"),
     })
-    public ResponseEntity<List<DiaryCreatedDateResponse>> getDiaryStatus(@RequestParam LocalDate startDate, @RequestParam LocalDate endDate) {
-        GetDiaryStatusCommand command = GetDiaryStatusCommand.of(startDate, endDate, PassportHolder.getPassport().memberId());
+    public ResponseEntity<List<DiaryCreatedDateResponse>> getDiaryStatus(@RequestParam LocalDate startDate,
+                                                                         @RequestParam LocalDate endDate,
+                                                                         @RequestParam Long myPlantId) {
+        GetDiaryStatusCommand command = GetDiaryStatusCommand.of(startDate, endDate, myPlantId, PassportHolder.getPassport().memberId());
         List<Diary> diaryList = diaryUseCase.getDiaryStatus(command);
         List<DiaryCreatedDateResponse> responseList = diaryList.stream()
                 .map(DiaryCreatedDateResponse::from)

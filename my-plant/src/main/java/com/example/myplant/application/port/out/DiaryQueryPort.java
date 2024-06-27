@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface DiaryQueryPort {
     Diary getDiaryByDiaryId(Long diaryId);
 
-    List<Diary> getDiaryStatus(LocalDate startDate, LocalDate endDate, Long memberId);
+    List<Diary> getDiaryStatus(LocalDate startDate, LocalDate endDate, Long myPlantId, Long memberId);
 
     List<Diary> getDiaryByMemberId(Long memberId, Pageable pageable);
 

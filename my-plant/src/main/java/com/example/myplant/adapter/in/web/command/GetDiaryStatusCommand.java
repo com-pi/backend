@@ -10,12 +10,14 @@ import java.time.LocalDate;
 public class GetDiaryStatusCommand {
     private LocalDate startDate;
     private LocalDate endDate;
+    private Long myPlantId;
     private Long memberId;
 
-    public static GetDiaryStatusCommand of(LocalDate startDate, LocalDate endDate, Long memberId) {
+    public static GetDiaryStatusCommand of(LocalDate startDate, LocalDate endDate, Long myPlantId, Long memberId) {
         return GetDiaryStatusCommand.builder()
                 .startDate(startDate)
                 .endDate(endDate)
+                .myPlantId(myPlantId)
                 .memberId(memberId)
                 .build();
     }
