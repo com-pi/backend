@@ -2,8 +2,8 @@ package com.example.encycloservice.adapter.in;
 
 import com.example.common.baseentity.CommonResponse;
 import com.example.encycloservice.adapter.in.response.PopularPlantStatResponse;
+import com.example.encycloservice.adapter.in.response.RecentPlantDetailResponse;
 import com.example.encycloservice.application.port.in.StatisticsUseCase;
-import com.example.encycloservice.domain.RecentPlantDetailStat;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,14 +23,14 @@ public class StatisticsController {
 
     @Operation(summary = "최근 상세정보가 조회된 식물 조회", description = "최근에 상세정보가 조회된 식물을 조회합니다.")
     @GetMapping("/recent-plant-detail")
-    public ResponseEntity<CommonResponse<RecentPlantDetailStat>> getRecentDetailRequestStat(
-            @Parameter(name = "페이지", description = "기본값 1")
+    public ResponseEntity<CommonResponse<RecentPlantDetailResponse>> getRecentDetailRequestStat(
+            @Parameter(name = "페이지", description = "기본값 1") 
             @RequestParam(value = "page", defaultValue = "1") Integer page,
             @Parameter(name = "사이즈", description = "기본값 10")
             @RequestParam(value = "size", defaultValue = "10") Integer size
     ){
-        RecentPlantDetailStat recentPlantDetailsList = statisticsUseCase.getRecentPlantDetailsList(page, size);
-        return CommonResponse.okWithMessage("최근 조회된 식물 조회 성공", recentPlantDetailsList);
+        RecentPlantDetailResponse response = statisticsUseCase.getRecentPlantDetailsList(page, size);
+        return CommonResponse.okWithMessage("최근 조회된 식물 조회 성공", response);
     }
 
     @Operation(summary = "인기 식물 조회", description = "인기 식물을 조회합니다.")

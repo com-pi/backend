@@ -4,7 +4,7 @@ import com.example.encycloservice.adapter.out.cache.PopularityRecordRepository;
 
 import java.util.List;
 
-public record PopularPlantStat(
+public record PopularPlantStatResult(
         String referenceTime,
         List<PopularityRecordRepository.PlantRank> plantRankList
 ) {

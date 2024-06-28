@@ -1,6 +1,6 @@
 package com.example.encycloservice.adapter.out.cache;
 
-import com.example.encycloservice.application.port.out.PopularPlantStat;
+import com.example.encycloservice.application.port.out.PopularPlantStatResult;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
@@ -27,8 +27,8 @@ public class PopularityRecordRepository {
                 .toList();
     }
 
-    public PopularPlantStat getPopularPlantStat(){
-        return new PopularPlantStat(referenceTime, plantViewRank);
+    public PopularPlantStatResult getPopularPlantStat(){
+        return new PopularPlantStatResult(referenceTime, plantViewRank);
     }
 
     public record PlantRank(

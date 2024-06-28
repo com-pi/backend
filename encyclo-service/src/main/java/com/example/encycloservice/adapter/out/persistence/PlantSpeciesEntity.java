@@ -2,10 +2,7 @@ package com.example.encycloservice.adapter.out.persistence;
 
 import com.example.common.baseentity.BaseTimeAbstractEntity;
 import com.example.common.converter.JsonToStringListConverter;
-import com.example.encycloservice.domain.PlantSpecies;
-import com.example.encycloservice.domain.PlantTaxonomy;
-import com.example.encycloservice.domain.PlantingCondition;
-import com.example.encycloservice.domain.PlantingInfo;
+import com.example.encycloservice.domain.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -105,6 +102,15 @@ public class PlantSpeciesEntity extends BaseTimeAbstractEntity {
                 .temperatureCondition(plantSpecies.getTemperatureCondition())
                 .humidCondition(plantSpecies.getHumidCondition())
                 .imageUrls(plantSpecies.getImageUrls())
+                .build();
+    }
+
+    public PlantBrief toBrief(){
+        return PlantBrief.builder()
+                .plantSpeciesId(id)
+                .commonName(commonName)
+                .scientificName(String.format("%s %s", plantTaxonomy.getGenus(), plantTaxonomy.getSpecies()))
+                .imageUrl(imageUrls.get(0))
                 .build();
     }
 
