@@ -1,41 +1,36 @@
 package com.example.encycloservice.adapter.in.response;
 
 import com.example.encycloservice.application.port.out.EncyclopediaQuery;
-import com.example.encycloservice.application.port.out.PopularPlantStat;
-import com.example.encycloservice.domain.PlantSpecies;
+import com.example.encycloservice.domain.PlantBrief;
 import lombok.Builder;
 
 import java.util.List;
 
 @Builder
-public record PopularPlantStatResponse (
+public record PopularPlantStatResponse(
         String referenceTime,
         List<PlantRankRecord> plantRecord
 ) {
    @Builder
    public record PlantRankRecord (
-           String id,
            int rank,
-           String commonName,
-           String imageUrl
+           PlantBrief plantBriefInfo
    ) {
    }
 
-   public static PopularPlantStatResponse of (PopularPlantStat domain, EncyclopediaQuery encyclopediaQuery){
-      List<PlantRankRecord> plantRankRecord = domain.plantRankList().stream().map(
-              plantRank -> {
-                 PlantSpecies plantSpecies = encyclopediaQuery.getById(Long.valueOf(plantRank.plantId()));
-                 return PlantRankRecord.builder()
-                         .id(plantRank.plantId())
-                         .rank(plantRank.rank())
-                         .commonName(plantSpecies.getCommonName())
-                         .imageUrl(plantSpecies.getImageUrls().get(0))
-                         .build();
-              }
-      ).toList();
-      return PopularPlantStatResponse.builder()
-              .referenceTime(domain.referenceTime())
-              .plantRecord(plantRankRecord)
-              .build();
+   public static PopularPlantStatResponse toResponse(
+           com.example.encycloservice.application.port.out.PopularPlantStatResult result,
+           EncyclopediaQuery encyclopediaQuery){
+
+         return PopularPlantStatResponse.builder()
+                .referenceTime(result.referenceTime())
+                .plantRecord(result.plantRankList().stream()
+                          .map(plantRank -> PlantRankRecord.builder()
+                                 .rank(plantRank.rank())
+                                 .plantBriefInfo(encyclopediaQuery.getBriefById(Long.valueOf(plantRank.plantId())))
+                                 .build())
+                          .toList())
+                .build();
    }
+
 }

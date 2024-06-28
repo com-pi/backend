@@ -1,7 +1,7 @@
 package com.example.encycloservice.adapter.out.cache;
 
-import com.example.encycloservice.application.port.out.PopularPlantStat;
-import com.example.encycloservice.domain.RecentPlantDetailStat;
+import com.example.encycloservice.application.port.out.PopularPlantStatResult;
+import com.example.encycloservice.adapter.out.persistence.RecentPlantDetailStatResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -46,7 +46,7 @@ public class StatRedisRepository implements StatRepository {
     }
 
     @Override
-    public RecentPlantDetailStat getRecentPlantDetails(int page, int size) {
+    public RecentPlantDetailStatResult getRecentPlantDetails(int page, int size) {
         int start = (page - 1) * size;
         int end = start + size - 1;
 
@@ -57,15 +57,15 @@ public class StatRedisRepository implements StatRepository {
         Set<String> recordSet = redisTemplate.opsForZSet().reverseRange(RedisKey.recentPlantDetails, start, end);
         List<String> recordList = recordSet == null ? new ArrayList<>() : recordSet.stream().toList();
 
-        List<RecentPlantDetailStat.RecentPlantDetailRank> result = IntStream.range(0, recordList.size())
+        List<RecentPlantDetailStatResult.RecentPlantDetailRank> result = IntStream.range(0, recordList.size())
                 .mapToObj(rank ->
-                        RecentPlantDetailStat.RecentPlantDetailRank.builder()
+                        RecentPlantDetailStatResult.RecentPlantDetailRank.builder()
                                 .rank(rank)
                                 .plantId(Long.valueOf(recordList.get(rank)))
                                 .build()
                 ).toList();
 
-        return RecentPlantDetailStat.builder()
+        return RecentPlantDetailStatResult.builder()
                 .totalPage(totalPage)
                 .totalElement(totalElement)
                 .results(result)
@@ -104,7 +104,7 @@ public class StatRedisRepository implements StatRepository {
     }
 
     @Override
-    public PopularPlantStat getPopularPlantList() {
+    public PopularPlantStatResult getPopularPlantList() {
         return popularityRecordRepository.getPopularPlantStat();
     }
 
