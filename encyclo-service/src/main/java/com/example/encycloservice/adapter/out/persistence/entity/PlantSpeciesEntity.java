@@ -1,4 +1,4 @@
-package com.example.encycloservice.adapter.out.persistence;
+package com.example.encycloservice.adapter.out.persistence.entity;
 
 import com.example.common.baseentity.BaseTimeAbstractEntity;
 import com.example.common.converter.JsonToStringListConverter;
@@ -110,7 +110,7 @@ public class PlantSpeciesEntity extends BaseTimeAbstractEntity {
                 .plantSpeciesId(id)
                 .commonName(commonName)
                 .scientificName(String.format("%s %s", plantTaxonomy.getGenus(), plantTaxonomy.getSpecies()))
-                .imageUrl(imageUrls.get(0))
+                .imageUrl(imageUrls.getFirst())
                 .build();
     }
 
