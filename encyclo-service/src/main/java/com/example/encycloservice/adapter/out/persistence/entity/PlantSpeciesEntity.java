@@ -110,7 +110,7 @@ public class PlantSpeciesEntity extends BaseTimeAbstractEntity {
                 .plantSpeciesId(id)
                 .commonName(commonName)
                 .scientificName(String.format("%s %s", plantTaxonomy.getGenus(), plantTaxonomy.getSpecies()))
-                .imageUrl(imageUrls.getFirst())
+                .imageUrl(imageUrls.get(0))
                 .build();
     }
 

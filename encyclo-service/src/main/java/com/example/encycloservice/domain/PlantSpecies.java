@@ -45,7 +45,7 @@ public class PlantSpecies {
                 .plantSpeciesId(plantSpecies.getId())
                 .commonName(plantSpecies.getCommonName())
                 .scientificName(String.format("%s %s", plantSpecies.getPlantTaxonomy().getSpecies(), plantSpecies.getPlantTaxonomy().getFamily()))
-                .ImageUrl(plantSpecies.getImageUrls().get(0))
+                .imageUrl(plantSpecies.getImageUrls().get(0))
                 .build();
     }
 

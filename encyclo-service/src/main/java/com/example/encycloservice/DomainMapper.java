@@ -11,7 +11,7 @@ public class DomainMapper {
         return SearchPlantQueryResult.SingleSearchPlantResult.builder()
                 .plantSpeciesId(entity.getId())
                 .commonName(entity.getCommonName())
-                .imageUrl(entity.getImageUrls().getFirst())
+                .imageUrl(entity.getImageUrls().get(0))
                 .build();
     }
 
