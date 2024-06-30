@@ -16,11 +16,10 @@ public class ArticleHashtagEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long articleHashtagId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "article_id")
-    private CommonArticleEntity article;
+    private Long articleId;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hashtag_id")
     private HashtagEntity hashtag;
 
@@ -29,7 +28,7 @@ public class ArticleHashtagEntity {
      */
     public static ArticleHashtagEntity of(CommonArticleEntity articleEntity, HashtagEntity hashtagEntity) {
         return ArticleHashtagEntity.builder()
-                .article(articleEntity)
+                .articleId(articleEntity.getArticleId())
                 .hashtag(hashtagEntity)
                 .build();
     }
@@ -47,8 +46,16 @@ public class ArticleHashtagEntity {
     public ArticleHashtag toDomain() {
         return ArticleHashtag.builder()
                 .articleHashtagId(articleHashtagId)
-                .articleId(article.getArticleId())
+                .articleId(articleId)
                 .hashtag(hashtag.toDomain())
+                .build();
+    }
+
+    public static ArticleHashtagEntity fromDomain(ArticleHashtag articleHashtag) {
+        return ArticleHashtagEntity.builder()
+                .articleHashtagId(articleHashtag.getArticleHashtagId())
+                .articleId(articleHashtag.getArticleId())
+                .hashtag(HashtagEntity.from(articleHashtag.getHashtag()))
                 .build();
     }
 

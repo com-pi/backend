@@ -1,16 +1,17 @@
 package com.example.boardservice.domain;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 public class Article {
 
     private Long articleId;
@@ -25,11 +26,14 @@ public class Article {
 
     private List<String> imageUrls;
 
+    private List<String> hashtagList;
+
     private ArticleType articleType;
 
-    public static Article from(Long articleId) {
-        return Article.builder()
-                .articleId(articleId)
-                .build();
+    private LocalDateTime createdAt;
+
+    public void addHashtagList(List<String> hashtagList) {
+        this.hashtagList = hashtagList;
     }
+
 }

@@ -38,4 +38,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<CommonResponse<Void>> handleDuplicatedLikeException(DuplicateLikeException exception) {
         return CommonResponse.conflictWithMessage(exception.getMessage());
     }
+
+    @ExceptionHandler(Exception.class)
+    public void occuredExeption(Exception e){
+        e.printStackTrace();
+    }
 }

@@ -24,13 +24,13 @@ public class LikeQueryAdapter implements LikeQueryPort {
 
     @Override
     public Optional<Like> findLikeByArticleIdAndMemberId(Long articleId, Long memberId) {
-        Optional<LikeEntity> likeEntity = likeRepository.findByArticle_ArticleIdAndMember_MemberId(articleId, memberId);
+        Optional<LikeEntity> likeEntity = likeRepository.findByArticle_ArticleIdAndMemberId(articleId, memberId);
         return likeEntity.map(LikeEntity::toDomain);
     }
 
     @Override
     public Optional<Like> findLikeByArticleIdAndMemberIdAndIsLiked(Long articleId, Long memberId, boolean isLiked) {
-        Optional<LikeEntity> likeEntity = likeRepository.findByArticle_ArticleIdAndMember_MemberIdAndIsLiked(articleId, memberId, isLiked);
+        Optional<LikeEntity> likeEntity = likeRepository.findByArticle_ArticleIdAndMemberIdAndIsLiked(articleId, memberId, isLiked);
         return likeEntity.map(LikeEntity::toDomain);
     }
 

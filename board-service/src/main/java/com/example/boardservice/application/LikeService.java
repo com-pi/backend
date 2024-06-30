@@ -23,7 +23,6 @@ public class LikeService implements LikeUseCase {
     private final ArticleQueryPort articleQueryPort;
 
     @Override
-    @Transactional
     public Long like(Like like) {
         likeQueryPort.findLikeByArticleIdAndMemberId(like.getArticleId(), like.getMemberId())
                 .ifPresent(originLike -> {

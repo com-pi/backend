@@ -2,8 +2,7 @@ package com.example.boardservice.application.port.out;
 
 import com.example.boardservice.domain.Hashtag;
 
-public interface HashtagCommandPort {
+public interface HashtagQueryPort {
 
-    Hashtag save(Hashtag hashtag);
-
+    Hashtag findHashtagByName(String name);
 }

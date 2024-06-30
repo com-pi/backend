@@ -24,6 +24,7 @@ public class HashtagEntity {
 
     public static HashtagEntity from(Hashtag hashtag) {
         return HashtagEntity.builder()
+                .hashtagId(hashtag.getHashtagId())
                 .name(hashtag.getName())
                 .build();
     }

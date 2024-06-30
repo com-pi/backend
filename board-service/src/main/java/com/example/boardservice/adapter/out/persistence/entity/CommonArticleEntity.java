@@ -21,13 +21,10 @@ import java.util.List;
 @Table(name = "article")
 public class CommonArticleEntity extends DeletedAtAbstractEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Long articleId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    protected MemberEntity member;
+    protected Long memberId;
 
     protected String title;
 
@@ -41,7 +38,6 @@ public class CommonArticleEntity extends DeletedAtAbstractEntity {
     @Transient
     protected ArticleType articleType;
 
-
     @PostLoad
     public void setArticleTypeAfterLoad() {
         this.articleType = ArticleType.fromString(this.getClass().getAnnotation(DiscriminatorValue.class).value());
@@ -50,16 +46,17 @@ public class CommonArticleEntity extends DeletedAtAbstractEntity {
     public Article toArticle() {
         return Article.builder()
                 .articleId(this.articleId)
-                .memberId(this.member.getMemberId())
+                .memberId(this.memberId)
                 .title(this.title)
                 .content(this.content)
                 .viewCount(this.viewCount)
                 .imageUrls(this.imageUrls)
                 .articleType(this.articleType)
+                .createdAt(this.getCreatedAt())
                 .build();
     }
 
-    public static CommonArticleEntity from(Long articleId) {
+    public static CommonArticleEntity ofId(Long articleId) {
         return new CommonArticleEntity(articleId);
     }
 
@@ -67,5 +64,9 @@ public class CommonArticleEntity extends DeletedAtAbstractEntity {
         this.articleId = articleId;
     }
 
+    @Override
+    public void delete() {
+        super.delete();
+    }
 
 }

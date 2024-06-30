@@ -6,9 +6,7 @@ import lombok.Getter;
 @Getter
 public enum ArticleType {
 
-    BUY_AND_SELL(MinioBucket.ARTICLE_TRADE),
-    PLANT_SITTER(MinioBucket.ARTICLE_TRADE),
-    SHOW_OFF(MinioBucket.ARTICLE_PLANT_LIFE),
+    GENERAL_BOARD(MinioBucket.ARTICLE_PLANT_LIFE),
     QNA(MinioBucket.ARTICLE_PLANT_LIFE);
 
     private final MinioBucket bucket;
@@ -19,9 +17,7 @@ public enum ArticleType {
 
     public static ArticleType fromString(String type) {
         return switch (type.toLowerCase()) {
-            case "buy_and_sell" -> BUY_AND_SELL;
-            case "plantsitter" -> PLANT_SITTER;
-            case "showoff" -> SHOW_OFF;
+            case "general_board" -> GENERAL_BOARD;
             case "qna" -> QNA;
             default -> throw new RuntimeException("enum 타입 변환 에러");
         };

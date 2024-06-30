@@ -13,4 +13,11 @@ public class ArticleHashtag {
 
     private Hashtag hashtag;
 
+    public static ArticleHashtag generateArticleHashtag(Long articleId, Hashtag hashtag) {
+        return ArticleHashtag.builder()
+                .articleId(articleId)
+                .hashtag(hashtag)
+                .build();
+    }
+
 }

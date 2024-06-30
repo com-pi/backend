@@ -23,9 +23,7 @@ public class LikeEntity {
     @JoinColumn(name = "article_id")
     private CommonArticleEntity article;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
-    private MemberEntity member;
+    private Long memberId;
 
     private Boolean isLiked;
 
@@ -33,8 +31,8 @@ public class LikeEntity {
     public static LikeEntity from(Like like) {
         return LikeEntity.builder()
                 .likeId(like.getLikeId())
-                .article(CommonArticleEntity.from(like.getArticleId()))
-                .member(MemberEntity.from(like.getMemberId()))
+                .article(CommonArticleEntity.ofId(like.getArticleId()))
+                .memberId(like.getMemberId())
                 .isLiked(like.getIsLiked())
                 .build();
     }
@@ -43,7 +41,7 @@ public class LikeEntity {
         return Like.builder()
                 .likeId(this.likeId)
                 .articleId(this.article.getArticleId())
-                .memberId(this.member.getMemberId())
+                .memberId(this.memberId)
                 .isLiked(this.isLiked)
                 .build();
     }

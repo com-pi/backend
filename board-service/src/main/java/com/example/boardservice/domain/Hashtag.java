@@ -11,10 +11,9 @@ public class Hashtag {
 
     private String name;
 
-    public static Hashtag ofName(String name) {
+    public static Hashtag generateHashtag(String name) {
         return Hashtag.builder()
                 .name(name)
                 .build();
     }
-
 }

@@ -1,18 +1,41 @@
 package com.example.boardservice.domain;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 @Getter
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@Builder(builderMethodName = "generate")
+@Builder
 public class Comment {
 
-    private Long boardId;
-    private Integer dept;
-    private Long parentCommentId;
     private Long commentId;
-    private Long authorId;
+
     private String content;
+
+    private Long memberId;
+
+    private Comment parent;
+
+    private List<Comment> children = new ArrayList<>();
+
+    private Long articleId;
+
+    private LocalDate createdDate;
+
+    private Boolean isEditable;
+
+    public static Comment ofId(Long commentId) {
+        return Comment.builder()
+                .commentId(commentId)
+                .build();
+    }
+
+    public void addEditable(Long currentMemberId) {
+        this.isEditable = Objects.equals(this.memberId, currentMemberId);
+    }
 
 }
