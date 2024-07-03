@@ -1,4 +1,4 @@
-package com.example.boardservice.application.port;
+package com.example.boardservice.application;
 
 import com.example.boardservice.application.ArticleHashtagService;
 import com.example.boardservice.application.GeneralArticleService;
