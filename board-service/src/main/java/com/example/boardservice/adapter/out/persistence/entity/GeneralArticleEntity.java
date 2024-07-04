@@ -9,7 +9,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -19,12 +18,9 @@ import java.util.List;
 @Table(name = "general_board")
 public class GeneralArticleEntity extends CommonArticleEntity {
 
-    private LocalDateTime createdAt;
-
     @Builder
-    public GeneralArticleEntity(Long articleId, Long memberId, String title, String content, Integer viewCount, List<String> imageUrls, ArticleType articleType, LocalDateTime createdAt) {
+    public GeneralArticleEntity(Long articleId, Long memberId, String title, String content, Integer viewCount, List<String> imageUrls, ArticleType articleType) {
         super(articleId, memberId, title, content, viewCount, imageUrls, articleType);
-        this.createdAt = createdAt;
     }
 
     public GeneralArticle toDomain() {
@@ -35,7 +31,7 @@ public class GeneralArticleEntity extends CommonArticleEntity {
                 .content(this.content)
                 .viewCount(this.viewCount)
                 .imageUrls(this.imageUrls)
-                .createdAt(getCreatedAt())
+                .createdAt(this.getCreatedAt())
                 .build();
     }
 
@@ -47,7 +43,6 @@ public class GeneralArticleEntity extends CommonArticleEntity {
                 .content(generalArticle.getContent())
                 .viewCount(generalArticle.getViewCount())
                 .imageUrls(generalArticle.getImageUrls())
-                .createdAt(generalArticle.getCreatedAt())
                 .build();
     }
 
@@ -55,9 +50,5 @@ public class GeneralArticleEntity extends CommonArticleEntity {
         this.title = article.getTitle();
         this.content = article.getContent();
         this.imageUrls = article.getImageUrls();
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return super.getCreatedAt();
     }
 }

@@ -5,4 +5,5 @@ import com.example.boardservice.domain.Hashtag;
 public interface HashtagQueryPort {
 
     Hashtag findHashtagByName(String name);
+
 }

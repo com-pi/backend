@@ -7,6 +7,7 @@ import com.example.boardservice.application.port.out.HashtagQueryPort;
 import com.example.boardservice.domain.ArticleHashtag;
 import com.example.boardservice.domain.Hashtag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,5 +46,14 @@ public class ArticleHashtagService {
 
     public List<ArticleHashtag> getHashtagListByArticle(Long articleId) {
         return articleHashtagQueryPort.getArticleHashtagListByArticleId(articleId);
+    }
+
+    public List<ArticleHashtag> getArticleIdByHashtagId(Long hashtagId, Pageable pageable) {
+        return articleHashtagQueryPort.getArticleIdByHashtagId(hashtagId, pageable);
+    }
+
+    public Long getArticleIdByHashtagName(String name) {
+        Hashtag hashtag = hashtagQueryPort.findHashtagByName(name);
+        return hashtag.getHashtagId();
     }
 }

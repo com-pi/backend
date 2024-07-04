@@ -18,7 +18,6 @@ public class ArticleHashtagEntity {
 
     private Long articleId;
 
-    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hashtag_id")
     private HashtagEntity hashtag;

@@ -1,7 +1,5 @@
 package com.example.boardservice.application;
 
-import com.example.boardservice.adapter.out.persistence.CommonArticleQueryAdapter;
-import com.example.boardservice.application.port.in.CommonArticleUseCase;
 import com.example.boardservice.application.port.out.CommonArticleQueryPort;
 import com.example.boardservice.domain.Article;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +19,7 @@ public class CommonArticleService {
         return commonArticleQueryPort.getArticleList(pageable);
     }
 
-    public Page<Article> getArticleListByHashtag(String name, Pageable pageable) {
+    public List<Article> getArticleListByArticleId(List<Long> articleIdList, Pageable pageable) {
+        return commonArticleQueryPort.getArticleListByArticleId(articleIdList, pageable);
     }
 }

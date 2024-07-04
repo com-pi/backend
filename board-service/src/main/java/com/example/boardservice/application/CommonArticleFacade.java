@@ -1,6 +1,5 @@
 package com.example.boardservice.application;
 
-import com.example.boardservice.adapter.in.web.response.CommonArticleResponse;
 import com.example.boardservice.application.port.in.CommonArticleUseCase;
 import com.example.boardservice.domain.Article;
 import com.example.boardservice.domain.ArticleHashtag;
@@ -34,9 +33,22 @@ public class CommonArticleFacade implements CommonArticleUseCase {
     }
 
     @Override
-    public CommonArticleResponse getArticleListByHashtag(String name, Pageable pageable) {
-        Page<Article> articlePage = commonArticleService.getArticleListByHashtag(name, pageable);
+    public List<Article> getArticleListByHashtag(String name, Pageable pageable) {
+        Long hashtagId = articleHashtagService.getArticleIdByHashtagName(name);
 
-        return null;
+        List<Long> articleIdList = articleHashtagService.getArticleIdByHashtagId(hashtagId, pageable).stream()
+                .map(ArticleHashtag::getArticleId)
+                .toList();
+
+        List<Article> articleList = commonArticleService.getArticleListByArticleId(articleIdList, pageable);
+
+        articleList.forEach(article -> {
+            List<String> hashtagList = articleHashtagService.getHashtagListByArticle(article.getArticleId()).stream()
+                    .map(articleHashtag -> articleHashtag.getHashtag().getName())
+                    .toList();
+            article.addHashtagList(hashtagList);
+        });
+
+        return articleList;
     }
 }

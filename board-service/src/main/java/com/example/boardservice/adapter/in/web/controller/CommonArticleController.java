@@ -1,8 +1,6 @@
 package com.example.boardservice.adapter.in.web.controller;
 
 import com.example.boardservice.adapter.in.web.response.CommonArticleListResponse;
-import com.example.boardservice.adapter.in.web.response.CommonArticleResponse;
-import com.example.boardservice.adapter.in.web.response.GeneralArticleListResponse;
 import com.example.boardservice.application.port.in.CommonArticleUseCase;
 import com.example.common.annotation.Authenticate;
 import com.example.common.domain.Role;
@@ -43,7 +41,7 @@ public class CommonArticleController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "해시태그 게시글 조회", description = "해당 해시태그를 가진 게시글을 목록으로 조회합니다.")
+    @Operation(summary = "해시태그 게시글 목록 조회", description = "해당 해시태그를 가진 게시글을 목록으로 조회합니다.")
     @Authenticate(Role.MEMBER)
     @GetMapping("/hashtags")
     @Parameters({
@@ -51,10 +49,10 @@ public class CommonArticleController {
             @Parameter(name = "size", description = "페이지 크기", example = "4"),
             @Parameter(name = "sort", description = "정렬 기준", example = "createdAt,DESC")
     })
-    public ResponseEntity<CommonArticleResponse> getArticleListByHashtag(
+    public ResponseEntity<CommonArticleListResponse> getArticleListByHashtag(
             @RequestParam final String name,
             @PageableDefault(size = 4, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        CommonArticleResponse response = useCase.getArticleListByHashtag(name, pageable);
+        CommonArticleListResponse response = CommonArticleListResponse.from(useCase.getArticleListByHashtag(name, pageable));
         return ResponseEntity.ok(response);
     }
 
