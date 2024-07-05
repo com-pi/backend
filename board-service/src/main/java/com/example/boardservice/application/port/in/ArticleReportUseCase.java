@@ -1,8 +1,8 @@
 package com.example.boardservice.application.port.in;
 
 import com.example.boardservice.domain.ArticleReport;
+import org.springframework.data.domain.Pageable;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
 public interface ArticleReportUseCase {

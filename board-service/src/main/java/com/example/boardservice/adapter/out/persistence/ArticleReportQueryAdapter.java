@@ -6,9 +6,9 @@ import com.example.boardservice.domain.ArticleReport;
 import com.example.common.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
 @Component

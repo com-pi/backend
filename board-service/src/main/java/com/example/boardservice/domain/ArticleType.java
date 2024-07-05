@@ -18,7 +18,7 @@ public enum ArticleType {
     public static ArticleType fromString(String type) {
         return switch (type.toLowerCase()) {
             case "general_board" -> GENERAL_BOARD;
-            case "qna" -> QNA;
+            case "qna_board" -> QNA;
             default -> throw new RuntimeException("enum 타입 변환 에러");
         };
     }

@@ -12,4 +12,5 @@ public interface GeneralArticleRepository extends JpaRepository<GeneralArticleEn
     Optional<GeneralArticleEntity> findByArticleIdAndDeletionYn(Long articleId, String deletionYn);
 
     Page<GeneralArticleEntity> findByDeletionYn(String deletionYn, Pageable pageable);
+
 }

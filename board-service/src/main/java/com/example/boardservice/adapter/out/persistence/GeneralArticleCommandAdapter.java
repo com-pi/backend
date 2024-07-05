@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 public class GeneralArticleCommandAdapter implements GeneralArticleCommandPort {
 
     private final GeneralArticleRepository generalArticleRepository;
+
     @Override
     public GeneralArticle save(GeneralArticle article) {
         GeneralArticleEntity generalArticleEntity = generalArticleRepository.save(GeneralArticleEntity.fromDomain(article));
