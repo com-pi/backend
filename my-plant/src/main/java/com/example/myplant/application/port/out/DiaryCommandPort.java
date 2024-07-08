@@ -10,4 +10,6 @@ public interface DiaryCommandPort {
 
     void delete(Diary diary);
 
+    void postDiaryArticle(Diary diary);
+
 }

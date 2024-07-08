@@ -24,3 +24,9 @@ spring:
       settings:
         trace: false
         web-allow-others: true
+
+feign:
+  client:
+    config:
+      diary-article:
+        url: http://localhost:8000/board-service/diaries

@@ -12,6 +12,7 @@ import com.example.myplant.application.port.out.DiaryCommandPort;
 import com.example.myplant.application.port.out.DiaryQueryPort;
 import com.example.myplant.domain.Diary;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +27,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
+@Slf4j
 public class DiaryService implements DiaryUseCase {
 
     private final DiaryCommandPort diaryCommandPort;
@@ -38,8 +40,16 @@ public class DiaryService implements DiaryUseCase {
     public Long registerDiary(Diary diary, List<MultipartFile> imageFiles) {
         isPostAlreadyPublished(diary.getMyPlantId(), diary.getCreatedDate());
 
-        diary.updateImageUrlList(getImageUrls(imageFiles));
-        return diaryCommandPort.save(diary);
+        if(diary.hasImageFiles(imageFiles)) {
+            diary.updateImageUrlList(getImageUrls(imageFiles));
+        }
+        Long savedDiaryId = diaryCommandPort.save(diary);
+
+        if(diary.isSyncable()) {
+            diaryCommandPort.postDiaryArticle(diary);
+        }
+
+        return savedDiaryId;
     }
 
     @Override

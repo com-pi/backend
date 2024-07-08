@@ -48,8 +48,7 @@ public class DiaryController {
                             "\"isPublished\":true,\"isPublic\":true}"
             )
             @RequestPart("data") String requestJson,
-            @RequestPart("imageFiles") List<MultipartFile> imageFiles) throws JsonProcessingException {
-
+            @RequestPart(value = "imageFiles", required = false) List<MultipartFile> imageFiles) throws JsonProcessingException {
         RegisterDiaryCommand command = objectMapper.readValue(requestJson, RegisterDiaryCommand.class);
         command.addMemberId(PassportHolder.getPassport().memberId());
         Long diaryId = diaryUseCase.registerDiary(command.toDomain(), imageFiles);
