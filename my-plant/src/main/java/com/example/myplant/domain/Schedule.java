@@ -1,18 +1,32 @@
 package com.example.myplant.domain;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
 public class Schedule {
+
     private Long scheduleId;
+
     private Long memberId;
+
     private String title;
-    private LocalDateTime endDateTime;
+
     private Boolean isCompleted;
+
+    private LocalDateTime startDateTime;
+
+    private LocalDateTime endDateTime;
+
+    private Boolean isRecurring;
+
+    private Integer frequency; // 반복 주기(일 기준)
+
+    private String colorType;
 
     public boolean isWriter(Long originMemberId) {
         return originMemberId.equals(memberId);
@@ -20,7 +34,7 @@ public class Schedule {
 
 
     // @TODO 현재 시간을 기준으로 일정이 과거인지 validation 체크 필요, 현재 테스트를 위해 열어둠
-    public void validateCheckEndDateTime() {
+    public void checkEndDateTime() {
         if(endDateTime.isBefore(LocalDateTime.now())) {
             // throw new IllegalArgumentException("올바른 일정을 설정해주세요.");
         };

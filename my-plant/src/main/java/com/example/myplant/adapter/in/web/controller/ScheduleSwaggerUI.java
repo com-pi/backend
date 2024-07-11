@@ -18,7 +18,10 @@ public interface ScheduleSwaggerUI {
     ResponseEntity<CommonResponse<Long>> createSchedule(
         @Schema(
             example = "{\"title\":\"테스트\","
-                + " \"endDateTime\":\"2024-06-16T16:14:00\"}"
+                + " \"startDateTime\":\"2024-06-15T16:14:00\","
+                + " \"endDateTime\":\"2024-06-16T16:14:00\","
+                + " \"frequency\":2,"
+                + " \"colorType\":\"YELLOW\"}"
         ) CreateScheduleRequest request);
 
     @Operation(summary = "일정 수정", description = "기존 일정을 수정합니다.")
@@ -33,5 +36,12 @@ public interface ScheduleSwaggerUI {
 
     @Operation(summary = "메인페이지에서 일정 조회", description = "메인 페이지에서 일정을 조회합니다.")
     ResponseEntity<ScheduleMainResponseList> getMainPageScheduleList();
+
+    @Operation(summary = "오늘의 일정 조회", description = "오늘의 일정을 조회합니다.")
+    ResponseEntity<ScheduleMainResponseList> getTodayScheduleList();
+
+    @Operation(summary = "다가오는 일정 조회", description = "다가오는 일정을 조회합니다.(7일 기준)")
+    ResponseEntity<ScheduleMainResponseList> getUpComingScheduleList();
+
 
 }

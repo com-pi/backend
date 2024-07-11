@@ -2,17 +2,10 @@ package com.example.myplant.adapter.out.persistence.entity;
 
 import com.example.common.baseentity.DeletedAtAbstractEntity;
 import com.example.myplant.domain.Schedule;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import lombok.*;
+
 import java.time.LocalDateTime;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -32,7 +25,15 @@ public class ScheduleEntity extends DeletedAtAbstractEntity {
 
     private Boolean isCompleted;
 
+    private LocalDateTime startDateTime;
+
     private LocalDateTime endDateTime;
+
+    private Boolean isRecurring;
+
+    private Integer frequency; // 반복 주기(일 기준)
+
+    private String colorType;
 
     public static ScheduleEntity from(Schedule schedule) {
         return ScheduleEntity.builder()
@@ -40,7 +41,11 @@ public class ScheduleEntity extends DeletedAtAbstractEntity {
             .memberId(schedule.getMemberId())
             .title(schedule.getTitle())
             .isCompleted(schedule.getIsCompleted())
+            .startDateTime(schedule.getStartDateTime())
             .endDateTime(schedule.getEndDateTime())
+            .isRecurring(schedule.getIsRecurring())
+            .frequency(schedule.getFrequency())
+            .colorType(schedule.getColorType())
             .build();
     }
 
@@ -50,7 +55,11 @@ public class ScheduleEntity extends DeletedAtAbstractEntity {
             .memberId(this.memberId)
             .title(this.title)
             .isCompleted(this.isCompleted)
+            .startDateTime(this.startDateTime)
             .endDateTime(this.endDateTime)
+            .isRecurring(this.isRecurring)
+            .frequency(this.frequency)
+            .colorType(this.colorType)
             .build();
     }
 

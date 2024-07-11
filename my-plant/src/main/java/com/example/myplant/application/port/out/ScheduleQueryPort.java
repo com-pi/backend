@@ -8,6 +8,7 @@ public interface ScheduleQueryPort {
 
     Schedule findByScheduleId(Long scheduleId);
 
-    List<Schedule> findByMemberIdAndStatusOrderByEndDateTime(Long memberId, Boolean isCompleted);
+    List<Schedule> getMainPageScheduleList(Long memberId, Boolean isCompleted);
 
+    List<Schedule> getTodayScheduleList(Long memberId, boolean isCompleted);
 }

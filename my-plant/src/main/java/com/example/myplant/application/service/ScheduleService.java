@@ -24,14 +24,14 @@ public class ScheduleService implements ScheduleUseCase {
     @Override
     @Transactional
     public Long createSchedule(Schedule schedule) {
-        schedule.validateCheckEndDateTime();
+        schedule.checkEndDateTime();
         return scheduleCommandPort.createSchedule(schedule);
     }
 
     @Override
     @Transactional
     public Long updateSchedule(Schedule schedule) {
-        schedule.validateCheckEndDateTime();
+        schedule.checkEndDateTime();
 
         Schedule originSchedule = scheduleQueryPort.findByScheduleId(schedule.getScheduleId());
         if(!schedule.isWriter(originSchedule.getMemberId())) {
@@ -53,7 +53,13 @@ public class ScheduleService implements ScheduleUseCase {
 
     @Override
     public ScheduleMainResponseList getMainPageScheduleList(Long memberId) {
-        List<Schedule> scheduleList = scheduleQueryPort.findByMemberIdAndStatusOrderByEndDateTime(memberId, false);
+        List<Schedule> scheduleList = scheduleQueryPort.getMainPageScheduleList(memberId, false);
+        return ScheduleMainResponseList.from(scheduleList);
+    }
+
+    @Override
+    public ScheduleMainResponseList getTodayScheduleList(Long memberId) {
+        List<Schedule> scheduleList = scheduleQueryPort.getTodayScheduleList(memberId, false);
         return ScheduleMainResponseList.from(scheduleList);
     }
 
