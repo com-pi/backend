@@ -6,9 +6,8 @@ import com.example.encycloservice.domain.PlantSpecies;
 public interface MyEncyclopediaCommand {
 
     void createEncyclopedia(MyEncyclopedia myEncyclopedia);
-    void updateEncyclopedia(MyEncyclopedia myEncyclopedia);
 
-    void addPlantToEncyclopedia(PlantSpecies plantSpeciesId, MyEncyclopedia myEncyclopediaId);
+    void addPlantsToEncyclopedia(PlantSpecies plantSpeciesId, MyEncyclopedia myEncyclopediaId);
     void removePlantFromEncyclopedia(PlantSpecies plantSpecies, MyEncyclopedia myEncyclopedia);
 
 }

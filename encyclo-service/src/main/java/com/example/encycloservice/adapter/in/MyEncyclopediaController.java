@@ -65,23 +65,23 @@ public class MyEncyclopediaController {
         return CommonResponse.okWithMessage("내 도감 생성 성공");
     }
 
-    @PostMapping("/{myEncyclopediaId}/plant/{plantSpeciesId}")
+    @PostMapping("/{myEncyclopediaId}/plant")
     @Operation(summary = "내 도감에 식물 추가", description = "내 도감에 식물을 추가합니다.")
     @Authenticate(Role.MEMBER)
-    public ResponseEntity<CommonResponse<Void>> addPlantToMyEncyclopedia(
+    public ResponseEntity<CommonResponse<Void>> addPlantsToMyEncyclopedia(
             @PathVariable Long myEncyclopediaId,
-            @PathVariable Long plantSpeciesId) {
-        myEncyclopediaUseCase.addPlantToEncyclopedia(plantSpeciesId, myEncyclopediaId);
+            @RequestParam List<Long> plantSpeciesIds) {
+        myEncyclopediaUseCase.addPlantsToEncyclopedia(plantSpeciesIds, myEncyclopediaId);
         return CommonResponse.okWithMessage("내 도감에 식물 추가 성공");
     }
 
-    @DeleteMapping("/{myEncyclopediaId}/plant/{plantSpeciesId}")
+    @DeleteMapping("/{myEncyclopediaId}/plant")
     @Operation(summary = "내 도감에서 식물 삭제", description = "내 도감에서 식물을 삭제합니다.")
     @Authenticate(Role.MEMBER)
-    public ResponseEntity<CommonResponse<Void>> removePlantFromMyEncyclopedia(
+    public ResponseEntity<CommonResponse<Void>> removePlantsFromMyEncyclopedia(
             @PathVariable Long myEncyclopediaId,
-            @PathVariable Long plantSpeciesId) {
-        myEncyclopediaUseCase.removePlantFromEncyclopedia(myEncyclopediaId, plantSpeciesId);
+            @RequestParam List<Long> plantSpeciesIds) {
+        myEncyclopediaUseCase.removePlantsFromEncyclopedia(plantSpeciesIds, myEncyclopediaId);
         return CommonResponse.okWithMessage("내 도감에서 식물 삭제 성공");
     }
 

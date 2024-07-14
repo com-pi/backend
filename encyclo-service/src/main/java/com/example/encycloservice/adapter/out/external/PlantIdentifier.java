@@ -16,8 +16,8 @@ public interface PlantIdentifier {
 
     @PostMapping(value = "/v2/identify/{project}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     PlantIdentificationResult identify(
-            @PathVariable("project") java.lang.String project,
-            @RequestParam("api-key") java.lang.String apiKey,
+            @PathVariable("project") String project,
+            @RequestParam("api-key") String apiKey,
             @RequestPart("images") List<MultipartFile> images
     );
 

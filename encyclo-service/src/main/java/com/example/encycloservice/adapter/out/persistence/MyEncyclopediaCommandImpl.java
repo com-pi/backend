@@ -24,14 +24,10 @@ public class MyEncyclopediaCommandImpl implements MyEncyclopediaCommand {
         myEncyclopediaRepository.save(MyEncyclopediaEntity.fromDomain(myEncyclopedia));
     }
 
-    @Override
-    public void updateEncyclopedia(MyEncyclopedia myEncyclopedia) {
-
-    }
 
     @Override
     @Transactional
-    public void addPlantToEncyclopedia(PlantSpecies plantSpecies, MyEncyclopedia myEncyclopedia) {
+    public void addPlantsToEncyclopedia(PlantSpecies plantSpecies, MyEncyclopedia myEncyclopedia) {
         EncyclopediaPlantEntity encyclopediaPlant = EncyclopediaPlantEntity.builder()
                 .plantEntity(entityManager.getReference(PlantSpeciesEntity.class, plantSpecies.getId()))
                 .myEncyclopediaEntity(entityManager.getReference(MyEncyclopediaEntity.class, myEncyclopedia.getId()))

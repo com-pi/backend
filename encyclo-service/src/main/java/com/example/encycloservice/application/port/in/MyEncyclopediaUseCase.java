@@ -11,7 +11,7 @@ public interface MyEncyclopediaUseCase {
     MyEncyclopedia getMyEncyclopediaDetail(Long myEncyclopediaId);
 
     void createEncyclopedia(MyEncyclopediaCreate myEncyclopediaCreate);
-    void addPlantToEncyclopedia(Long plantSpeciesId, Long myEncyclopediaId);
-    void removePlantFromEncyclopedia(Long myEncyclopediaId, Long plantSpeciesId);
+    void addPlantsToEncyclopedia(List<Long> plantSpeciesId, Long myEncyclopediaId);
+    void removePlantsFromEncyclopedia(List<Long> plantSpeciesId, Long myEncyclopediaId);
 
 }
