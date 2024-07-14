@@ -1,4 +1,4 @@
-package com.example.authserver.adapter.out;
+package com.example.authserver.adapter.out.query.external;
 
 import com.example.authserver.application.port.out.external.AddressConverterPort;
 import com.example.authserver.util.Secret;

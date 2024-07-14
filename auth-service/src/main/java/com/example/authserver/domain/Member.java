@@ -1,6 +1,6 @@
 package com.example.authserver.domain;
 
-import com.example.authserver.adapter.out.command.MemberEntity;
+import com.example.authserver.adapter.out.entity.MemberEntity;
 import com.example.authserver.application.ModifyMemberInfoCommand;
 import com.example.common.domain.Address;
 import com.example.common.domain.Location;
@@ -62,6 +62,12 @@ public class Member {
                 .role(Role.MEMBER)
                 .imageUrl(memberCreate.getImageUrl())
                 .thumbnailUrl(memberCreate.getThumbnailUr())
+                .build();
+    }
+
+    public static Member ofId(Long id){
+        return Member.builder()
+                .id(id)
                 .build();
     }
 

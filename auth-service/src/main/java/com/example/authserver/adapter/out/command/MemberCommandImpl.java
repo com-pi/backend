@@ -1,5 +1,7 @@
 package com.example.authserver.adapter.out.command;
 
+import com.example.authserver.adapter.out.entity.MemberEntity;
+import com.example.authserver.adapter.out.repository.MemberJpaRepository;
 import com.example.authserver.application.port.out.persistence.MemberCommand;
 import com.example.authserver.domain.Member;
 import com.example.common.exception.InternalServerException;

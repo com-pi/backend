@@ -1,4 +1,4 @@
-package com.example.authserver.adapter.out;
+package com.example.authserver.adapter.out.query.external;
 
 import com.example.authserver.configuration.FeignConfig;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -14,7 +14,7 @@ public interface KakaoMapClient {
 
     @GetMapping("/v2/local/geo/coord2regioncode.json")
     AddressConvertResponse getAddress(@RequestHeader String Authorization,
-                       @RequestParam(required = false) double x,
-                       @RequestParam(required = false) double y);
+                                      @RequestParam(required = false) double x,
+                                      @RequestParam(required = false) double y);
 
 }

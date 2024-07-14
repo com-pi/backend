@@ -1,5 +1,7 @@
 package com.example.authserver.application.port.out.external;
 
+import com.example.authserver.application.port.out.external.response.NaverTokenResponse;
+import com.example.authserver.application.port.out.external.response.NaverUserInfoResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;

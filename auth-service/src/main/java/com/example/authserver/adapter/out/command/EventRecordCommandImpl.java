@@ -1,5 +1,7 @@
 package com.example.authserver.adapter.out.command;
 
+import com.example.authserver.adapter.out.entity.EventRecordEntity;
+import com.example.authserver.adapter.out.repository.EventRecordJpaRepository;
 import com.example.authserver.application.port.out.persistence.EventRecordCommand;
 import com.example.authserver.domain.Event;
 import com.example.authserver.domain.EventRecord;
@@ -13,7 +15,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class EventRecordCommandAdapter implements EventRecordCommand {
+public class EventRecordCommandImpl implements EventRecordCommand {
 
     private final EventRecordJpaRepository eventRecordJpaRepository;
     private final ObjectMapper objectMapper;

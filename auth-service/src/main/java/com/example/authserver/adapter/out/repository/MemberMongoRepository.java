@@ -1,5 +1,6 @@
-package com.example.authserver.adapter.out.query;
+package com.example.authserver.adapter.out.repository;
 
+import com.example.authserver.adapter.out.entity.MemberDocument;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;

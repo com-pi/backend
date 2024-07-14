@@ -1,5 +1,7 @@
 package com.example.authserver.adapter.out.query;
 
+import com.example.authserver.adapter.out.entity.MemberDocument;
+import com.example.authserver.adapter.out.repository.MemberMongoRepository;
 import com.example.authserver.application.port.out.persistence.MemberQuery;
 import com.example.authserver.domain.Member;
 import lombok.RequiredArgsConstructor;

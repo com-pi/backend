@@ -1,7 +1,7 @@
 package com.example.authserver.adapter.out.query;
 
-import com.example.authserver.adapter.out.command.MemberEntity;
-import com.example.authserver.adapter.out.command.MemberJpaRepository;
+import com.example.authserver.adapter.out.entity.MemberEntity;
+import com.example.authserver.adapter.out.repository.MemberJpaRepository;
 import com.example.authserver.application.port.out.persistence.MemberQuery;
 import com.example.authserver.domain.Member;
 import lombok.RequiredArgsConstructor;

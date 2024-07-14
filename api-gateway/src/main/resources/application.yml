@@ -23,7 +23,7 @@ spring:
         - id: member-service
           uri: lb://AUTH-SERVICE
           predicates:
-            - Path=/auth-service/member/**
+            - Path=/auth-service/member/**, /auth-service/follow/**
           filters:
             - name: TokenValidateFilter
             - name: PathPrefixRemoveFilter

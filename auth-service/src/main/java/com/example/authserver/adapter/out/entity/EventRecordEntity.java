@@ -1,4 +1,4 @@
-package com.example.authserver.adapter.out.command;
+package com.example.authserver.adapter.out.entity;
 
 import com.example.authserver.domain.Event;
 import com.example.authserver.domain.EventRecord;

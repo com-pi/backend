@@ -1,4 +1,4 @@
-package com.example.authserver.application.port.out.external;
+package com.example.authserver.application.port.out.external.response;
 
 import com.example.authserver.domain.MemberCreate;
 

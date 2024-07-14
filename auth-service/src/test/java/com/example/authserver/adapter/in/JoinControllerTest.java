@@ -1,11 +1,11 @@
 package com.example.authserver.adapter.in;
 
 import com.example.authserver.adapter.in.request.MemberCreateRequest;
-import com.example.authserver.adapter.out.command.EventRecordEntity;
-import com.example.authserver.adapter.out.command.EventRecordJpaRepository;
+import com.example.authserver.adapter.out.entity.EventRecordEntity;
+import com.example.authserver.adapter.out.repository.EventRecordJpaRepository;
 import com.example.authserver.event.MemberEventHandler;
 import com.example.authserver.event.MemberEventPublisher;
-import com.example.authserver.adapter.out.query.MemberMongoRepository;
+import com.example.authserver.adapter.out.repository.MemberMongoRepository;
 import com.example.authserver.application.port.out.persistence.RedisPort;
 import com.example.authserver.configuration.KafkaTopic;
 import com.fasterxml.jackson.databind.ObjectMapper;

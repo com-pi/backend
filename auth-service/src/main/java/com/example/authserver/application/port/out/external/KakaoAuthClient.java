@@ -1,5 +1,7 @@
 package com.example.authserver.application.port.out.external;
 
+import com.example.authserver.application.port.out.external.response.KakaoTokenResponse;
+import com.example.authserver.application.port.out.external.response.KakaoUserInfoResponse;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;

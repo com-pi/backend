@@ -1,4 +1,4 @@
-package com.example.authserver.adapter.out.query;
+package com.example.authserver.adapter.out.entity;
 
 import com.example.authserver.domain.Member;
 import com.example.common.domain.Address;

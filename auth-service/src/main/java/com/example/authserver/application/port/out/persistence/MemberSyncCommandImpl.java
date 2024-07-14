@@ -1,7 +1,7 @@
 package com.example.authserver.application.port.out.persistence;
 
-import com.example.authserver.adapter.out.query.MemberDocument;
-import com.example.authserver.adapter.out.query.MemberMongoRepository;
+import com.example.authserver.adapter.out.entity.MemberDocument;
+import com.example.authserver.adapter.out.repository.MemberMongoRepository;
 import com.example.authserver.domain.Member;
 import com.example.common.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;

@@ -1,5 +1,7 @@
-package com.example.authserver.adapter.out.command;
+package com.example.authserver.adapter.out.entity;
 
+import com.example.authserver.adapter.out.command.MemberEntityListener;
+import com.example.authserver.domain.FollowMember;
 import com.example.authserver.domain.Member;
 import com.example.authserver.util.GeomUtil;
 import com.example.common.baseentity.DeletedAtAbstractEntity;
@@ -88,6 +90,15 @@ public class MemberEntity extends DeletedAtAbstractEntity {
                 .location(GeomUtil.createLocation(memberEntity.getLocation()))
                 .address(memberEntity.getAddress())
                 .lastLogin(memberEntity.getLastLogin())
+                .build();
+    }
+
+    public static FollowMember toFollowMember(MemberEntity memberEntity) {
+        return FollowMember.builder()
+                .id(memberEntity.getId())
+                .nickname(memberEntity.getNickname())
+                .imageUrl(memberEntity.getImageUrl())
+                .thumbnailUrl(memberEntity.getThumbnailUrl())
                 .build();
     }
 

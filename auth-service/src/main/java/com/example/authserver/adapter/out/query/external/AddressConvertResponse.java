@@ -1,4 +1,4 @@
-package com.example.authserver.adapter.out;
+package com.example.authserver.adapter.out.query.external;
 
 import com.example.common.domain.Address;
 import com.fasterxml.jackson.annotation.JsonAlias;
