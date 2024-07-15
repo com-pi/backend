@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -34,6 +36,11 @@ public class ScheduleEntity extends DeletedAtAbstractEntity {
     private Integer frequency; // 반복 주기(일 기준)
 
     private String colorType;
+
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "schedule_id")
+    private List<CompletedScheduleEntity> completedScheduleList = new ArrayList<>();
+
 
     public static ScheduleEntity from(Schedule schedule) {
         return ScheduleEntity.builder()
@@ -65,10 +72,14 @@ public class ScheduleEntity extends DeletedAtAbstractEntity {
 
     public void update(Schedule schedule) {
         this.title = schedule.getTitle();
+        this.startDateTime = schedule.getStartDateTime();
         this.endDateTime = schedule.getEndDateTime();
+        this.frequency = schedule.getFrequency();
+        this.colorType = schedule.getColorType();
+        this.isRecurring = schedule.getIsRecurring();
     }
 
-    public void updateStatus(Boolean isCompleted) {
+    public void complete(Boolean isCompleted) {
         this.isCompleted = isCompleted;
     }
 

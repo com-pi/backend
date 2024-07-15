@@ -13,5 +13,7 @@ public interface ScheduleUseCase {
 
     ScheduleMainResponseList getMainPageScheduleList(Long memberId);
 
-    ScheduleMainResponseList getTodayScheduleList(Long memberId);
+    ScheduleMainResponseList getTodayScheduleList(Schedule schedule);
+
+    ScheduleMainResponseList getUpcomingScheduleList(Schedule schedule);
 }

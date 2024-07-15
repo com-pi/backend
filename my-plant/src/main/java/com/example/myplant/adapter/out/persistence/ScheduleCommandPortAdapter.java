@@ -30,7 +30,7 @@ public class ScheduleCommandPortAdapter implements ScheduleCommandPort {
     public Long updateScheduleStatus(final Schedule schedule, final Boolean originIsCompleted) {
         ScheduleEntity scheduleEntity = scheduleRepository.findById(schedule.getScheduleId())
                 .orElseThrow(() -> new NotFoundException(ScheduleEntity.class));
-        scheduleEntity.updateStatus(!originIsCompleted);
+        scheduleEntity.complete(!originIsCompleted);
         return scheduleEntity.getScheduleId();
     }
 

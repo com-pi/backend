@@ -40,8 +40,14 @@ public interface ScheduleSwaggerUI {
     @Operation(summary = "오늘의 일정 조회", description = "오늘의 일정을 조회합니다.")
     ResponseEntity<ScheduleMainResponseList> getTodayScheduleList();
 
-    @Operation(summary = "다가오는 일정 조회", description = "다가오는 일정을 조회합니다.(7일 기준)")
-    ResponseEntity<ScheduleMainResponseList> getUpComingScheduleList();
+    @Operation(summary = "다가오는 일정 조회", description = "다가오는 일정을 조회합니다. (7일 기준)")
+    ResponseEntity<ScheduleMainResponseList> getUpcomingScheduleList();
+
+    @Operation(summary = "(달력 폼)일정 상세 페이지 목록 조회", description = "상세 일정을 목록으로 조회합니다.")
+    ResponseEntity<ScheduleMainResponseList> getScheduleList();
+
+    @Operation(summary = "(달력 폼)일정 상세 페이지 일자별 상세 조회", description = "상세 일정을 일자별로 단건 조회합니다.")
+    ResponseEntity<ScheduleMainResponseList> getScheduleByDate();
 
 
 }

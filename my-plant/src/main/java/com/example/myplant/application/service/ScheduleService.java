@@ -1,12 +1,11 @@
 package com.example.myplant.application.service;
 
 import com.example.common.exception.UnauthorizedException;
+import com.example.myplant.adapter.in.web.response.ScheduleMainResponseList;
 import com.example.myplant.application.port.in.ScheduleUseCase;
 import com.example.myplant.application.port.out.ScheduleCommandPort;
 import com.example.myplant.application.port.out.ScheduleQueryPort;
-import com.example.myplant.adapter.in.web.response.ScheduleMainResponseList;
 import com.example.myplant.domain.Schedule;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,8 +57,24 @@ public class ScheduleService implements ScheduleUseCase {
     }
 
     @Override
-    public ScheduleMainResponseList getTodayScheduleList(Long memberId) {
-        List<Schedule> scheduleList = scheduleQueryPort.getTodayScheduleList(memberId, false);
+    public ScheduleMainResponseList getTodayScheduleList(Schedule schedule) {
+        // 단건 일정
+        List<Schedule> scheduleList = scheduleQueryPort.getTodayScheduleList(schedule.getMemberId(), false);
+
+        // 반복 일정
+        List<Schedule> recurringScheduleList = scheduleQueryPort.getRecurringScheduleList(schedule.getMemberId(), false);
+        List<Schedule> matchingSchedule = schedule.findMatchingSchedules(recurringScheduleList);
+
+        return ScheduleMainResponseList.from(schedule.getTodayScheduleList(scheduleList, matchingSchedule));
+    }
+
+    @Override
+    public ScheduleMainResponseList getUpcomingScheduleList(Schedule schedule) {
+        // currentDate < startDate(단건)
+        // currentDate < startDate(반복)
+        // currentDate > startDate && currentDate <= endDate(단건)
+        // currentDate > startDate && currentDate <= endDate(반복)
+        List<Schedule> scheduleList = scheduleQueryPort.getUpcomingScheduleList(schedule.getUpcomingDate(), schedule.getMemberId(), false);
         return ScheduleMainResponseList.from(scheduleList);
     }
 

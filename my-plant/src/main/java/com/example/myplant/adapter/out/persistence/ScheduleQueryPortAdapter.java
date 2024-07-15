@@ -7,6 +7,7 @@ import com.example.myplant.domain.Schedule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -31,6 +32,27 @@ public class ScheduleQueryPortAdapter implements ScheduleQueryPort {
     @Override
     public List<Schedule> getTodayScheduleList(Long memberId, boolean isCompleted) {
         return scheduleRepository.getTodayScheduleList(memberId, isCompleted).stream()
+                .map(ScheduleEntity::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<Schedule> getRecurringScheduleList(Long memberId, boolean isCompleted) {
+        return scheduleRepository.getRecurringScheduleList(memberId, isCompleted).stream()
+                .map(ScheduleEntity::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<Schedule> getUpcomingScheduleList(LocalDateTime upcomingDate, Long memberId, boolean isCompleted) {
+        return scheduleRepository.getUpcomingScheduleList(upcomingDate, memberId, isCompleted).stream()
+                .map(ScheduleEntity::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<Schedule> getScheduleList(Long memberId) {
+        return scheduleRepository.findByMemberIdAndIsCompletedOrderByEndDateTime(memberId, false).stream()
                 .map(ScheduleEntity::toDomain)
                 .toList();
     }

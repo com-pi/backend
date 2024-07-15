@@ -4,7 +4,10 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Stream;
 
 @Getter
 @Builder
@@ -53,5 +56,39 @@ public class Schedule {
         }
 
         return duration.toHours() + "시간 전";
+    }
+
+    public LocalDateTime getUpcomingDate() {
+        LocalDateTime now = LocalDateTime.now();
+        return now.plusDays(7);
+    }
+
+    public List<Schedule> findMatchingSchedules(List<Schedule> recurringScheduleList) {
+        LocalDate today = LocalDate.now();
+
+        return recurringScheduleList.stream()
+                .filter(schedule -> isScheduleMatchingToday(schedule, today))
+                .toList();
+    }
+
+    public List<Schedule> getTodayScheduleList(List<Schedule> scheduleList, List<Schedule> recurringScheduleList) {
+        return Stream
+                .concat(scheduleList.stream(), recurringScheduleList.stream())
+                .toList();
+    }
+
+    private boolean isScheduleMatchingToday(Schedule schedule, LocalDate today) {
+        LocalDateTime startDateTime = schedule.getStartDateTime();
+        LocalDateTime endDateTime = schedule.getEndDateTime();
+        int frequency = schedule.getFrequency();
+
+        LocalDate currentDate = startDateTime.toLocalDate();
+        while (!currentDate.isAfter(endDateTime.toLocalDate())) {
+            if (currentDate.equals(today)) {
+                return true;
+            }
+            currentDate = currentDate.plusDays(frequency);
+        }
+        return false;
     }
 }

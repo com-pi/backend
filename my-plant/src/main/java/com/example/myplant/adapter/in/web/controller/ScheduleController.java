@@ -3,6 +3,7 @@ package com.example.myplant.adapter.in.web.controller;
 import com.example.common.annotation.Authenticate;
 import com.example.common.baseentity.CommonResponse;
 import com.example.common.domain.Role;
+import com.example.myplant.adapter.in.web.command.GetScheduleCommand;
 import com.example.myplant.adapter.in.web.command.UpdateScheduleStatusCommand;
 import com.example.myplant.adapter.in.web.request.CreateScheduleRequest;
 import com.example.myplant.adapter.in.web.request.UpdateScheduleRequest;
@@ -44,7 +45,6 @@ public class ScheduleController implements ScheduleSwaggerUI {
         return ResponseEntity.ok(new CommonResponse<>("일정의 상태가 수정되었습니다.", id));
     }
 
-
     @Override
     @Authenticate(Role.MEMBER)
     @GetMapping("/main")
@@ -57,14 +57,27 @@ public class ScheduleController implements ScheduleSwaggerUI {
     @Authenticate(Role.MEMBER)
     @GetMapping("/main/today")
     public ResponseEntity<ScheduleMainResponseList> getTodayScheduleList() {
-        ScheduleMainResponseList responseList = scheduleUseCase.getTodayScheduleList(PassportHolder.getPassport().memberId());
+        GetScheduleCommand command = GetScheduleCommand.of(PassportHolder.getPassport().memberId());
+        ScheduleMainResponseList responseList = scheduleUseCase.getTodayScheduleList(command.toDomain());
         return ResponseEntity.ok(responseList);
     }
 
     @Override
     @Authenticate(Role.MEMBER)
     @GetMapping("/main/upcoming")
-    public ResponseEntity<ScheduleMainResponseList> getUpComingScheduleList() {
+    public ResponseEntity<ScheduleMainResponseList> getUpcomingScheduleList() {
+        GetScheduleCommand command = GetScheduleCommand.of(PassportHolder.getPassport().memberId());
+        ScheduleMainResponseList responseList = scheduleUseCase.getUpcomingScheduleList(command.toDomain());
+        return ResponseEntity.ok(responseList);
+    }
+
+    @Override
+    public ResponseEntity<ScheduleMainResponseList> getScheduleList() {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<ScheduleMainResponseList> getScheduleByDate() {
         return null;
     }
 
