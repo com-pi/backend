@@ -17,8 +17,8 @@ eureka:
   instance:
     hostname: my-plant # 쿠버네티스 서비스 명
 
-#feign:
-#  client:
-#    config:
-#      diary-article:
-#        url: https://api.com-p.site/board-service/diaries
+feign:
+  client:
+    config:
+      diary-article:
+        url: http://board-service:8080/board-service/diaries
