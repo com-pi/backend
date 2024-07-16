@@ -44,7 +44,7 @@ public class EncyclopediaQueryAdapter implements EncyclopediaQuery {
     public PlantBrief getBriefById(Long id) {
         return encyclopediaRepository.findById(id)
                 .map(PlantSpeciesEntity::toBrief)
-                .orElse(null);
+                .orElse(new PlantBrief(id, null, null, null));
     }
 
 }

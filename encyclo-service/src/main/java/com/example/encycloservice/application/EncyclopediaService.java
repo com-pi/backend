@@ -9,6 +9,7 @@ import com.example.encycloservice.application.port.out.EncyclopediaCommand;
 import com.example.encycloservice.application.port.out.EncyclopediaQuery;
 import com.example.encycloservice.application.port.out.ScraperPort;
 import com.example.encycloservice.application.port.out.StatisticsCommand;
+import com.example.encycloservice.domain.PlantBrief;
 import com.example.encycloservice.domain.PlantSpecies;
 import com.example.encycloservice.domain.PlantSpeciesCreate;
 import com.example.encycloservice.domain.SearchPlantQueryResult;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +40,12 @@ public class EncyclopediaService implements EncyclopediaUseCase {
     public void syncDatabase(String keyword) {
         SearchResultByScraper searchResultByScraper = scraperPort.searchPlant(keyword);
         searchResultByScraper.results().forEach(r -> encyclopediaCommand.syncDatabaseFromExternal(r.id()));
+    }
+
+    @Transactional(readOnly = true)
+    public PlantBriefListResponse getPlantBriefByIds(List<Long> plantIds) {
+        List<PlantBrief> list = plantIds.stream().map(encyclopediaQuery::getBriefById).toList();
+        return PlantBriefListResponse.toResponse(list);
     }
 
     @Transactional(readOnly = true)

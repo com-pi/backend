@@ -5,6 +5,7 @@ import com.example.common.baseentity.CommonResponse;
 import com.example.common.domain.Role;
 import com.example.encycloservice.adapter.in.response.PlantSpeciesDetailResponse;
 import com.example.encycloservice.application.EncyclopediaService;
+import com.example.encycloservice.application.PlantBriefListResponse;
 import com.example.encycloservice.domain.PlantSpecies;
 import com.example.encycloservice.domain.SearchPlantQueryResult;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +17,8 @@ import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -56,6 +59,14 @@ public class EncyclopediaController {
     public ResponseEntity<CommonResponse<PlantSpeciesDetailResponse>> getPlantDetailsById(@PathVariable Long id){
         PlantSpecies plantSpecies = encyclopediaService.getPlantDetailById(id);
         return CommonResponse.okWithMessage("조회 성공", PlantSpeciesDetailResponse.toResponse(plantSpecies));
+    }
+
+    @GetMapping("/plant/brief")
+    @Operation(summary = "식물 간략 정보 조회", description = "식물의 id 값으로 간략 정보를 조회 합니다.")
+    @Authenticate(Role.MEMBER)
+    public ResponseEntity<CommonResponse<PlantBriefListResponse>> getPlantBriefById(@RequestParam List<Long> ids){
+        PlantBriefListResponse plantBriefByIds = encyclopediaService.getPlantBriefByIds(ids);
+        return CommonResponse.okWithMessage("조회 성공", plantBriefByIds);
     }
 
 }
