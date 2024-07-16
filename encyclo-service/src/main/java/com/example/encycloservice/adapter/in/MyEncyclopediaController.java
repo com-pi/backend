@@ -5,6 +5,7 @@ import com.example.common.baseentity.CommonResponse;
 import com.example.common.domain.Passport;
 import com.example.common.domain.Role;
 import com.example.encycloservice.adapter.in.request.MyEncyclopediaCreateRequest;
+import com.example.encycloservice.adapter.in.response.MyEncyclopediaDetailResponse;
 import com.example.encycloservice.adapter.in.response.MyEncyclopediaListResponse;
 import com.example.encycloservice.aop.filter.PassportHolder;
 import com.example.encycloservice.application.port.in.MyEncyclopediaUseCase;

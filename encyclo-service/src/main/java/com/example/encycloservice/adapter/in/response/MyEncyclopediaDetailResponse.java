@@ -1,4 +1,4 @@
-package com.example.encycloservice.adapter.in;
+package com.example.encycloservice.adapter.in.response;
 
 import com.example.encycloservice.domain.MyEncyclopedia;
 import com.example.encycloservice.domain.PlantBrief;
