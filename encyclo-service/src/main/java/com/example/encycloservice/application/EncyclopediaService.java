@@ -2,6 +2,7 @@ package com.example.encycloservice.application;
 
 import com.example.common.domain.Passport;
 import com.example.common.exception.NotFoundException;
+import com.example.encycloservice.adapter.in.request.PlantAddRequest;
 import com.example.encycloservice.adapter.out.external.SearchResultByScraper;
 import com.example.encycloservice.aop.filter.PassportHolder;
 import com.example.encycloservice.application.port.in.EncyclopediaUseCase;
@@ -9,10 +10,7 @@ import com.example.encycloservice.application.port.out.EncyclopediaCommand;
 import com.example.encycloservice.application.port.out.EncyclopediaQuery;
 import com.example.encycloservice.application.port.out.ScraperPort;
 import com.example.encycloservice.application.port.out.StatisticsCommand;
-import com.example.encycloservice.domain.PlantBrief;
-import com.example.encycloservice.domain.PlantSpecies;
-import com.example.encycloservice.domain.PlantSpeciesCreate;
-import com.example.encycloservice.domain.SearchPlantQueryResult;
+import com.example.encycloservice.domain.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -40,6 +38,19 @@ public class EncyclopediaService implements EncyclopediaUseCase {
     public void syncDatabase(String keyword) {
         SearchResultByScraper searchResultByScraper = scraperPort.searchPlant(keyword);
         searchResultByScraper.results().forEach(r -> encyclopediaCommand.syncDatabaseFromExternal(r.id()));
+    }
+
+    @Transactional
+    public void savePlantAddInquiry(PlantAddRequest plantAddRequest) {
+        Passport passport = PassportHolder.getPassport();
+        PlantAddInquriy plantAddSubmission = PlantAddInquriy.builder()
+                .commonName(plantAddRequest.commonName())
+                .scientificName(plantAddRequest.scientificName())
+                .requesterId(passport.memberId())
+                .status(PlantAddInquriy.Status.SUBMITTED)
+                .result(null)
+                .build();
+        encyclopediaCommand.savePlantAddInquiry(plantAddSubmission);
     }
 
     @Transactional(readOnly = true)

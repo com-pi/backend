@@ -3,6 +3,7 @@ package com.example.encycloservice.adapter.in;
 import com.example.common.annotation.Authenticate;
 import com.example.common.baseentity.CommonResponse;
 import com.example.common.domain.Role;
+import com.example.encycloservice.adapter.in.request.PlantAddRequest;
 import com.example.encycloservice.adapter.in.response.PlantSpeciesDetailResponse;
 import com.example.encycloservice.application.EncyclopediaService;
 import com.example.encycloservice.application.PlantBriefListResponse;
@@ -68,5 +69,16 @@ public class EncyclopediaController {
         PlantBriefListResponse plantBriefByIds = encyclopediaService.getPlantBriefByIds(ids);
         return CommonResponse.okWithMessage("조회 성공", plantBriefByIds);
     }
+
+    @PostMapping("/plant/add")
+    @Operation(summary = "식물 추가 요청", description = "식물 추가를 요청합니다.")
+    @Authenticate(Role.MEMBER)
+    public ResponseEntity<CommonResponse<String>> addPlant(
+            @RequestBody PlantAddRequest plantAddRequest
+    ){
+        encyclopediaService.savePlantAddInquiry(plantAddRequest);
+        return CommonResponse.okWithMessage("식물 추가 요청이 완료되었습니다.", null);
+    }
+
 
 }

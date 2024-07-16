@@ -1,12 +1,15 @@
-package com.example.encycloservice.adapter.out.cache;
+package com.example.encycloservice.adapter.out.persistence;
 
+import com.example.common.exception.InternalServerException;
 import com.example.encycloservice.adapter.out.external.PlantDetailResult;
 import com.example.encycloservice.adapter.out.external.PlantInfoScraper;
-import com.example.encycloservice.adapter.out.persistence.EncyclopediaRepository;
+import com.example.encycloservice.adapter.out.persistence.entity.PlantAddInquiryEntity;
 import com.example.encycloservice.adapter.out.persistence.entity.PlantSpeciesEntity;
 import com.example.encycloservice.application.port.out.EncyclopediaCommand;
+import com.example.encycloservice.domain.PlantAddInquriy;
 import com.example.encycloservice.domain.PlantSpecies;
 import feign.FeignException;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class EncyclopediaCommandAdapter implements EncyclopediaCommand {
 
+    private final EntityManager entityManager;
     private final EncyclopediaRepository encyclopediaRepository;
     private final PlantInfoScraper plantInfoScraper;
 
@@ -36,4 +40,15 @@ public class EncyclopediaCommandAdapter implements EncyclopediaCommand {
         } catch (FeignException ignored) {
         }
     }
+
+    @Override
+    public void savePlantAddInquiry(PlantAddInquriy plantAddInquriy) {
+        try {
+            entityManager.persist(PlantAddInquiryEntity.fromDomain(plantAddInquriy));
+            entityManager.flush();
+        } catch (Exception e) {
+            throw new InternalServerException("식물 추가 요청 실패", e);
+        }
+    }
+
 }
