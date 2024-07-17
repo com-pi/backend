@@ -7,8 +7,9 @@ import java.util.List;
 
 public interface CommonArticleUseCase {
 
-    List<Article> getCommonArticleList(Pageable pageable);
+    List<Article> getArticleList(String type, Pageable pageable);
 
     List<Article> getArticleListByHashtag(String name, Pageable pageable);
 
+    Article getArticle(Long articleId);
 }

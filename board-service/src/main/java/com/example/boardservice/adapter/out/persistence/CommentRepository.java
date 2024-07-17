@@ -11,4 +11,6 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
     Optional<CommentEntity> findByCommentIdAndDeletionYn(Long commentId, String deletionYn);
 
     List<CommentEntity> findByArticle_ArticleIdAndDeletionYn(Long articleId, String deleteionYn);
+
+    int countByArticle_ArticleId(Long articleId);
 }

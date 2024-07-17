@@ -7,13 +7,15 @@ import java.util.List;
 
 public record CommonArticleResponse(
         Long articleId,
+// @TODO Member
 //        MemberResponse member,
         LocalDateTime createdAt,
         String title,
         String content,
+        int likeCount,
+        int commentCount,
         List<String> hashtagList,
         List<String> imageUrls
-        // @TODO 좋아요 개수, 댓글 개수
 ) {
     public static CommonArticleResponse from(Article article) {
         return new CommonArticleResponse(
@@ -22,6 +24,8 @@ public record CommonArticleResponse(
                 article.getCreatedAt(),
                 article.getTitle(),
                 article.getContent(),
+                article.getLikeCount(),
+                article.getCommentCount(),
                 article.getHashtagList(),
                 article.getImageUrls()
         );

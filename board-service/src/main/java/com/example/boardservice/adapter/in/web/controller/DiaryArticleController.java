@@ -3,7 +3,6 @@ package com.example.boardservice.adapter.in.web.controller;
 import com.example.boardservice.adapter.in.web.request.PostDiaryRequest;
 import com.example.boardservice.adapter.out.persistence.entity.DiaryArticleUseCase;
 import com.example.common.baseentity.CommonResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class DiaryArticleController {
 
     private final DiaryArticleUseCase diaryArticleUseCase;
-    private final ObjectMapper objectMapper;
 
     // @TODO @Authenticate
     @Operation(summary = "일지 게시글 등록", description = "일지 게시글을 연동하여 등록합니다.")

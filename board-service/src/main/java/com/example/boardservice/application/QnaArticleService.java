@@ -18,8 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Objects;
-
-import static com.example.boardservice.domain.ArticleType.QNA;
+import static com.example.boardservice.domain.ArticleType.QNA_BOARD;
 
 @Service
 @RequiredArgsConstructor
@@ -67,7 +66,7 @@ public class QnaArticleService {
      */
     private List<String> getImageUrls (List<MultipartFile> imageFiles) {
         List<String> objectNames = imageCommand.saveImages(
-                new SaveImagesCommand(imageFiles, QNA.getBucket())
+                new SaveImagesCommand(imageFiles, QNA_BOARD.getBucket())
         );
         return objectUrlMapper.toUrl(objectNames, MinioBucket.ARTICLE_TRADE);
     }

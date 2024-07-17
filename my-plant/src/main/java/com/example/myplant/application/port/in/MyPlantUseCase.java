@@ -15,4 +15,6 @@ public interface MyPlantUseCase {
     MyPlant getMyPlantByMyPlantId(Long myPlantId);
 
     Long deletePlant(Long memberId, Long myPlantId);
+
+    MyPlant getMyPlantDetailsForUpdate(Long myPlantId);
 }

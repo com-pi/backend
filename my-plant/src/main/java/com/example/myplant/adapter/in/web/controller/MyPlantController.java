@@ -85,4 +85,12 @@ public class MyPlantController {
         MyPlant myPlant = myPlantUseCase.getMyPlantByMyPlantId(myPlantId);
         return ResponseEntity.ok(MyPlantDetailResponse.from(myPlant));
     }
+
+    @Operation(summary = "내 식물 기존 정보 조회", description = "내 식물 수정 시 내 식물의 기존 정보를 상세 조회합니다.")
+    @Authenticate(Role.MEMBER)
+    @GetMapping("/detail/{myPlantId}")
+    public ResponseEntity<MyPlantDetailResponse> getMyPlantDetailsForUpdate(@PathVariable("myPlantId") Long myPlantId) {
+        MyPlant myPlant = myPlantUseCase.getMyPlantDetailsForUpdate(myPlantId);
+        return ResponseEntity.ok(MyPlantDetailResponse.from(myPlant));
+    }
 }

@@ -16,12 +16,13 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class CommonArticleFacade implements CommonArticleUseCase {
 
-    private final CommonArticleService commonArticleService;
+    private final CommonArticleService articleService;
     private final ArticleHashtagService articleHashtagService;
+    private final LikeService likeService;
+    private final CommentService commentService;
 
-    @Override
-    public List<Article> getCommonArticleList(Pageable pageable) {
-        Page<Article> articlePage = commonArticleService.getArticleList(pageable);
+    public List<Article> getArticleList(String type, Pageable pageable) {
+        Page<Article> articlePage = articleService.getArticleList(type, pageable);
         return articlePage
                 .stream()
                 .peek(article -> {
@@ -46,7 +47,7 @@ public class CommonArticleFacade implements CommonArticleUseCase {
                 .map(ArticleHashtag::getArticleId)
                 .toList();
 
-        List<Article> articleList = commonArticleService.getArticleListByArticleId(articleIdList, pageable);
+        List<Article> articleList = articleService.getArticleListByArticleId(articleIdList, pageable);
 
         articleList.forEach(article -> {
             List<String> hashtagList = articleHashtagService.getHashtagListByArticle(article.getArticleId()).stream()
@@ -55,5 +56,17 @@ public class CommonArticleFacade implements CommonArticleUseCase {
             article.addHashtagList(hashtagList);
         });
         return articleList;
+    }
+
+    public Article getArticle(Long articleId) {
+        Article article = this.articleService.getArticle(articleId);
+        // 해시태그
+        List<String> hashtagList = articleHashtagService.getHashtagListByArticle(articleId)
+                .stream()
+                .map(articleHashtag -> articleHashtag.getHashtag().getName())
+                .toList();
+        article.addHashtagList(hashtagList);
+
+        return article;
     }
 }

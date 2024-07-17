@@ -53,6 +53,11 @@ public class MyPlantService implements MyPlantUseCase {
         return myPlantQueryPort.getMyPlantByMyPlantId(myPlantId);
     }
 
+    @Override
+    public MyPlant getMyPlantDetailsForUpdate(Long myPlantId) {
+        return myPlantQueryPort.getMyPlantDetailsForUpdate(myPlantId);
+    }
+
     private void validatePermission(final Long originMemberId, final Long memberId) {
         if(!Objects.equals(originMemberId, memberId)) {
             throw new UnauthorizedException("식물을 수정하거나 삭제할 권한이 없습니다.");

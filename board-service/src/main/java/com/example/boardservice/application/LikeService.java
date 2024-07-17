@@ -1,7 +1,7 @@
 package com.example.boardservice.application;
 
 import com.example.boardservice.application.port.in.LikeUseCase;
-import com.example.boardservice.application.port.out.ArticleQueryPort;
+import com.example.boardservice.application.port.out.CommonArticleCommandPort;
 import com.example.boardservice.application.port.out.LikeCommandPort;
 import com.example.boardservice.application.port.out.LikeQueryPort;
 import com.example.boardservice.domain.Like;
@@ -20,19 +20,23 @@ public class LikeService implements LikeUseCase {
 
     private final LikeCommandPort likeCommandPort;
     private final LikeQueryPort likeQueryPort;
-    private final ArticleQueryPort articleQueryPort;
+    private final CommonArticleCommandPort articleCommandPort;
 
     @Override
+    @Transactional
     public Long like(Like like) {
         likeQueryPort.findLikeByArticleIdAndMemberId(like.getArticleId(), like.getMemberId())
                 .ifPresent(originLike -> {
                     if(originLike.isLiked()) {
-                        throw new DuplicateLikeException("이미 찜을 등록한 게시물 입니다.");
+                        throw new DuplicateLikeException("이미 좋아요한 게시물 입니다.");
                     }
                     like.updateLikeId(originLike.getLikeId());
                 });
+
         like.like();
-        return likeCommandPort.save(like).getLikeId();
+        Like savedLike = likeCommandPort.save(like);
+        articleCommandPort.increaseLikeCount(savedLike.getArticleId());
+        return savedLike.getLikeId();
     }
 
     @Override
@@ -40,9 +44,9 @@ public class LikeService implements LikeUseCase {
     public Long unlike(Like like) {
         Like originLike = likeQueryPort.getLikeByLikeId(like.getLikeId());
         validatePermission(like.getMemberId(), originLike.getMemberId());
-
         originLike.unlike();
         likeCommandPort.save(originLike);
+        articleCommandPort.decreaseLikeCount(like.getArticleId());
         return like.getLikeId();
     }
 
@@ -57,5 +61,9 @@ public class LikeService implements LikeUseCase {
         if(!Objects.equals(originMemberId, memberId)) {
             throw new UnauthorizedException("게시글에 찜을 해제할 권한이 없습니다.");
         }
+    }
+
+    public int getLikeCount(Long articleId) {
+        return likeQueryPort.getLikeCount(articleId);
     }
 }

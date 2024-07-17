@@ -21,6 +21,7 @@ public class PostDiaryRequest {
                 .title(title)
                 .content(content)
                 .imageUrls(imageUrlList)
+                .viewCount(0)
                 .build();
     }
 

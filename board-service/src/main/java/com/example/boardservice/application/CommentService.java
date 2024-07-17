@@ -3,6 +3,7 @@ package com.example.boardservice.application;
 import com.example.boardservice.application.port.in.CommentUseCase;
 import com.example.boardservice.application.port.out.CommentCommandPort;
 import com.example.boardservice.application.port.out.CommentQueryPort;
+import com.example.boardservice.application.port.out.CommonArticleCommandPort;
 import com.example.boardservice.domain.Comment;
 import com.example.boardservice.domain.CommentWithReplies;
 import com.example.boardservice.security.PassportHolder;
@@ -21,11 +22,13 @@ public class CommentService implements CommentUseCase {
 
     private final CommentCommandPort commentCommandPort;
     private final CommentQueryPort commentQueryPort;
+    private final CommonArticleCommandPort articleCommandPort;
 
     @Override
     @Transactional
     public Long post(Comment comment) {
         Comment savedComment = commentCommandPort.save(comment);
+        articleCommandPort.increaseCommentCount(savedComment.getArticleId());
         return savedComment.getCommentId();
     }
 
@@ -33,6 +36,7 @@ public class CommentService implements CommentUseCase {
     public Long postReply(Comment comment) {
         canPostReply(comment.getParent().getCommentId());
         Comment savedComment = commentCommandPort.saveReply(comment);
+        articleCommandPort.increaseCommentCount(savedComment.getArticleId());
         return savedComment.getCommentId();
     }
 
@@ -53,6 +57,7 @@ public class CommentService implements CommentUseCase {
         validatePermission(originComment.getMemberId(), comment.getMemberId());
 
         commentCommandPort.delete(comment);
+        articleCommandPort.decreaseCommentCount(originComment.getArticleId());
         return comment.getCommentId();
     }
 
@@ -69,6 +74,10 @@ public class CommentService implements CommentUseCase {
                 })
                 .toList();
         return commentWithRepliesList;
+    }
+
+    public int getCommentCount(Long articleId) {
+        return commentQueryPort.getCommentCount(articleId);
     }
 
     /**

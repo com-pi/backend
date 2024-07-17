@@ -14,13 +14,13 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-@DiscriminatorValue("general_board")
-@Table(name = "diary_board")
+@DiscriminatorValue("DIARY_BOARD")
+@Table(name = "DIARY_BOARD")
 public class DiaryArticleEntity extends CommonArticleEntity {
 
     @Builder
-    public DiaryArticleEntity(Long articleId, Long memberId, String title, String content, Integer viewCount, List<String> imageUrls, ArticleType articleType) {
-        super(articleId, memberId, title, content, viewCount, imageUrls, articleType);
+    public DiaryArticleEntity(Long articleId, Long memberId, String title, String content, Integer viewCount, Integer likeCount, Integer commentCount, List<String> imageUrls, ArticleType articleType) {
+        super(articleId, memberId, title, content, viewCount, likeCount, commentCount, imageUrls, articleType);
     }
 
     public DiaryArticle toDomain() {
@@ -32,6 +32,8 @@ public class DiaryArticleEntity extends CommonArticleEntity {
                 .viewCount(this.viewCount)
                 .imageUrls(this.imageUrls)
                 .createdAt(this.getCreatedAt())
+                .likeCount(this.likeCount)
+                .commentCount(this.commentCount)
                 .build();
     }
 
@@ -43,6 +45,8 @@ public class DiaryArticleEntity extends CommonArticleEntity {
                 .content(article.getContent())
                 .viewCount(article.getViewCount())
                 .imageUrls(article.getImageUrls())
+                .likeCount(article.getLikeCount())
+                .commentCount(article.getCommentCount())
                 .build();
     }
 

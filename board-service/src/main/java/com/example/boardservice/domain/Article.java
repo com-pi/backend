@@ -32,6 +32,10 @@ public class Article {
 
     private LocalDateTime createdAt;
 
+    private int likeCount;
+
+    private int commentCount;
+
     public void addHashtagList(List<String> hashtagList) {
         this.hashtagList = hashtagList;
     }

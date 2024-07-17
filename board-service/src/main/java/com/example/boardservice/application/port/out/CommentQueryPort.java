@@ -9,4 +9,6 @@ public interface CommentQueryPort {
     Comment getComment(Long commentId);
 
     List<Comment> getCommentList(Long articleId);
+
+    int getCommentCount(Long articleId);
 }

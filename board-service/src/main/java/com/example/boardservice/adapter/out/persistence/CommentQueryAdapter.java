@@ -29,4 +29,9 @@ public class CommentQueryAdapter implements CommentQueryPort {
                 .map(CommentEntity::toDomain)
                 .toList();
     }
+
+    @Override
+    public int getCommentCount(Long articleId) {
+        return commentRepository.countByArticle_ArticleId(articleId);
+    }
 }

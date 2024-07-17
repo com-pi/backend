@@ -14,13 +14,13 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-@DiscriminatorValue("general_board")
-@Table(name = "general_board")
+@DiscriminatorValue("GENERAL_BOARD")
+@Table(name = "GENERAL_BOARD")
 public class GeneralArticleEntity extends CommonArticleEntity {
 
     @Builder
-    public GeneralArticleEntity(Long articleId, Long memberId, String title, String content, Integer viewCount, List<String> imageUrls, ArticleType articleType) {
-        super(articleId, memberId, title, content, viewCount, imageUrls, articleType);
+    public GeneralArticleEntity(Long articleId, Long memberId, String title, String content, Integer viewCount, Integer likeCount, Integer commentCount, List<String> imageUrls, ArticleType articleType) {
+        super(articleId, memberId, title, content, viewCount, likeCount, commentCount, imageUrls, articleType);
     }
 
     public GeneralArticle toDomain() {
@@ -32,6 +32,8 @@ public class GeneralArticleEntity extends CommonArticleEntity {
                 .viewCount(this.viewCount)
                 .imageUrls(this.imageUrls)
                 .createdAt(this.getCreatedAt())
+                .likeCount(this.likeCount)
+                .commentCount(this.commentCount)
                 .build();
     }
 
@@ -43,6 +45,8 @@ public class GeneralArticleEntity extends CommonArticleEntity {
                 .content(generalArticle.getContent())
                 .viewCount(generalArticle.getViewCount())
                 .imageUrls(generalArticle.getImageUrls())
+                .likeCount(generalArticle.getLikeCount())
+                .commentCount(generalArticle.getCommentCount())
                 .build();
     }
 

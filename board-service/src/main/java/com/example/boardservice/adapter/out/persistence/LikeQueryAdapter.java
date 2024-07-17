@@ -34,4 +34,9 @@ public class LikeQueryAdapter implements LikeQueryPort {
         return likeEntity.map(LikeEntity::toDomain);
     }
 
+    @Override
+    public int getLikeCount(Long articleId) {
+        return likeRepository.countByArticle_ArticleId(articleId);
+    }
+
 }

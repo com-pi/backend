@@ -32,15 +32,19 @@ public class CommonArticleEntity extends DeletedAtAbstractEntity {
 
     protected Integer viewCount;
 
+    protected Integer likeCount;
+
+    protected Integer commentCount;
+
     @Convert(converter = JsonToStringListConverter.class)
     protected List<String> imageUrls;
 
-    @Transient
-    protected ArticleType articleType;
+    @Enumerated(EnumType.STRING)
+    protected ArticleType type;
 
     @PostLoad
     public void setArticleTypeAfterLoad() {
-        this.articleType = ArticleType.fromString(this.getClass().getAnnotation(DiscriminatorValue.class).value());
+        this.type = ArticleType.from(this.getClass().getAnnotation(DiscriminatorValue.class).value());
     }
 
     public Article toArticle() {
@@ -51,8 +55,10 @@ public class CommonArticleEntity extends DeletedAtAbstractEntity {
                 .content(this.content)
                 .viewCount(this.viewCount)
                 .imageUrls(this.imageUrls)
-                .articleType(this.articleType)
+                .articleType(this.type)
                 .createdAt(this.getCreatedAt())
+                .likeCount(this.likeCount)
+                .commentCount(this.commentCount)
                 .build();
     }
 
@@ -67,6 +73,22 @@ public class CommonArticleEntity extends DeletedAtAbstractEntity {
     @Override
     public void delete() {
         super.delete();
+    }
+
+    public void increaseLikeCount() {
+        this.likeCount += 1;
+    }
+
+    public void decreaseLikeCount() {
+        this.likeCount -= 1;
+    }
+
+    public void increaseCommentCount() {
+        this.commentCount += 1;
+    }
+
+    public  void decreaseCommentCount() {
+        this.commentCount -= 1;
     }
 
 }

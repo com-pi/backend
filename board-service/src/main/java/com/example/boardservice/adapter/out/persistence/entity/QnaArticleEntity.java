@@ -14,12 +14,13 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor
-@DiscriminatorValue("qna_board")
-@Table(name = "qna_board")
+@DiscriminatorValue("QNA_BOARD")
+@Table(name = "QNA_BOARD")
 public class QnaArticleEntity extends CommonArticleEntity {
+
     @Builder
-    public QnaArticleEntity(Long articleId, Long memberId, String title, String content, Integer viewCount, List<String> imageUrls, ArticleType articleType) {
-        super(articleId, memberId, title, content, viewCount, imageUrls, articleType);
+    public QnaArticleEntity(Long articleId, Long memberId, String title, String content, Integer viewCount, Integer likeCount, Integer commentCount, List<String> imageUrls, ArticleType articleType) {
+        super(articleId, memberId, title, content, viewCount, likeCount, commentCount, imageUrls, articleType);
     }
 
     public QnaArticle toDomain() {
@@ -31,6 +32,8 @@ public class QnaArticleEntity extends CommonArticleEntity {
                 .viewCount(this.viewCount)
                 .imageUrls(this.imageUrls)
                 .createdAt(this.getCreatedAt())
+                .likeCount(this.likeCount)
+                .commentCount(this.commentCount)
                 .build();
     }
 
@@ -42,6 +45,8 @@ public class QnaArticleEntity extends CommonArticleEntity {
                 .content(qnaArticle.getContent())
                 .viewCount(qnaArticle.getViewCount())
                 .imageUrls(qnaArticle.getImageUrls())
+                .likeCount(qnaArticle.getLikeCount())
+                .commentCount(qnaArticle.getCommentCount())
                 .build();
     }
 

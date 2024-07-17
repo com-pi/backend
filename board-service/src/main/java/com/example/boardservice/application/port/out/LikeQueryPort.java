@@ -10,4 +10,6 @@ public interface LikeQueryPort {
     Optional<Like> findLikeByArticleIdAndMemberId(Long articleId, Long memberId);
 
     Optional<Like> findLikeByArticleIdAndMemberIdAndIsLiked(Long articleId, Long memberId, boolean isLiked);
+
+    int getLikeCount(Long articleId);
 }
