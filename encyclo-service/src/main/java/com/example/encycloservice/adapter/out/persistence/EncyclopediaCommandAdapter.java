@@ -6,7 +6,7 @@ import com.example.encycloservice.adapter.out.external.PlantInfoScraper;
 import com.example.encycloservice.adapter.out.persistence.entity.PlantAddInquiryEntity;
 import com.example.encycloservice.adapter.out.persistence.entity.PlantSpeciesEntity;
 import com.example.encycloservice.application.port.out.EncyclopediaCommand;
-import com.example.encycloservice.domain.PlantAddInquriy;
+import com.example.encycloservice.domain.PlantAddInquiry;
 import com.example.encycloservice.domain.PlantSpecies;
 import feign.FeignException;
 import jakarta.persistence.EntityManager;
@@ -42,13 +42,20 @@ public class EncyclopediaCommandAdapter implements EncyclopediaCommand {
     }
 
     @Override
-    public void savePlantAddInquiry(PlantAddInquriy plantAddInquriy) {
+    public void savePlantAddInquiry(PlantAddInquiry plantAddInquriy) {
         try {
             entityManager.persist(PlantAddInquiryEntity.fromDomain(plantAddInquriy));
             entityManager.flush();
         } catch (Exception e) {
             throw new InternalServerException("식물 추가 요청 실패", e);
         }
+    }
+
+    @Override
+    public void processPlantAddInquiry(PlantAddInquiry processed) {
+        PlantAddInquiryEntity entity = encyclopediaRepository.findAddInquiryById(processed.id())
+                .orElseThrow(() -> new InternalServerException("식물 추가 요청을 찾을 수 없습니다.", null));
+        entity.update(processed);
     }
 
 }

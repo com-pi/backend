@@ -3,8 +3,8 @@ package com.example.encycloservice.domain;
 
 import lombok.Builder;
 
-@Builder
-public record PlantAddInquriy(
+@Builder(toBuilder = true)
+public record PlantAddInquiry(
 
         Long id,
         String commonName,
@@ -19,6 +19,13 @@ public record PlantAddInquriy(
         SUBMITTED,
         IN_PROGRESS,
         PROCESSED
+    }
+
+    public PlantAddInquiry process(PlantAddInquiryProcess process){
+        return this.toBuilder()
+                .status(process.status())
+                .result(process.result())
+                .build();
     }
 
 }

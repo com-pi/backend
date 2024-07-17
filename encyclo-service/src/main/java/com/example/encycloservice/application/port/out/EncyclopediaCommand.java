@@ -1,6 +1,6 @@
 package com.example.encycloservice.application.port.out;
 
-import com.example.encycloservice.domain.PlantAddInquriy;
+import com.example.encycloservice.domain.PlantAddInquiry;
 import com.example.encycloservice.domain.PlantSpecies;
 
 public interface EncyclopediaCommand {
@@ -8,6 +8,7 @@ public interface EncyclopediaCommand {
     Long savePlantSpecies(PlantSpecies plantSpecies);
     void syncDatabaseFromExternal(String id);
 
-    void savePlantAddInquiry(PlantAddInquriy plantAddInquriy);
+    void savePlantAddInquiry(PlantAddInquiry plantAddInquiry);
 
+    void processPlantAddInquiry(PlantAddInquiry processed);
 }

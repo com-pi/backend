@@ -22,7 +22,9 @@ public abstract class BaseTimeAbstractEntity {
 
     @PrePersist
     protected void onCreate(){
-        this.createdAt = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now();
+        this.createdAt = now;
+        this.updatedAt = now;
     }
 
     @PreUpdate
