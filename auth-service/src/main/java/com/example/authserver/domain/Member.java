@@ -12,6 +12,7 @@ import lombok.Getter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Getter
 @AllArgsConstructor
@@ -112,4 +113,9 @@ public class Member {
                 .build();
     }
 
+    public Member changeNickname() {
+        return this.toBuilder()
+                .nickname(String.format("새회원_%s", UUID.randomUUID().toString().replace("-", "").substring(0, 7)))
+                .build();
+    }
 }

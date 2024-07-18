@@ -19,7 +19,7 @@ public record MemberCreateRequest(
                 .email(email)
                 .password(password)
                 .phoneNumber(phoneNumber)
-                .nickname(String.format("새회원_%s", UUID.randomUUID().toString().replace("-", "")))
+                .nickname(String.format("새회원_%s", UUID.randomUUID().toString().replace("-", "").substring(0, 8)))
                 .build();
     }
 

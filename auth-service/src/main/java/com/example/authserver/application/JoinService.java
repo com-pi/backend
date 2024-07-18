@@ -13,6 +13,7 @@ import com.example.authserver.exception.VerificationFailException;
 import com.example.common.exception.ConflictException;
 import com.example.common.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,17 @@ public class JoinService implements JoinUseCase {
         }
 
         Member newMember = Member.create(memberCreateRequest.toDomain(), passwordEncoder);
-        memberCommand.save(newMember);
+        // fixme : 닉네임 중복 처리 관련 어떻게 해야할 지
+        // 참고로 UUID 8자리에 대해서는 42억명 정도의 회원을 담을 수 있고,
+        // 7.7만명의 회원이 가입하면 중복될 확률이 50% 정도가 됩니다.
+        while(true){
+            try {
+                memberCommand.save(newMember);
+                break;
+            } catch(DataIntegrityViolationException e) {
+                newMember = newMember.changeNickname();
+            }
+        }
     }
 
     @Override

@@ -13,19 +13,19 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MemberCommandImpl implements MemberCommand {
 
-    private final MemberJpaRepository jpaRepository;
+    private final MemberJpaRepository memberJpaRepository;
 
     @Override
     @Transactional
     public void save(Member member) {
         MemberEntity memberEntity = MemberEntity.fromDomain(member);
-        jpaRepository.save(memberEntity);
+        memberJpaRepository.save(memberEntity);
     }
 
     @Override
     @Transactional
     public void update(Member member) {
-        MemberEntity memberEntity = jpaRepository.findById(member.getId())
+        MemberEntity memberEntity = memberJpaRepository.findById(member.getId())
                 .orElseThrow(() -> new InternalServerException("멤버를 찾을 수 없습니다.", null));
         memberEntity.update(member);
     }
