@@ -9,15 +9,11 @@ import java.io.IOException;
 
 public class ThumbnailGenerator {
 
-
-    // Todo 에러 수정 (Thumbnail 안됨)
-
     public static MultipartFile createThumbnail(MultipartFile file) throws IOException {
         int quality = 100;
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        int size = outputStream.toByteArray().length;
 
-        while (size > 30000L && quality > 0) {
+        while (true) {
             outputStream.reset();
 
             Thumbnails.of(file.getInputStream())
@@ -26,6 +22,10 @@ public class ThumbnailGenerator {
                     .outputFormat("jpeg")
                     .toOutputStream(outputStream);
 
+            int size = outputStream.size();
+            if (size <= 30000L || quality <= 10) {
+                break;
+            }
             quality -= 10;
         }
 
@@ -34,4 +34,5 @@ public class ThumbnailGenerator {
                 "thumbnail_" + file.getOriginalFilename(),
                 "image/jpeg");
     }
+
 }

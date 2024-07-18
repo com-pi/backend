@@ -19,9 +19,10 @@ public class CustomMultipartFile implements MultipartFile {
         return new CustomMultipartFile(input, originalFileName, contentType);
     }
 
+    @NotNull
     @Override
     public String getName() {
-        return null;
+        return originalFileName;
     }
 
     @Override
@@ -31,17 +32,17 @@ public class CustomMultipartFile implements MultipartFile {
 
     @Override
     public String getContentType() {
-        return "";
+        return contentType;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return input == null || input.length == 0;
     }
 
     @Override
     public long getSize() {
-        return 0;
+        return input.length;
     }
 
     @NotNull
