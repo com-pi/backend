@@ -20,5 +20,5 @@ public interface DiaryRepository extends JpaRepository<DiaryEntity, Long> {
 
     Optional<DiaryEntity> findByDiaryIdAndIsPublishedAndIsPublicAndDeletionYn(Long diaryId, boolean isPublished, boolean isPublic, String deletionYn);
 
-    Optional<DiaryEntity> findByDiaryIdAndCreatedDateAndDeletionYn(Long myPlantId, LocalDate createdDate, String deletionYn);
+    Optional<DiaryEntity> findByMyPlantIdAndCreatedDateAndDeletionYn(Long myPlantId, LocalDate createdDate, String deletionYn);
 }

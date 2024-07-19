@@ -57,7 +57,7 @@ public class DiaryQueryPortAdapter implements DiaryQueryPort {
 
     @Override
     public Optional<Diary> getDiaryByIdAndCreatedDate(Long myPlantId, LocalDate createdDate) {
-        Optional<DiaryEntity> diaryEntity = diaryRepository.findByDiaryIdAndCreatedDateAndDeletionYn(myPlantId, createdDate, "N");
+        Optional<DiaryEntity> diaryEntity = diaryRepository.findByMyPlantIdAndCreatedDateAndDeletionYn(myPlantId, createdDate, "N");
         return diaryEntity.map(DiaryEntity::toDomain);
     }
 }

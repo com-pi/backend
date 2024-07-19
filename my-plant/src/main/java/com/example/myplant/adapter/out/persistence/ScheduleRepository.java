@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> {
@@ -48,5 +49,17 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> 
             @Param("endDate") LocalDateTime endDate,
             @Param("memberId") Long memberId,
             @Param("isCompleted") boolean isCompleted
+    );
+
+    @Query("""
+    SELECT s FROM ScheduleEntity s
+    WHERE DATE(s.startDateTime) >= :startDate
+      AND DATE(s.endDateTime) <= :endDate
+      AND s.memberId = :memberId
+    """)
+    List<ScheduleEntity> getScheduleCalendarList(
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("memberId") Long memberId
     );
 }

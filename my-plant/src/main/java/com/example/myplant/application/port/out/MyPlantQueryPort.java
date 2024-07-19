@@ -10,5 +10,4 @@ public interface MyPlantQueryPort {
 
     MyPlant getMyPlantByMyPlantId(Long myPlantId);
 
-    MyPlant getMyPlantDetailsForUpdate(Long myPlantId);
 }

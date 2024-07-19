@@ -5,19 +5,25 @@ import com.example.myplant.domain.MyPlant;
 import java.time.LocalDate;
 
 public record MyPlantForUpdateResponse(
-        Long myPlantId,
-        String plantName,
+        Long characterId,
+        LocalDate lastWaterday,
         LocalDate plantBirthday,
-        String imageUrl,
-        Integer relationshipScore
+        String plantType,
+        String plantLocation,
+        String plantName,
+        String potType,
+        Integer wateringIntervalInDays
 ) {
-    public static MyPlantDetailResponse from(MyPlant myPlant) {
-        return new MyPlantDetailResponse(
-                myPlant.getMyPlantId(),
-                myPlant.getPlantName(),
+    public static MyPlantForUpdateResponse from(MyPlant myPlant) {
+        return new MyPlantForUpdateResponse(
+                myPlant.getPlantCharacter().getPlantCharacterId(),
+                myPlant.getLastWateringDate(),
                 myPlant.getPlantBirthday(),
-                myPlant.getPlantCharacter().getImageUrl(),
-                myPlant.getRelationshipScore()
+                myPlant.getPlantType(),
+                myPlant.getPlantSpot(),
+                myPlant.getPlantName(),
+                myPlant.getPotType(),
+                myPlant.getWateringIntervalInDays()
         );
     }
 }

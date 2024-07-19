@@ -15,7 +15,7 @@ public interface CommonArticleRepository extends JpaRepository<CommonArticleEnti
 
     Page<CommonArticleEntity> findByDeletionYn(String deletionYn, Pageable pageable);
 
-    Page<CommonArticleEntity> findByTypeAndDeletionYn(ArticleType type, String deletionYn);
+    Page<CommonArticleEntity> findByTypeAndDeletionYn(ArticleType type, String deletionYn, Pageable pageable);
 
     List<CommonArticleEntity> findByArticleIdInOrderByCreatedAt(List<ArticleHashtag> articleIdList);
 

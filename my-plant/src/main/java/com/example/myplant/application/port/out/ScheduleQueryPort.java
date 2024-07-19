@@ -1,5 +1,6 @@
 package com.example.myplant.application.port.out;
 
+import com.example.myplant.adapter.in.web.command.GetDiaryScheduleCommand;
 import com.example.myplant.domain.Schedule;
 
 import java.time.LocalDateTime;
@@ -18,4 +19,6 @@ public interface ScheduleQueryPort {
     List<Schedule> getScheduleList(Long memberId);
 
     List<Schedule> getRecurringScheduleList(Long memberId, boolean isCompleted);
+
+    List<Schedule> getScheduleCalendarList(GetDiaryScheduleCommand command);
 }

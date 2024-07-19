@@ -1,5 +1,6 @@
 package com.example.myplant.application.port.in;
 
+import com.example.myplant.adapter.in.web.command.GetDiaryScheduleCommand;
 import com.example.myplant.adapter.in.web.response.ScheduleMainResponseList;
 import com.example.myplant.domain.Schedule;
 
@@ -16,4 +17,6 @@ public interface ScheduleUseCase {
     ScheduleMainResponseList getTodayScheduleList(Schedule schedule);
 
     ScheduleMainResponseList getUpcomingScheduleList(Schedule schedule);
+
+    void getScheduleCalendarList(GetDiaryScheduleCommand command);
 }

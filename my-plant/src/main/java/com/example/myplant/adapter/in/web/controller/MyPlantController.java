@@ -6,6 +6,7 @@ import com.example.common.domain.Role;
 import com.example.myplant.adapter.in.web.request.CreateMyPlantRequest;
 import com.example.myplant.adapter.in.web.request.UpdateMyPlantRequest;
 import com.example.myplant.adapter.in.web.response.MyPlantDetailResponse;
+import com.example.myplant.adapter.in.web.response.MyPlantForUpdateResponse;
 import com.example.myplant.adapter.in.web.response.MyPlantListResponse;
 import com.example.myplant.adapter.in.web.response.MyPlantResponse;
 import com.example.myplant.application.port.in.MyPlantUseCase;
@@ -63,7 +64,7 @@ public class MyPlantController {
     @Authenticate(Role.MEMBER)
     @DeleteMapping("/{myPlantId}")
     public ResponseEntity<CommonResponse<Long>> deletePlant(@PathVariable("myPlantId") Long myPlantId) {
-        Long plantId = myPlantUseCase.deletePlant(PassportHolder.getPassport().memberId(), myPlantId);
+        Long plantId = myPlantUseCase.deleteMyPlant(PassportHolder.getPassport().memberId(), myPlantId);
         return ResponseEntity.ok(new CommonResponse<>("내 식물이 삭제되었습니다.", plantId));
     }
 
@@ -80,17 +81,17 @@ public class MyPlantController {
 
     @Operation(summary = "내 식물 상세 조회", description = "내 식물을 상세 조회합니다.")
     @Authenticate(Role.MEMBER)
-    @GetMapping("/detail/{myPlantId}")
+    @GetMapping("/{myPlantId}")
     public ResponseEntity<MyPlantDetailResponse> getMyPlantByMyPlantId(@PathVariable("myPlantId") Long myPlantId) {
-        MyPlant myPlant = myPlantUseCase.getMyPlantByMyPlantId(myPlantId);
+        MyPlant myPlant = myPlantUseCase.getMyPlant(myPlantId);
         return ResponseEntity.ok(MyPlantDetailResponse.from(myPlant));
     }
 
     @Operation(summary = "내 식물 기존 정보 조회", description = "내 식물 수정 시 내 식물의 기존 정보를 상세 조회합니다.")
     @Authenticate(Role.MEMBER)
     @GetMapping("/detail/{myPlantId}")
-    public ResponseEntity<MyPlantDetailResponse> getMyPlantDetailsForUpdate(@PathVariable("myPlantId") Long myPlantId) {
-        MyPlant myPlant = myPlantUseCase.getMyPlantDetailsForUpdate(myPlantId);
-        return ResponseEntity.ok(MyPlantDetailResponse.from(myPlant));
+    public ResponseEntity<MyPlantForUpdateResponse> getMyPlantDetailsForUpdate(@PathVariable("myPlantId") Long myPlantId) {
+        MyPlant myPlant = myPlantUseCase.getMyPlant(myPlantId);
+        return ResponseEntity.ok(MyPlantForUpdateResponse.from(myPlant));
     }
 }

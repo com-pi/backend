@@ -29,8 +29,4 @@ public class MyPlantQueryAdapter implements MyPlantQueryPort {
         return myPlantEntity.toDomain();
     }
 
-    @Override
-    public MyPlant getMyPlantDetailsForUpdate(Long myPlantId) {
-        return null;
-    }
 }

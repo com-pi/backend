@@ -27,7 +27,7 @@ public class CommonArticleQueryAdapter implements CommonArticleQueryPort {
 
     @Override
     public Page<Article> getArticleList(ArticleType type, Pageable pageable) {
-        Page<CommonArticleEntity> commonArticleEntityPage = articleRepository.findByTypeAndDeletionYn(type, "N");
+        Page<CommonArticleEntity> commonArticleEntityPage = articleRepository.findByTypeAndDeletionYn(type, "N", pageable);
         return commonArticleEntityPage.map(CommonArticleEntity::toArticle);
     }
 

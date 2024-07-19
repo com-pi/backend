@@ -1,6 +1,7 @@
 package com.example.myplant.application.service;
 
 import com.example.common.exception.UnauthorizedException;
+import com.example.myplant.adapter.in.web.command.GetDiaryScheduleCommand;
 import com.example.myplant.adapter.in.web.response.ScheduleMainResponseList;
 import com.example.myplant.application.port.in.ScheduleUseCase;
 import com.example.myplant.application.port.out.ScheduleCommandPort;
@@ -76,6 +77,12 @@ public class ScheduleService implements ScheduleUseCase {
         // currentDate > startDate && currentDate <= endDate(반복)
         List<Schedule> scheduleList = scheduleQueryPort.getUpcomingScheduleList(schedule.getUpcomingDate(), schedule.getMemberId(), false);
         return ScheduleMainResponseList.from(scheduleList);
+    }
+
+    @Override
+    public void getScheduleCalendarList(GetDiaryScheduleCommand command) {
+        List<Schedule> scheduleList = scheduleQueryPort.getScheduleCalendarList(command);
+        System.out.println(scheduleList);
     }
 
 }

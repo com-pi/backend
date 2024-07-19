@@ -1,6 +1,7 @@
 package com.example.myplant.adapter.out.persistence;
 
 import com.example.common.exception.NotFoundException;
+import com.example.myplant.adapter.in.web.command.GetDiaryScheduleCommand;
 import com.example.myplant.adapter.out.persistence.entity.ScheduleEntity;
 import com.example.myplant.application.port.out.ScheduleQueryPort;
 import com.example.myplant.domain.Schedule;
@@ -39,6 +40,18 @@ public class ScheduleQueryPortAdapter implements ScheduleQueryPort {
     @Override
     public List<Schedule> getRecurringScheduleList(Long memberId, boolean isCompleted) {
         return scheduleRepository.getRecurringScheduleList(memberId, isCompleted).stream()
+                .map(ScheduleEntity::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<Schedule> getScheduleCalendarList(GetDiaryScheduleCommand command) {
+        List<ScheduleEntity> scheduleEntityList = scheduleRepository.getScheduleCalendarList(
+                command.getStartDate(),
+                command.getEndDate(),
+                command.getMemberId()
+        );
+        return scheduleEntityList.stream()
                 .map(ScheduleEntity::toDomain)
                 .toList();
     }

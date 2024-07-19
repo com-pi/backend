@@ -38,7 +38,7 @@ public class MyPlantService implements MyPlantUseCase {
 
     @Override
     @Transactional
-    public Long deletePlant(Long memberId, Long myPlantId) {
+    public Long deleteMyPlant(Long memberId, Long myPlantId) {
         myPlantCommandPort.delete(myPlantId);
         return myPlantId;
     }
@@ -49,15 +49,13 @@ public class MyPlantService implements MyPlantUseCase {
     }
 
     @Override
-    public MyPlant getMyPlantByMyPlantId(Long myPlantId) {
+    public MyPlant getMyPlant(Long myPlantId) {
         return myPlantQueryPort.getMyPlantByMyPlantId(myPlantId);
     }
 
-    @Override
-    public MyPlant getMyPlantDetailsForUpdate(Long myPlantId) {
-        return myPlantQueryPort.getMyPlantDetailsForUpdate(myPlantId);
-    }
-
+    /**
+     * private
+     */
     private void validatePermission(final Long originMemberId, final Long memberId) {
         if(!Objects.equals(originMemberId, memberId)) {
             throw new UnauthorizedException("식물을 수정하거나 삭제할 권한이 없습니다.");

@@ -3,6 +3,7 @@ package com.example.myplant.adapter.in.web.controller;
 import com.example.common.annotation.Authenticate;
 import com.example.common.baseentity.CommonResponse;
 import com.example.common.domain.Role;
+import com.example.myplant.adapter.in.web.command.GetDiaryScheduleCommand;
 import com.example.myplant.adapter.in.web.command.GetScheduleCommand;
 import com.example.myplant.adapter.in.web.command.UpdateScheduleStatusCommand;
 import com.example.myplant.adapter.in.web.request.CreateScheduleRequest;
@@ -13,6 +14,8 @@ import com.example.myplant.security.PassportHolder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RestController
 @RequiredArgsConstructor
@@ -72,7 +75,13 @@ public class ScheduleController implements ScheduleSwaggerUI {
     }
 
     @Override
-    public ResponseEntity<ScheduleMainResponseList> getScheduleList() {
+    @Authenticate(Role.MEMBER)
+    @GetMapping("/calendar/list")
+    public ResponseEntity<ScheduleMainResponseList> getScheduleCalendarList(
+            @RequestParam("startDate") LocalDate startDate,
+            @RequestParam("endDate") LocalDate endDate
+    ) {
+        scheduleUseCase.getScheduleCalendarList(GetDiaryScheduleCommand.of(startDate, endDate, (PassportHolder.getPassport().memberId())));
         return null;
     }
 
