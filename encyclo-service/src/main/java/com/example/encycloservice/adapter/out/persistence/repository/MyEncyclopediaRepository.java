@@ -1,6 +1,9 @@
 package com.example.encycloservice.adapter.out.persistence.repository;
 
+import com.example.encycloservice.adapter.out.persistence.entity.EncyclopediaPlantEntity;
 import com.example.encycloservice.adapter.out.persistence.entity.MyEncyclopediaEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -25,5 +28,8 @@ public interface MyEncyclopediaRepository extends JpaRepository<MyEncyclopediaEn
     @Query("DELETE FROM EncyclopediaPlantEntity e WHERE e.myEncyclopediaEntity.id = :myEncyclopediaId")
     @Modifying
     void deletePlantsFromEncyclopedia(Long myEncyclopediaId);
+
+    @Query("SELECT ep FROM EncyclopediaPlantEntity ep WHERE ep.myEncyclopediaEntity.id = :myEncyclopediaId")
+    Page<EncyclopediaPlantEntity> findPlantListByEncyclopediaId(Long myEncyclopediaId, PageRequest pageable);
 
 }

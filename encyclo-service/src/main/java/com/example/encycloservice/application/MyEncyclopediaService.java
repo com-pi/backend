@@ -1,6 +1,8 @@
 package com.example.encycloservice.application;
 
 import com.example.common.exception.NotFoundException;
+import com.example.encycloservice.adapter.in.response.MyEncyclopediaDetailResponse;
+import com.example.encycloservice.adapter.out.persistence.entity.EncyclopediaPlantEntity;
 import com.example.encycloservice.aop.filter.PassportHolder;
 import com.example.encycloservice.application.port.in.MyEncyclopediaUseCase;
 import com.example.encycloservice.application.port.out.EncyclopediaQuery;
@@ -8,9 +10,11 @@ import com.example.encycloservice.application.port.out.MyEncyclopediaCommand;
 import com.example.encycloservice.application.port.out.MyEncyclopediaQuery;
 import com.example.encycloservice.domain.MyEncyclopedia;
 import com.example.encycloservice.domain.MyEncyclopediaCreate;
+import com.example.encycloservice.domain.PlantBrief;
 import com.example.encycloservice.domain.PlantSpecies;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,9 +34,19 @@ public class MyEncyclopediaService implements MyEncyclopediaUseCase {
     }
 
     @Override
-    public MyEncyclopedia getMyEncyclopediaDetail(Long myEncyclopediaId) {
-        return myEncyclopediaQuery.findEncyclopediaWithContentById(myEncyclopediaId)
-                .orElseThrow(() -> new NotFoundException("내 도감을 찾을 수 없습니다."));
+    public MyEncyclopediaDetailResponse getPlantListByEncyclopediaId(Long myEncyclopediaId, Integer page, Integer size) {
+        Page<EncyclopediaPlantEntity> pageableResult =
+                myEncyclopediaQuery.getPlantListByEncyclopediaId(myEncyclopediaId, page, size);
+
+        List<PlantBrief> plantBriefList = pageableResult.get()
+                .map(plant -> encyclopediaQuery.getBriefById(plant.getPlantEntity().getId()))
+                .toList();
+
+        return MyEncyclopediaDetailResponse.builder()
+                .totalElement(pageableResult.getTotalElements())
+                .totalPage(pageableResult.getTotalPages())
+                .plantCollection(plantBriefList)
+                .build();
     }
 
     @Override

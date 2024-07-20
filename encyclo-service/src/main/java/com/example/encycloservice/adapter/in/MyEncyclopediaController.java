@@ -34,7 +34,6 @@ public class MyEncyclopediaController {
     public ResponseEntity<CommonResponse<MyEncyclopediaListResponse>> getMyEncyclopediaList() {
         Passport passport = PassportHolder.getPassport();
         List<MyEncyclopedia> myEncyclopedias = myEncyclopediaUseCase.myEncyclopediaList(passport.memberId());
-
         MyEncyclopediaListResponse response = new MyEncyclopediaListResponse(
                 myEncyclopedias.stream().map(MyEncyclopediaListResponse.MyEncyclopediaResponse::fromDomain).toList());
 
@@ -42,12 +41,14 @@ public class MyEncyclopediaController {
     }
 
     @GetMapping("/{myEncyclopediaId}")
-    @Operation(summary = "내 도감 조회", description = "내 도감을 조회합니다.")
+    @Operation(summary = "내 도감의 식물 리스트 조회", description = "내 도감의 식물을 조회합니다.")
     @Authenticate(Role.MEMBER)
-    public ResponseEntity<CommonResponse<MyEncyclopediaDetailResponse>> getMyEncyclopedia(
-            @PathVariable Long myEncyclopediaId) {
-        MyEncyclopedia myEncyclopedia = myEncyclopediaUseCase.getMyEncyclopediaDetail(myEncyclopediaId);
-        MyEncyclopediaDetailResponse response = MyEncyclopediaDetailResponse.fromDomain(myEncyclopedia);
+    public ResponseEntity<CommonResponse<MyEncyclopediaDetailResponse>> getMyEncyclopediaPlant(
+            @PathVariable Long myEncyclopediaId,
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size
+    ) {
+        MyEncyclopediaDetailResponse response = myEncyclopediaUseCase.getPlantListByEncyclopediaId(myEncyclopediaId, page, size);
         return CommonResponse.okWithMessage("내 도감 조회 성공", response);
     }
 

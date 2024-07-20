@@ -1,5 +1,6 @@
 package com.example.encycloservice.adapter.out.persistence.entity;
 
+import com.example.common.baseentity.BaseTimeAbstractEntity;
 import com.example.encycloservice.domain.PlantBrief;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,11 +10,11 @@ import org.hibernate.Hibernate;
 @AllArgsConstructor
 @Builder
 @ToString
-@EqualsAndHashCode(of = "id")
+@EqualsAndHashCode(of = "id", callSuper = false)
 @Getter
 @Entity
 @Table(name = "encyclopedia_plant")
-public class  EncyclopediaPlantEntity {
+public class  EncyclopediaPlantEntity extends BaseTimeAbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
