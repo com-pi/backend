@@ -9,5 +9,6 @@ public interface MyEncyclopediaCommand {
 
     void addPlantsToEncyclopedia(PlantSpecies plantSpeciesId, MyEncyclopedia myEncyclopediaId);
     void removePlantFromEncyclopedia(PlantSpecies plantSpecies, MyEncyclopedia myEncyclopedia);
+    void removeEncyclopedia(Long myEncyclopediaId);
 
 }

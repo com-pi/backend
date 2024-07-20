@@ -86,4 +86,16 @@ public class MyEncyclopediaController {
         return CommonResponse.okWithMessage("내 도감에서 식물 삭제 성공");
     }
 
+    @DeleteMapping("/{myEncyclopediaId}")
+    @Operation(summary = "내 도감 삭제", description = "내 도감을 삭제합니다.")
+    @Authenticate(Role.MEMBER)
+    public ResponseEntity<CommonResponse<Void>> removeMyEncyclopedia(
+            @PathVariable Long myEncyclopediaId) {
+        myEncyclopediaUseCase.removeMyEncyclopedia(myEncyclopediaId);
+        return CommonResponse.okWithMessage("내 도감 삭제 성공");
+    }
+
+
+
+
 }

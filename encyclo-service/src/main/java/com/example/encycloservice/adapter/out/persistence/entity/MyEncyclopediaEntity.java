@@ -1,6 +1,6 @@
 package com.example.encycloservice.adapter.out.persistence.entity;
 
-import com.example.common.baseentity.DeletedAtAbstractEntity;
+import com.example.common.baseentity.BaseTimeAbstractEntity;
 import com.example.encycloservice.domain.MyEncyclopedia;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,7 +14,7 @@ import java.util.List;
 @Builder
 @ToString
 @EqualsAndHashCode(of = "id", callSuper = false)
-public class MyEncyclopediaEntity extends DeletedAtAbstractEntity {
+public class MyEncyclopediaEntity extends BaseTimeAbstractEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

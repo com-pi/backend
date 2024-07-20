@@ -95,4 +95,14 @@ public class MyEncyclopediaService implements MyEncyclopediaUseCase {
         }
     }
 
+    @Override
+    @Transactional
+    public void removeMyEncyclopedia(Long myEncyclopediaId) {
+        MyEncyclopedia myEncyclopedia = myEncyclopediaQuery.findById(myEncyclopediaId)
+                .orElseThrow(() -> new NotFoundException("내 도감을 찾을 수 없습니다."));
+        myEncyclopedia.verifyOwner(PassportHolder.getPassport());
+
+        myEncyclopediaCommand.removeEncyclopedia(myEncyclopediaId);
+    }
+
 }

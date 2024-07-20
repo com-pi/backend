@@ -24,7 +24,6 @@ public class MyEncyclopediaCommandImpl implements MyEncyclopediaCommand {
         myEncyclopediaRepository.save(MyEncyclopediaEntity.fromDomain(myEncyclopedia));
     }
 
-
     @Override
     @Transactional
     public void addPlantsToEncyclopedia(PlantSpecies plantSpecies, MyEncyclopedia myEncyclopedia) {
@@ -39,6 +38,12 @@ public class MyEncyclopediaCommandImpl implements MyEncyclopediaCommand {
     @Transactional
     public void removePlantFromEncyclopedia(PlantSpecies plantSpecies, MyEncyclopedia myEncyclopedia) {
         myEncyclopediaRepository.deleteByPlantSpeciesIdAndMyEncyclopediaId(plantSpecies.getId(), myEncyclopedia.getId());
+    }
+
+    @Override
+    public void removeEncyclopedia(Long myEncyclopediaId) {
+        myEncyclopediaRepository.deletePlantsFromEncyclopedia(myEncyclopediaId);
+        myEncyclopediaRepository.deleteById(myEncyclopediaId);
     }
 
 }
