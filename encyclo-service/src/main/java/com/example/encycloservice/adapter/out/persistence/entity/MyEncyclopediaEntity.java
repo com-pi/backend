@@ -12,7 +12,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
+@ToString(exclude = "plantCollection")
 @EqualsAndHashCode(of = "id", callSuper = false)
 public class MyEncyclopediaEntity extends BaseTimeAbstractEntity {
 

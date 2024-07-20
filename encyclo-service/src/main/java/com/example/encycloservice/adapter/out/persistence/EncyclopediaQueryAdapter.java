@@ -4,6 +4,7 @@ import com.example.encycloservice.DomainMapper;
 import com.example.encycloservice.adapter.in.response.PlantAddInquiryResponse;
 import com.example.encycloservice.adapter.out.persistence.entity.PlantAddInquiryEntity;
 import com.example.encycloservice.adapter.out.persistence.entity.PlantSpeciesEntity;
+import com.example.encycloservice.adapter.out.persistence.repository.EncyclopediaRepository;
 import com.example.encycloservice.application.port.out.EncyclopediaQuery;
 import com.example.encycloservice.domain.PlantAddInquiry;
 import com.example.encycloservice.domain.PlantBrief;

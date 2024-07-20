@@ -1,10 +1,9 @@
-package com.example.encycloservice.adapter.out.persistence;
+package com.example.encycloservice.adapter.out.persistence.repository;
 
 import com.example.encycloservice.adapter.out.persistence.entity.MyEncyclopediaEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.scheduling.annotation.Async;
 
 import java.util.List;
 import java.util.Optional;

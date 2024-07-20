@@ -10,7 +10,7 @@ import com.example.encycloservice.domain.MyEncyclopedia;
 import com.example.encycloservice.domain.MyEncyclopediaCreate;
 import com.example.encycloservice.domain.PlantSpecies;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,17 +48,17 @@ public class MyEncyclopediaService implements MyEncyclopediaUseCase {
                 .orElseThrow(() -> new NotFoundException("내 도감을 찾을 수 없습니다."));
         myEncyclopedia.verifyOwner(PassportHolder.getPassport());
 
-        plantSpeciesIds.forEach(plantSpeciesId -> {
+        for (Long plantSpeciesId : plantSpeciesIds) {
             PlantSpecies plantSpecies = encyclopediaQuery.getById(plantSpeciesId);
             if (plantSpecies == null) {
                 throw new NotFoundException("식물을 찾을 수 없습니다.");
             }
             try {
                 myEncyclopediaCommand.addPlantsToEncyclopedia(plantSpecies, myEncyclopedia);
-            } catch (DataIntegrityViolationException ignored) {
-                // 내 도감에 동일한 식물이 들어가 있을 때, 이를 무시합니다.
+            } catch (ConstraintViolationException ignored) {
+                // 도감에 중복된 식물이 있는 경우 이를 무시합니다.
             }
-        });
+        }
     }
 
     @Override

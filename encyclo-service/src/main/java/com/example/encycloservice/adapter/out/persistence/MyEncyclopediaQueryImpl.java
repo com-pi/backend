@@ -1,6 +1,7 @@
 package com.example.encycloservice.adapter.out.persistence;
 
 import com.example.encycloservice.adapter.out.persistence.entity.MyEncyclopediaEntity;
+import com.example.encycloservice.adapter.out.persistence.repository.MyEncyclopediaRepository;
 import com.example.encycloservice.application.port.out.MyEncyclopediaQuery;
 import com.example.encycloservice.domain.MyEncyclopedia;
 import lombok.RequiredArgsConstructor;

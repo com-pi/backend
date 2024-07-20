@@ -1,4 +1,4 @@
-package com.example.encycloservice.adapter.out.persistence;
+package com.example.encycloservice.adapter.out.persistence.repository;
 
 import com.example.encycloservice.adapter.out.persistence.entity.PlantAddInquiryEntity;
 import com.example.encycloservice.adapter.out.persistence.entity.PlantSpeciesEntity;
