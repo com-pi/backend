@@ -90,8 +90,10 @@ public class ScheduleController implements ScheduleSwaggerUI {
 
     @Override
     @Authenticate(Role.MEMBER)
-    public ResponseEntity<ScheduleMainResponseList> getScheduleByDate() {
-        return null;
+    @GetMapping("/calendar/date")
+    public ResponseEntity<ScheduleMainResponseList> getScheduleByDate(@RequestParam("date") final LocalDate date) {
+        ScheduleMainResponseList scheduleMainResponseList = scheduleUseCase.getScheduleByDate(date, GetScheduleCommand.of(PassportHolder.getPassport().memberId()).toDomain());
+        return ResponseEntity.ok(scheduleMainResponseList);
     }
 
 

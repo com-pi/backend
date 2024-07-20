@@ -57,8 +57,8 @@ public interface ScheduleSwaggerUI {
     })
     ResponseEntity<ScheduleCalendarResponseList> getScheduleCalendarList(LocalDate startDate, LocalDate endDate);
 
-    @Operation(summary = "(달력)일정 상세 페이지 일자별 상세 조회", description = "일정을 일자별로 단건 조회합니다.")
-    ResponseEntity<ScheduleMainResponseList> getScheduleByDate();
+    @Operation(summary = "(달력)일정 상세 페이지 일자별 상세 조회", description = "일정을 일자별로 조회합니다.")
+    ResponseEntity<ScheduleMainResponseList> getScheduleByDate(LocalDate localDate);
 
 
 }

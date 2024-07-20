@@ -8,6 +8,7 @@ import com.example.myplant.domain.Schedule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -45,12 +46,8 @@ public class ScheduleQueryPortAdapter implements ScheduleQueryPort {
     }
 
     @Override
-    public List<Schedule> getRecurringScheduleCalendarList(GetDiaryScheduleCommand command) {
-        List<ScheduleEntity> scheduleEntityList = scheduleRepository.getRecurringScheduleCalendarList(
-                command.getStartDate(),
-                command.getEndDate(),
-                command.getMemberId()
-        );
+    public List<Schedule> getRecurringScheduleCalendarList(LocalDate startDate, LocalDate endDate, Long memberId) {
+        List<ScheduleEntity> scheduleEntityList = scheduleRepository.getRecurringScheduleCalendarList(startDate, endDate, memberId);
         return scheduleEntityList.stream()
                 .map(ScheduleEntity::toDomain)
                 .toList();
@@ -70,6 +67,14 @@ public class ScheduleQueryPortAdapter implements ScheduleQueryPort {
                 command.getEndDate(),
                 command.getMemberId()
         );
+        return scheduleEntityList.stream()
+                .map(ScheduleEntity::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<Schedule> getSingleScheduleCalender(LocalDate date, Long memberId) {
+        List<ScheduleEntity> scheduleEntityList = scheduleRepository.getSingleScheduleCalender(date, memberId);
         return scheduleEntityList.stream()
                 .map(ScheduleEntity::toDomain)
                 .toList();

@@ -65,15 +65,13 @@ public class Schedule {
         return now.plusDays(7);
     }
 
-    public List<Schedule> findMatchingSchedules(List<Schedule> recurringScheduleList) {
-        LocalDate today = LocalDate.now();
-
+    public List<Schedule> findMatchingSchedules(List<Schedule> recurringScheduleList, LocalDate today) {
         return recurringScheduleList.stream()
                 .filter(schedule -> isScheduleMatchingToday(schedule, today))
                 .toList();
     }
 
-    public List<Schedule> getTodayScheduleList(List<Schedule> scheduleList, List<Schedule> recurringScheduleList) {
+    public List<Schedule> getMatchingScheduleList(List<Schedule> scheduleList, List<Schedule> recurringScheduleList) {
         return Stream
                 .concat(scheduleList.stream(), recurringScheduleList.stream())
                 .toList();
@@ -117,4 +115,5 @@ public class Schedule {
         }
         return recurringDateList;
     }
+
 }

@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -66,9 +67,9 @@ public class ScheduleService implements ScheduleUseCase {
 
         // 반복 일정
         List<Schedule> recurringScheduleList = scheduleQueryPort.getRecurringScheduleList(schedule.getMemberId(), false);
-        List<Schedule> matchingSchedule = schedule.findMatchingSchedules(recurringScheduleList);
+        List<Schedule> matchingSchedule = schedule.findMatchingSchedules(recurringScheduleList, LocalDate.now());
 
-        return ScheduleMainResponseList.from(schedule.getTodayScheduleList(scheduleList, matchingSchedule));
+        return ScheduleMainResponseList.from(schedule.getMatchingScheduleList(scheduleList, matchingSchedule));
     }
 
     @Override
@@ -90,7 +91,11 @@ public class ScheduleService implements ScheduleUseCase {
                 .toList();
 
         // 반복 일정
-        List<Schedule> recurringScheduleList = scheduleQueryPort.getRecurringScheduleCalendarList(command);
+        List<Schedule> recurringScheduleList = scheduleQueryPort.getRecurringScheduleCalendarList(
+                command.getStartDate(),
+                command.getEndDate(),
+                command.getMemberId()
+        );
         List<ScheduleCalendarResponse> recurringScheduleResponseList = recurringScheduleList.stream()
                 .flatMap(schedule -> schedule.getRecurringDate(schedule, command).stream()
                 .map(date -> ScheduleCalendarResponse.from(date, schedule.getColorType())))
@@ -99,6 +104,19 @@ public class ScheduleService implements ScheduleUseCase {
         return Stream
                 .concat(scheduleResponseList.stream(), recurringScheduleResponseList.stream())
                 .toList();
+    }
+
+    @Override
+    public ScheduleMainResponseList getScheduleByDate(LocalDate date, Schedule schedule) {
+        // 단건 일정
+        List<Schedule> scheduleList = scheduleQueryPort.getSingleScheduleCalender(date, schedule.getMemberId());
+
+        // 반복 일정
+        List<Schedule> recurringScheduleList = scheduleQueryPort.getRecurringScheduleCalendarList(date, date, schedule.getMemberId());
+        List<Schedule> filteredScheduleList = schedule.findMatchingSchedules(recurringScheduleList, date);
+
+        List<Schedule> matchingScheduleList = schedule.getMatchingScheduleList(scheduleList, filteredScheduleList);
+        return ScheduleMainResponseList.from(matchingScheduleList);
     }
 
 

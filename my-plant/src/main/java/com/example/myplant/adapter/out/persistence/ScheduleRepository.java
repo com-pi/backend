@@ -84,5 +84,17 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> 
             @Param("memberId") Long memberId
     );
 
+    @Query("""
+        SELECT s FROM ScheduleEntity s
+        WHERE s.memberId = :memberId
+        AND s.isRecurring = false
+        AND s.deletionYn = 'N'
+        AND FUNCTION('DATE', s.startDateTime) = :date
+    """)
+    List<ScheduleEntity> getSingleScheduleCalender(
+            @Param("date") LocalDate date,
+            @Param("memberId") Long memberId
+    );
+
 
 }
