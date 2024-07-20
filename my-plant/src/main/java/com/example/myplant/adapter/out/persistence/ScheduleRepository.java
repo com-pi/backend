@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> {
 
@@ -32,23 +31,41 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> 
             AND CURRENT_DATE <= FUNCTION('DATE', s.endDateTime)
             AND s.memberId = :memberId
             AND s.isCompleted = :isCompleted
-            AND s.isRecurring = false
+            AND s.isRecurring = true
     """)
     List<ScheduleEntity> getRecurringScheduleList(Long memberId, boolean isCompleted);
 
+    @Query("""
+        SELECT s FROM ScheduleEntity s
+        WHERE s.memberId = :memberId
+        AND s.isRecurring = true
+        AND s.deletionYn = 'N'
+        AND
+        (
+          (:startDate >= FUNCTION('DATE', s.startDateTime) AND :startDate <= FUNCTION('DATE', s.endDateTime)) OR
+          (:endDate >= FUNCTION('DATE', s.startDateTime) AND :endDate <= FUNCTION('DATE', s.endDateTime)) OR
+          (FUNCTION('DATE', s.startDateTime) >= :startDate AND FUNCTION('DATE', s.startDateTime) <= :endDate) OR
+          (FUNCTION('DATE', s.endDateTime) >= :startDate AND FUNCTION('DATE', s.endDateTime) <= :endDate)
+        )
+    """)
+    List<ScheduleEntity> getUpcomingRecurringScheduleList(
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("memberId") Long memberId
+    );
 
     @Query("""
-        SELECT s
-        FROM ScheduleEntity s
-        WHERE FUNCTION('DATE', s.endDateTime) > CURRENT_DATE
-            AND FUNCTION('DATE', s.endDateTime) <= FUNCTION('DATE', :endDate)
-            AND s.memberId = :memberId
-            AND s.isCompleted = :isCompleted
-   """)
+        SELECT s FROM ScheduleEntity s
+        WHERE s.memberId = :memberId
+        AND s.isRecurring = false
+        AND s.deletionYn = 'N'
+        AND FUNCTION('DATE', s.startDateTime) > :startDate
+        AND FUNCTION('DATE', s.startDateTime) <= :endDate
+    """)
     List<ScheduleEntity> getUpcomingScheduleList(
-            @Param("endDate") LocalDateTime endDate,
-            @Param("memberId") Long memberId,
-            @Param("isCompleted") boolean isCompleted
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("memberId") Long memberId
     );
 
     @Query("""

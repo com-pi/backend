@@ -20,7 +20,7 @@ public record ScheduleMainResponse(
             .title(schedule.getTitle())
             .startDateTime(schedule.getStartDateTime())
             .isCompleted(schedule.getIsCompleted())
-            .endDateTimeMessage(schedule.getEndDateTimeMessage(now))
+            .endDateTimeMessage(schedule.getDdayMessage(now))
             .build();
     }
 

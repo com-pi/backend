@@ -53,14 +53,6 @@ public class ScheduleController implements ScheduleSwaggerUI {
 
     @Override
     @Authenticate(Role.MEMBER)
-    @GetMapping("/main")
-    public ResponseEntity<ScheduleMainResponseList> getMainPageScheduleList() {
-        ScheduleMainResponseList scheduleMainResponseList = scheduleUseCase.getMainPageScheduleList(PassportHolder.getPassport().memberId());
-        return ResponseEntity.ok(scheduleMainResponseList);
-    }
-
-    @Override
-    @Authenticate(Role.MEMBER)
     @GetMapping("/main/today")
     public ResponseEntity<ScheduleMainResponseList> getTodayScheduleList() {
         GetScheduleCommand command = GetScheduleCommand.of(PassportHolder.getPassport().memberId());

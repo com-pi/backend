@@ -73,13 +73,21 @@ public class ScheduleService implements ScheduleUseCase {
     }
 
     @Override
-    public ScheduleMainResponseList getUpcomingScheduleList(Schedule schedule) {
-        // currentDate < startDate(단건)
-        // currentDate < startDate(반복)
-        // currentDate > startDate && currentDate <= endDate(단건)
-        // currentDate > startDate && currentDate <= endDate(반복)
-        List<Schedule> scheduleList = scheduleQueryPort.getUpcomingScheduleList(schedule.getUpcomingDate(), schedule.getMemberId(), false);
-        return ScheduleMainResponseList.from(scheduleList);
+    public ScheduleMainResponseList getUpcomingScheduleList(Schedule domain) {
+        LocalDate today = LocalDate.now();
+        LocalDate weekLater = today.plusDays(7);
+        Long memberId = domain.getMemberId();
+
+        // 단건 일정
+        List<Schedule> singleScheduleList = scheduleQueryPort.getUpcomingScheduleList(today, weekLater, memberId);
+
+        // 반복 일정
+        List<Schedule> recurringScheduleList = scheduleQueryPort.getUpcomingRecurringScheduleList(today, weekLater, memberId)
+                .stream()
+                .flatMap(schedule -> schedule.getRecurringSchedule(schedule, today, weekLater).stream())
+                .toList();
+
+        return ScheduleMainResponseList.from(domain.getMatchingScheduleList(singleScheduleList, recurringScheduleList));
     }
 
     @Override
@@ -97,7 +105,7 @@ public class ScheduleService implements ScheduleUseCase {
                 command.getMemberId()
         );
         List<ScheduleCalendarResponse> recurringScheduleResponseList = recurringScheduleList.stream()
-                .flatMap(schedule -> schedule.getRecurringDate(schedule, command).stream()
+                .flatMap(schedule -> schedule.getRecurringDate(schedule, command.getStartDate(), command.getEndDate()).stream()
                 .map(date -> ScheduleCalendarResponse.from(date, schedule.getColorType())))
                 .toList();
 

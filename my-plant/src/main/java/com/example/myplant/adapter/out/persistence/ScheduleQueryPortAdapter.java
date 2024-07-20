@@ -9,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -54,10 +54,20 @@ public class ScheduleQueryPortAdapter implements ScheduleQueryPort {
     }
 
     @Override
-    public List<Schedule> getUpcomingScheduleList(LocalDateTime upcomingDate, Long memberId, boolean isCompleted) {
-        return scheduleRepository.getUpcomingScheduleList(upcomingDate, memberId, isCompleted).stream()
+    public List<Schedule> getUpcomingRecurringScheduleList(LocalDate startDate, LocalDate endDate, Long memberId) {
+        // @TODO isCompleted
+        return scheduleRepository.getUpcomingRecurringScheduleList(startDate, endDate, memberId).stream()
                 .map(ScheduleEntity::toDomain)
                 .toList();
+    }
+
+    @Override
+    public List<Schedule> getUpcomingScheduleList(LocalDate startDate, LocalDate endDate, Long memberId) {
+        // @TODO isCompleted
+        List<ScheduleEntity> scheduleEntityList = scheduleRepository.getUpcomingScheduleList(startDate, endDate, memberId);
+        return scheduleEntityList.stream()
+                .map(ScheduleEntity::toDomain)
+                .collect(Collectors.toList());
     }
 
     @Override

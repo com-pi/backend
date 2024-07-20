@@ -1,6 +1,6 @@
 package com.example.myplant.domain;
 
-import com.example.myplant.adapter.in.web.command.GetDiaryScheduleCommand;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,7 +13,8 @@ import java.util.stream.Stream;
 
 @Getter
 @Builder
-public class Schedule {
+@AllArgsConstructor
+public class Schedule implements Comparable<Schedule>{
 
     private Long scheduleId;
 
@@ -45,11 +46,12 @@ public class Schedule {
         };
     }
 
-    public String getEndDateTimeMessage(LocalDateTime now) {
-        Duration duration = Duration.between(now, endDateTime);
+    public String getDdayMessage(LocalDateTime now) {
+        LocalDateTime dateTime = isRecurring ? startDateTime : endDateTime;
+        Duration duration = Duration.between(now, dateTime);
         long days = duration.toDays();
 
-        if(endDateTime.isBefore(now)) {
+        if(dateTime.isBefore(now)) {
             return "D+" + days * -1;
         }
 
@@ -68,6 +70,7 @@ public class Schedule {
     public List<Schedule> findMatchingSchedules(List<Schedule> recurringScheduleList, LocalDate today) {
         return recurringScheduleList.stream()
                 .filter(schedule -> isScheduleMatchingToday(schedule, today))
+                .map(schedule -> updateStartDate(schedule, today))
                 .toList();
     }
 
@@ -92,13 +95,10 @@ public class Schedule {
         return false;
     }
 
-    public List<LocalDate> getRecurringDate(Schedule schedule, GetDiaryScheduleCommand command) {
+    public List<LocalDate> getRecurringDate(Schedule schedule, LocalDate startDate, LocalDate endDate) {
         LocalDateTime startDateTime = schedule.getStartDateTime();
         LocalDateTime endDateTime = schedule.getEndDateTime();
         int frequency = schedule.getFrequency();
-
-        LocalDate startDate = command.getStartDate();
-        LocalDate endDate = command.getEndDate();
 
         LocalDate currentDate = startDateTime.toLocalDate();
         List<LocalDate> recurringDateList = new ArrayList<>();
@@ -115,5 +115,47 @@ public class Schedule {
         }
         return recurringDateList;
     }
+
+    public List<Schedule> getRecurringSchedule(Schedule schedule, LocalDate startDate, LocalDate endDate) {
+        LocalDateTime startDateTime = schedule.getStartDateTime();
+        LocalDateTime endDateTime = schedule.getEndDateTime();
+        int frequency = schedule.getFrequency();
+
+        LocalDate currentDate = startDateTime.toLocalDate();
+        List<Schedule> recurringScheduleList = new ArrayList<>();
+
+        while (!currentDate.isAfter(endDateTime.toLocalDate())) {
+            if(!currentDate.isBefore(startDate) && !currentDate.isAfter(endDate)) {
+                recurringScheduleList.add(updateStartDate(schedule, currentDate));
+            }
+
+            currentDate = currentDate.plusDays(frequency);
+            if(currentDate.isAfter(endDateTime.toLocalDate())) {
+                break;
+            }
+        }
+        return recurringScheduleList;
+    }
+
+    @Override
+    public int compareTo(Schedule o) {
+        return this.startDateTime.compareTo(o.startDateTime);
+    }
+
+    private Schedule updateStartDate(Schedule schedule, LocalDate currentDate) {
+        return Schedule.builder()
+                .scheduleId(schedule.getScheduleId())
+                .memberId(schedule.getMemberId())
+                .title(schedule.getTitle())
+                .isCompleted(schedule.getIsCompleted())
+                .startDateTime(currentDate.atTime(schedule.startDateTime.toLocalTime()))
+                .endDateTime(schedule.getEndDateTime())
+                .isRecurring(schedule.getIsRecurring())
+                .frequency(schedule.getFrequency())
+                .colorType(schedule.getColorType())
+                .build();
+    }
+
+
 
 }
