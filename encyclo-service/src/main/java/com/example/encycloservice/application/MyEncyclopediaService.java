@@ -88,4 +88,27 @@ public class MyEncyclopediaService implements MyEncyclopediaUseCase {
         myEncyclopediaCommand.removeEncyclopedia(myEncyclopediaId);
     }
 
+    @Override
+    @Transactional
+    public void movePlantBetweenEncyclopedia(List<Long> plantSpeciesIds, Long fromEncyclopediaId, Long toEncyclopediaId) {
+        MyEncyclopedia fromEncyclopedia = myEncyclopediaQuery.findEncyclopediaWithContentById(fromEncyclopediaId)
+                .orElseThrow(() -> new NotFoundException("내 도감을 찾을 수 없습니다."));
+        MyEncyclopedia toEncyclopedia = myEncyclopediaQuery.findEncyclopedia(toEncyclopediaId)
+                .orElseThrow(() -> new NotFoundException("내 도감을 찾을 수 없습니다."));
+
+        fromEncyclopedia.verifyOwner(PassportHolder.getPassport());
+        toEncyclopedia.verifyOwner(PassportHolder.getPassport());
+
+        fromEncyclopedia.getPlantCollection().stream()
+                .filter(plantBrief -> plantSpeciesIds.contains(plantBrief.getPlantSpeciesId()))
+                .forEach(plant -> {
+                            myEncyclopediaCommand.removePlantFromEncyclopedia(plant.getPlantSpeciesId(), fromEncyclopedia);
+                            try {
+                                myEncyclopediaCommand.addPlantsToEncyclopedia(plant.getPlantSpeciesId(), toEncyclopedia);
+                            } catch (ConstraintViolationException ignored) {
+                                // 이미 도감에 있는 경우 무시합니다.
+                            }
+                        }
+                );
+    }
 }

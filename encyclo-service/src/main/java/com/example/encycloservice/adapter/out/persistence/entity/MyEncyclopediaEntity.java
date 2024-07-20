@@ -8,6 +8,7 @@ import lombok.*;
 import java.util.List;
 
 @Entity
+@Getter
 @Table(name = "my_encyclopedia")
 @NoArgsConstructor
 @AllArgsConstructor

@@ -10,4 +10,6 @@ public interface MyEncyclopediaQuery {
     List<MyEncyclopedia> getMyEncyclopediaList(Long memberId);
     Optional<MyEncyclopedia> findById(Long id);
     Optional<MyEncyclopedia> findEncyclopediaWithContentById(Long myEncyclopediaId);
+    Optional<MyEncyclopedia> findEncyclopedia(Long fromEncyclopediaId);
+
 }

@@ -24,13 +24,18 @@ public class MyEncyclopediaQueryImpl implements MyEncyclopediaQuery {
 
     @Override
     public Optional<MyEncyclopedia> findById(Long id) {
-        return myEncyclopediaRepository.findById(id)
-                .map(MyEncyclopediaEntity::toDomain);
+        return myEncyclopediaRepository.findById(id).map(MyEncyclopediaEntity::toDomain);
     }
 
     @Override
     public Optional<MyEncyclopedia> findEncyclopediaWithContentById(Long myEncyclopediaId) {
-        return myEncyclopediaRepository.findWithContentById(myEncyclopediaId)
+        return myEncyclopediaRepository.findEncyclopediaById(myEncyclopediaId)
+                .map(MyEncyclopediaEntity::toDomain);
+    }
+
+    @Override
+    public Optional<MyEncyclopedia> findEncyclopedia(Long fromEncyclopediaId) {
+        return myEncyclopediaRepository.findEncyclopediaById(fromEncyclopediaId)
                 .map(MyEncyclopediaEntity::toDomain);
     }
 }

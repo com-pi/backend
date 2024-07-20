@@ -13,14 +13,14 @@ public interface MyEncyclopediaRepository extends JpaRepository<MyEncyclopediaEn
     @Query("SELECT DISTINCT e FROM MyEncyclopediaEntity e LEFT JOIN FETCH e.plantCollection WHERE e.memberId = :memberId")
     List<MyEncyclopediaEntity> findListByMemberId(Long memberId);
 
-    @Query("DELETE FROM EncyclopediaPlantEntity e WHERE e.plantEntity.id = :plantId AND e.myEncyclopediaEntity.id = :encyclopediaId")
     @Modifying
+    @Query("DELETE FROM EncyclopediaPlantEntity e WHERE e.plantEntity.id = :plantId AND e.myEncyclopediaEntity.id = :encyclopediaId")
     void deleteByPlantSpeciesIdAndMyEncyclopediaId(Long plantId, Long encyclopediaId);
 
     @Query("SELECT e FROM MyEncyclopediaEntity e " +
             "LEFT JOIN FETCH e.plantCollection p LEFT JOIN FETCH p.plantEntity " +
             "WHERE e.id = :myEncyclopediaId")
-    Optional<MyEncyclopediaEntity> findWithContentById(Long myEncyclopediaId);
+    Optional<MyEncyclopediaEntity> findEncyclopediaById(Long myEncyclopediaId);
 
     @Query("DELETE FROM EncyclopediaPlantEntity e WHERE e.myEncyclopediaEntity.id = :myEncyclopediaId")
     @Modifying

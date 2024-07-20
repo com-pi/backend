@@ -20,7 +20,7 @@ public class MyEncyclopedia {
     private Long memberId;
     private String title;
     private String coverImageUrl;
-    private List<PlantBrief> plantCollection;
+    private List<PlantBrief> plantCollection = new ArrayList<>();
 
     public static MyEncyclopedia create(MyEncyclopediaCreate myEncyclopediaCreate) {
         return MyEncyclopedia.builder()

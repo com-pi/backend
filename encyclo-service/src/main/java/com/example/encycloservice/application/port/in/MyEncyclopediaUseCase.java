@@ -14,5 +14,6 @@ public interface MyEncyclopediaUseCase {
     void addPlantsToEncyclopedia(List<Long> plantSpeciesId, Long myEncyclopediaId);
     void removePlantsFromEncyclopedia(List<Long> plantSpeciesId, Long myEncyclopediaId);
     void removeMyEncyclopedia(Long myEncyclopediaId);
+    void movePlantBetweenEncyclopedia(List<Long> plantSpeciesIds, Long fromEncyclopediaId, Long toEncyclopediaId);
 
 }

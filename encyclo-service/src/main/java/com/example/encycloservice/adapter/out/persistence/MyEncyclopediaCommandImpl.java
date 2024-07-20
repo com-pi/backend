@@ -36,8 +36,24 @@ public class MyEncyclopediaCommandImpl implements MyEncyclopediaCommand {
     }
 
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void addPlantsToEncyclopedia(Long plantSpeciesId, MyEncyclopedia myEncyclopedia) {
+        EncyclopediaPlantEntity encyclopediaPlant = EncyclopediaPlantEntity.builder()
+                .plantEntity(entityManager.getReference(PlantSpeciesEntity.class, plantSpeciesId))
+                .myEncyclopediaEntity(entityManager.getReference(MyEncyclopediaEntity.class, myEncyclopedia.getId()))
+                .build();
+        entityManager.persist(encyclopediaPlant);
+    }
+
+
+    @Override
     public void removePlantFromEncyclopedia(PlantSpecies plantSpecies, MyEncyclopedia myEncyclopedia) {
         myEncyclopediaRepository.deleteByPlantSpeciesIdAndMyEncyclopediaId(plantSpecies.getId(), myEncyclopedia.getId());
+    }
+
+    @Override
+    public void removePlantFromEncyclopedia(Long plantSpeciesId, MyEncyclopedia myEncyclopedia) {
+        myEncyclopediaRepository.deleteByPlantSpeciesIdAndMyEncyclopediaId(plantSpeciesId, myEncyclopedia.getId());
     }
 
     @Override

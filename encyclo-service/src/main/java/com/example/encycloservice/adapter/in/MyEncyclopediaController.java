@@ -95,7 +95,15 @@ public class MyEncyclopediaController {
         return CommonResponse.okWithMessage("내 도감 삭제 성공");
     }
 
-
-
+    @PatchMapping("/{fromEncyclopediaId}")
+    @Operation(summary = "도감 간 식물 이동", description = "식물을 이동합니다.")
+    @Authenticate(Role.MEMBER)
+    public ResponseEntity<CommonResponse<Void>> removePlantsFromMyEncyclopedia(
+            @PathVariable Long fromEncyclopediaId,
+            @RequestParam Long toEncyclopediaId,
+            @RequestParam List<Long> plantSpeciesIds) {
+        myEncyclopediaUseCase.movePlantBetweenEncyclopedia(plantSpeciesIds, fromEncyclopediaId, toEncyclopediaId);
+        return CommonResponse.okWithMessage("도감 간 식물 이동 성공");
+    }
 
 }
