@@ -1,10 +1,6 @@
 server:
   port: 8081
 
-spring:
-  application:
-    name: auth-service
-
 --- ## Eureka
 eureka:
   client:
@@ -58,7 +54,16 @@ secret:
   refreshToken: test2
   passwordChangeToken: test3
 
---- ## 기타
+---
+## 파일 사이즈
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 30MB
+
+
+## 문서화
 springdoc:
   swagger-ui:
     display-request-duration: true
@@ -80,3 +85,4 @@ management:
 logging:
   level:
     com.example.authserver: DEBUG
+

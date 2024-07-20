@@ -1,10 +1,6 @@
 server:
   port: 8080
 
-spring:
-  application:
-    name: auth-service
-
 --- ## Eureka
 eureka:
   client:
@@ -38,15 +34,7 @@ spring:
       hibernate:
         show_sql: true
 
-
---- # kafka 설정
-#spring:
-#  kafka:
-#    bootstrap-servers: kafka:9092
-#    consumer:
-#      auto-offset-reset: earliest
-
---- ## secret
+--- ## secret 관련
 oauth:
   naver:
     app-key: OhHssSBOwmc929lDfGOg
@@ -60,7 +48,15 @@ secret:
   refreshToken: test2
   passwordChangeToken: test3
 
---- ## 기타
+---
+## 파일 사이즈
+spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 30MB
+
+## 문서화 관련
 springdoc:
   swagger-ui:
     display-request-duration: true
@@ -78,3 +74,10 @@ management:
       enabled: true
     info:
       enabled: true
+
+--- # kafka 설정
+#spring:
+#  kafka:
+#    bootstrap-servers: kafka:9092
+#    consumer:
+#      auto-offset-reset: earliest
