@@ -13,12 +13,12 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> 
     List<ScheduleEntity> findByMemberIdAndIsCompletedOrderByEndDateTime(Long memberId, Boolean isCompleted);
 
     @Query("""
-        SELECT s 
-        FROM ScheduleEntity s 
-        WHERE DATE(s.startDateTime) = CURRENT_DATE
+        SELECT s
+        FROM ScheduleEntity s
+        WHERE FUNCTION('DATE', s.startDateTime) = CURRENT_DATE
             AND s.memberId = :memberId
             AND s.isCompleted = :isCompleted
-            AND s.frequency IS NULL
+            AND s.isRecurring = false
     """)
     List<ScheduleEntity> getTodayScheduleList(
             @Param("memberId") Long memberId,
@@ -26,22 +26,22 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> 
     );
 
     @Query("""
-        SELECT s 
-        FROM ScheduleEntity s 
-        WHERE CURRENT_DATE >= DATE(s.startDateTime)
-            AND CURRENT_DATE <= DATE(s.endDateTime)
+        SELECT s
+        FROM ScheduleEntity s
+        WHERE CURRENT_DATE >= FUNCTION('DATE', s.startDateTime)
+            AND CURRENT_DATE <= FUNCTION('DATE', s.endDateTime)
             AND s.memberId = :memberId
             AND s.isCompleted = :isCompleted
-            AND s.frequency IS NOT NULL
+            AND s.isRecurring = false
     """)
     List<ScheduleEntity> getRecurringScheduleList(Long memberId, boolean isCompleted);
 
 
     @Query("""
         SELECT s
-        FROM ScheduleEntity s 
-        WHERE DATE(s.endDateTime) > CURRENT_DATE
-            AND DATE(s.endDateTime) <= DATE(:endDate)
+        FROM ScheduleEntity s
+        WHERE FUNCTION('DATE', s.endDateTime) > CURRENT_DATE
+            AND FUNCTION('DATE', s.endDateTime) <= FUNCTION('DATE', :endDate)
             AND s.memberId = :memberId
             AND s.isCompleted = :isCompleted
    """)
@@ -52,14 +52,37 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> 
     );
 
     @Query("""
-    SELECT s FROM ScheduleEntity s
-    WHERE DATE(s.startDateTime) >= :startDate
-      AND DATE(s.endDateTime) <= :endDate
-      AND s.memberId = :memberId
+        SELECT s FROM ScheduleEntity s
+        WHERE s.memberId = :memberId
+        AND s.isRecurring = true
+        AND s.deletionYn = 'N'
+        AND
+        (
+          (:startDate >= FUNCTION('DATE', s.startDateTime) AND :startDate <= FUNCTION('DATE', s.endDateTime)) OR
+          (:endDate >= FUNCTION('DATE', s.startDateTime) AND :endDate <= FUNCTION('DATE', s.endDateTime)) OR
+          (FUNCTION('DATE', s.startDateTime) >= :startDate AND FUNCTION('DATE', s.startDateTime) <= :endDate) OR
+          (FUNCTION('DATE', s.endDateTime) >= :startDate AND FUNCTION('DATE', s.endDateTime) <= :endDate)
+        )
     """)
-    List<ScheduleEntity> getScheduleCalendarList(
+    List<ScheduleEntity> getRecurringScheduleCalendarList(
             @Param("startDate") LocalDate startDate,
             @Param("endDate") LocalDate endDate,
             @Param("memberId") Long memberId
     );
+
+    @Query("""
+        SELECT s FROM ScheduleEntity s
+        WHERE s.memberId = :memberId
+        AND s.isRecurring = false
+        AND s.deletionYn = 'N'
+        AND FUNCTION('DATE', s.startDateTime) >= :startDate
+        AND FUNCTION('DATE', s.startDateTime) <= :endDate
+    """)
+    List<ScheduleEntity> getScheduleCalendarList(
+            @Param("startDate") LocalDate localDate,
+            @Param("endDate") LocalDate endDate,
+            @Param("memberId") Long memberId
+    );
+
+
 }

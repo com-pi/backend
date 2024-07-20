@@ -20,5 +20,7 @@ public interface ScheduleQueryPort {
 
     List<Schedule> getRecurringScheduleList(Long memberId, boolean isCompleted);
 
+    List<Schedule> getRecurringScheduleCalendarList(GetDiaryScheduleCommand command);
+
     List<Schedule> getScheduleCalendarList(GetDiaryScheduleCommand command);
 }

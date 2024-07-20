@@ -3,6 +3,7 @@ package com.example.myplant.adapter.in.web.controller;
 import com.example.common.baseentity.CommonResponse;
 import com.example.myplant.adapter.in.web.request.CreateScheduleRequest;
 import com.example.myplant.adapter.in.web.request.UpdateScheduleRequest;
+import com.example.myplant.adapter.in.web.response.ScheduleCalendarResponseList;
 import com.example.myplant.adapter.in.web.response.ScheduleMainResponseList;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -54,7 +55,7 @@ public interface ScheduleSwaggerUI {
             @Parameter(name = "startDate", description = "조회 시작일", example = "2024-07-01"),
             @Parameter(name = "endDate", description = "조회 종료일", example = "2024-07-31"),
     })
-    ResponseEntity<ScheduleMainResponseList> getScheduleCalendarList(LocalDate startDate, LocalDate endDate);
+    ResponseEntity<ScheduleCalendarResponseList> getScheduleCalendarList(LocalDate startDate, LocalDate endDate);
 
     @Operation(summary = "(달력)일정 상세 페이지 일자별 상세 조회", description = "일정을 일자별로 단건 조회합니다.")
     ResponseEntity<ScheduleMainResponseList> getScheduleByDate();

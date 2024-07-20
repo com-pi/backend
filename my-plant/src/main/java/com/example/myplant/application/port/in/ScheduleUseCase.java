@@ -1,8 +1,11 @@
 package com.example.myplant.application.port.in;
 
 import com.example.myplant.adapter.in.web.command.GetDiaryScheduleCommand;
+import com.example.myplant.adapter.in.web.response.ScheduleCalendarResponse;
 import com.example.myplant.adapter.in.web.response.ScheduleMainResponseList;
 import com.example.myplant.domain.Schedule;
+
+import java.util.List;
 
 public interface ScheduleUseCase {
 
@@ -18,5 +21,5 @@ public interface ScheduleUseCase {
 
     ScheduleMainResponseList getUpcomingScheduleList(Schedule schedule);
 
-    void getScheduleCalendarList(GetDiaryScheduleCommand command);
+    List<ScheduleCalendarResponse> getScheduleCalendarList(GetDiaryScheduleCommand command);
 }

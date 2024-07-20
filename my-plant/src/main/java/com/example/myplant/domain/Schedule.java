@@ -1,11 +1,13 @@
 package com.example.myplant.domain;
 
+import com.example.myplant.adapter.in.web.command.GetDiaryScheduleCommand;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -77,7 +79,7 @@ public class Schedule {
                 .toList();
     }
 
-    private boolean isScheduleMatchingToday(Schedule schedule, LocalDate today) {
+    public boolean isScheduleMatchingToday(Schedule schedule, LocalDate today) {
         LocalDateTime startDateTime = schedule.getStartDateTime();
         LocalDateTime endDateTime = schedule.getEndDateTime();
         int frequency = schedule.getFrequency();
@@ -90,5 +92,29 @@ public class Schedule {
             currentDate = currentDate.plusDays(frequency);
         }
         return false;
+    }
+
+    public List<LocalDate> getRecurringDate(Schedule schedule, GetDiaryScheduleCommand command) {
+        LocalDateTime startDateTime = schedule.getStartDateTime();
+        LocalDateTime endDateTime = schedule.getEndDateTime();
+        int frequency = schedule.getFrequency();
+
+        LocalDate startDate = command.getStartDate();
+        LocalDate endDate = command.getEndDate();
+
+        LocalDate currentDate = startDateTime.toLocalDate();
+        List<LocalDate> recurringDateList = new ArrayList<>();
+
+        while (!currentDate.isAfter(endDateTime.toLocalDate())) {
+            if(!currentDate.isBefore(startDate) && !currentDate.isAfter(endDate)) {
+                recurringDateList.add(currentDate);
+            }
+
+            currentDate = currentDate.plusDays(frequency);
+            if(currentDate.isAfter(endDateTime.toLocalDate())) {
+                break;
+            }
+        }
+        return recurringDateList;
     }
 }

@@ -2,6 +2,7 @@ package com.example.myplant.application.service;
 
 import com.example.common.exception.UnauthorizedException;
 import com.example.myplant.adapter.in.web.command.GetDiaryScheduleCommand;
+import com.example.myplant.adapter.in.web.response.ScheduleCalendarResponse;
 import com.example.myplant.adapter.in.web.response.ScheduleMainResponseList;
 import com.example.myplant.application.port.in.ScheduleUseCase;
 import com.example.myplant.application.port.out.ScheduleCommandPort;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -80,9 +82,24 @@ public class ScheduleService implements ScheduleUseCase {
     }
 
     @Override
-    public void getScheduleCalendarList(GetDiaryScheduleCommand command) {
+    public List<ScheduleCalendarResponse> getScheduleCalendarList(GetDiaryScheduleCommand command) {
+        // 단건 일정
         List<Schedule> scheduleList = scheduleQueryPort.getScheduleCalendarList(command);
-        System.out.println(scheduleList);
+        List<ScheduleCalendarResponse> scheduleResponseList = scheduleList.stream()
+                .map(schedule -> ScheduleCalendarResponse.from(schedule.getStartDateTime().toLocalDate(), schedule.getColorType()))
+                .toList();
+
+        // 반복 일정
+        List<Schedule> recurringScheduleList = scheduleQueryPort.getRecurringScheduleCalendarList(command);
+        List<ScheduleCalendarResponse> recurringScheduleResponseList = recurringScheduleList.stream()
+                .flatMap(schedule -> schedule.getRecurringDate(schedule, command).stream()
+                .map(date -> ScheduleCalendarResponse.from(date, schedule.getColorType())))
+                .toList();
+
+        return Stream
+                .concat(scheduleResponseList.stream(), recurringScheduleResponseList.stream())
+                .toList();
     }
+
 
 }

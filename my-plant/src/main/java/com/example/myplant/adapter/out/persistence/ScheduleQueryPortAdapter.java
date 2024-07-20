@@ -45,8 +45,8 @@ public class ScheduleQueryPortAdapter implements ScheduleQueryPort {
     }
 
     @Override
-    public List<Schedule> getScheduleCalendarList(GetDiaryScheduleCommand command) {
-        List<ScheduleEntity> scheduleEntityList = scheduleRepository.getScheduleCalendarList(
+    public List<Schedule> getRecurringScheduleCalendarList(GetDiaryScheduleCommand command) {
+        List<ScheduleEntity> scheduleEntityList = scheduleRepository.getRecurringScheduleCalendarList(
                 command.getStartDate(),
                 command.getEndDate(),
                 command.getMemberId()
@@ -59,6 +59,18 @@ public class ScheduleQueryPortAdapter implements ScheduleQueryPort {
     @Override
     public List<Schedule> getUpcomingScheduleList(LocalDateTime upcomingDate, Long memberId, boolean isCompleted) {
         return scheduleRepository.getUpcomingScheduleList(upcomingDate, memberId, isCompleted).stream()
+                .map(ScheduleEntity::toDomain)
+                .toList();
+    }
+
+    @Override
+    public List<Schedule> getScheduleCalendarList(GetDiaryScheduleCommand command) {
+        List<ScheduleEntity> scheduleEntityList = scheduleRepository.getScheduleCalendarList(
+                command.getStartDate(),
+                command.getEndDate(),
+                command.getMemberId()
+        );
+        return scheduleEntityList.stream()
                 .map(ScheduleEntity::toDomain)
                 .toList();
     }

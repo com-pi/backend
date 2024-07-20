@@ -8,6 +8,8 @@ import com.example.myplant.adapter.in.web.command.GetScheduleCommand;
 import com.example.myplant.adapter.in.web.command.UpdateScheduleStatusCommand;
 import com.example.myplant.adapter.in.web.request.CreateScheduleRequest;
 import com.example.myplant.adapter.in.web.request.UpdateScheduleRequest;
+import com.example.myplant.adapter.in.web.response.ScheduleCalendarResponse;
+import com.example.myplant.adapter.in.web.response.ScheduleCalendarResponseList;
 import com.example.myplant.adapter.in.web.response.ScheduleMainResponseList;
 import com.example.myplant.application.port.in.ScheduleUseCase;
 import com.example.myplant.security.PassportHolder;
@@ -16,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -77,15 +80,16 @@ public class ScheduleController implements ScheduleSwaggerUI {
     @Override
     @Authenticate(Role.MEMBER)
     @GetMapping("/calendar/list")
-    public ResponseEntity<ScheduleMainResponseList> getScheduleCalendarList(
+    public ResponseEntity<ScheduleCalendarResponseList> getScheduleCalendarList(
             @RequestParam("startDate") LocalDate startDate,
             @RequestParam("endDate") LocalDate endDate
     ) {
-        scheduleUseCase.getScheduleCalendarList(GetDiaryScheduleCommand.of(startDate, endDate, (PassportHolder.getPassport().memberId())));
-        return null;
+        List<ScheduleCalendarResponse> responseList = scheduleUseCase.getScheduleCalendarList(GetDiaryScheduleCommand.of(startDate, endDate, (PassportHolder.getPassport().memberId())));
+        return ResponseEntity.ok(ScheduleCalendarResponseList.of(responseList));
     }
 
     @Override
+    @Authenticate(Role.MEMBER)
     public ResponseEntity<ScheduleMainResponseList> getScheduleByDate() {
         return null;
     }
