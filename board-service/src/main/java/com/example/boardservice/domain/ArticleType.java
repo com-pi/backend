@@ -1,5 +1,6 @@
 package com.example.boardservice.domain;
 
+import com.example.common.exception.ConflictException;
 import com.example.imagemodule.domain.MinioBucket;
 import lombok.Getter;
 
@@ -24,7 +25,7 @@ public enum ArticleType {
             case "general_board", "general" -> GENERAL_BOARD;
             case "qna_board", "qna" -> QNA_BOARD;
             case "diary_board", "diary" -> DIARY_BOARD;
-            default -> throw new RuntimeException("존재하지 않는 게시글 타입입니다.");
+            default -> throw new ConflictException("존재하지 않는 게시글 타입입니다.");
         };
     }
 

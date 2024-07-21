@@ -58,7 +58,7 @@ public class CommonArticleController {
 
     @Operation(summary = "게시글 상세 조회", description = "게시글을 상세 조회합니다.")
     @Authenticate(Role.MEMBER)
-    @GetMapping("/detail")
+    @GetMapping("/detail/{articleId}")
     public ResponseEntity<CommonArticleResponse> getArticle(@PathVariable Long articleId) {
         CommonArticleResponse response = CommonArticleResponse.from(useCase.getArticle(articleId));
         return ResponseEntity.ok(response);

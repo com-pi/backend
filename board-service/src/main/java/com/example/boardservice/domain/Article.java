@@ -1,6 +1,5 @@
 package com.example.boardservice.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -10,7 +9,6 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
 @SuperBuilder
 public class Article {
 
@@ -28,7 +26,7 @@ public class Article {
 
     private List<String> hashtagList;
 
-    private ArticleType articleType;
+    private ArticleType type;
 
     private LocalDateTime createdAt;
 

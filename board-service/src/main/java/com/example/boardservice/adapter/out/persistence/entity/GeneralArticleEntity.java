@@ -19,8 +19,8 @@ import java.util.List;
 public class GeneralArticleEntity extends CommonArticleEntity {
 
     @Builder
-    public GeneralArticleEntity(Long articleId, Long memberId, String title, String content, Integer viewCount, Integer likeCount, Integer commentCount, List<String> imageUrls, ArticleType articleType) {
-        super(articleId, memberId, title, content, viewCount, likeCount, commentCount, imageUrls, articleType);
+    public GeneralArticleEntity(Long articleId, Long memberId, String title, String content, Integer viewCount, Integer likeCount, Integer commentCount, List<String> imageUrls, ArticleType type) {
+        super(articleId, memberId, title, content, viewCount, likeCount, commentCount, imageUrls, type);
     }
 
     public GeneralArticle toDomain() {
@@ -47,6 +47,7 @@ public class GeneralArticleEntity extends CommonArticleEntity {
                 .imageUrls(generalArticle.getImageUrls())
                 .likeCount(generalArticle.getLikeCount())
                 .commentCount(generalArticle.getCommentCount())
+                .type(generalArticle.getType())
                 .build();
     }
 

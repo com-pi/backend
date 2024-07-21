@@ -55,7 +55,7 @@ public class CommonArticleEntity extends DeletedAtAbstractEntity {
                 .content(this.content)
                 .viewCount(this.viewCount)
                 .imageUrls(this.imageUrls)
-                .articleType(this.type)
+                .type(this.type)
                 .createdAt(this.getCreatedAt())
                 .likeCount(this.likeCount)
                 .commentCount(this.commentCount)

@@ -49,7 +49,7 @@ public class ScheduleController implements ScheduleSwaggerUI {
     public ResponseEntity<CommonResponse<Long>> updateScheduleStatus(@PathVariable Long scheduleId) {
         UpdateScheduleStatusCommand command = UpdateScheduleStatusCommand.of(scheduleId, PassportHolder.getPassport().memberId());
         Long id = scheduleUseCase.updateScheduleStatus(command.toDomain());
-        return ResponseEntity.ok(new CommonResponse<>("일정의 상태가 수정되었습니다.", id));
+        return ResponseEntity.ok(new CommonResponse<>("일정의 완료 상태가 수정되었습니다.", id));
     }
 
     @Override

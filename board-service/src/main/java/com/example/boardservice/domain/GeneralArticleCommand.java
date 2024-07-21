@@ -24,6 +24,7 @@ public class GeneralArticleCommand {
                 .content(content)
                 .imageUrls(imageUrls)
                 .viewCount(0)
+                .type(ArticleType.GENERAL_BOARD)
                 .build();
     }
 
