@@ -19,8 +19,8 @@ import java.util.List;
 public class DiaryArticleEntity extends CommonArticleEntity {
 
     @Builder
-    public DiaryArticleEntity(Long articleId, Long memberId, String title, String content, Integer viewCount, Integer likeCount, Integer commentCount, List<String> imageUrls, ArticleType articleType) {
-        super(articleId, memberId, title, content, viewCount, likeCount, commentCount, imageUrls, articleType);
+    public DiaryArticleEntity(Long articleId, Long memberId, String title, String content, Integer viewCount, Integer likeCount, Integer commentCount, List<String> imageUrls, ArticleType type) {
+        super(articleId, memberId, title, content, viewCount, likeCount, commentCount, imageUrls, type);
     }
 
     public DiaryArticle toDomain() {
@@ -34,6 +34,7 @@ public class DiaryArticleEntity extends CommonArticleEntity {
                 .createdAt(this.getCreatedAt())
                 .likeCount(this.likeCount)
                 .commentCount(this.commentCount)
+                .type(this.type)
                 .build();
     }
 
@@ -47,6 +48,7 @@ public class DiaryArticleEntity extends CommonArticleEntity {
                 .imageUrls(article.getImageUrls())
                 .likeCount(article.getLikeCount())
                 .commentCount(article.getCommentCount())
+                .type(article.getType())
                 .build();
     }
 

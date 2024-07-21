@@ -1,5 +1,6 @@
 package com.example.boardservice.adapter.in.web.request;
 
+import com.example.boardservice.domain.ArticleType;
 import com.example.boardservice.domain.DiaryArticle;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +23,7 @@ public class PostDiaryRequest {
                 .content(content)
                 .imageUrls(imageUrlList)
                 .viewCount(0)
+                .type(ArticleType.DIARY_BOARD)
                 .build();
     }
 

@@ -24,6 +24,7 @@ public class QnaArticleCommand {
                 .content(content)
                 .imageUrls(imageUrls)
                 .viewCount(0)
+                .type(ArticleType.QNA_BOARD)
                 .build();
     }
 
