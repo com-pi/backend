@@ -6,8 +6,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -25,8 +23,6 @@ public class ScheduleEntity extends DeletedAtAbstractEntity {
 
     private String title;
 
-    private Boolean isCompleted;
-
     private LocalDateTime startDateTime;
 
     private LocalDateTime endDateTime;
@@ -37,17 +33,12 @@ public class ScheduleEntity extends DeletedAtAbstractEntity {
 
     private String colorType;
 
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "schedule_id")
-    private List<CompletedScheduleEntity> completedScheduleList = new ArrayList<>();
-
 
     public static ScheduleEntity from(Schedule schedule) {
         return ScheduleEntity.builder()
             .scheduleId(schedule.getScheduleId())
             .memberId(schedule.getMemberId())
             .title(schedule.getTitle())
-            .isCompleted(schedule.getIsCompleted())
             .startDateTime(schedule.getStartDateTime())
             .endDateTime(schedule.getEndDateTime())
             .isRecurring(schedule.getIsRecurring())
@@ -61,7 +52,6 @@ public class ScheduleEntity extends DeletedAtAbstractEntity {
             .scheduleId(this.scheduleId)
             .memberId(this.memberId)
             .title(this.title)
-            .isCompleted(this.isCompleted)
             .startDateTime(this.startDateTime)
             .endDateTime(this.endDateTime)
             .isRecurring(this.isRecurring)
@@ -77,10 +67,6 @@ public class ScheduleEntity extends DeletedAtAbstractEntity {
         this.frequency = schedule.getFrequency();
         this.colorType = schedule.getColorType();
         this.isRecurring = schedule.getIsRecurring();
-    }
-
-    public void complete(Boolean isCompleted) {
-        this.isCompleted = isCompleted;
     }
 
 }

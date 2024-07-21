@@ -1,5 +1,7 @@
 package com.example.myplant.domain;
 
+import com.example.common.exception.ConflictException;
+import com.example.common.exception.UnauthorizedException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,6 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 @Getter
@@ -22,8 +25,6 @@ public class Schedule implements Comparable<Schedule>{
 
     private String title;
 
-    private Boolean isCompleted;
-
     private LocalDateTime startDateTime;
 
     private LocalDateTime endDateTime;
@@ -32,18 +33,36 @@ public class Schedule implements Comparable<Schedule>{
 
     private Integer frequency; // 반복 주기(일 기준)
 
+    private Boolean isCompleted;
+
     private String colorType;
 
-    public boolean isWriter(Long originMemberId) {
+    private boolean isWriter(Long originMemberId) {
         return originMemberId.equals(memberId);
     }
 
 
     // @TODO 현재 시간을 기준으로 일정이 과거인지 validation 체크 필요, 현재 테스트를 위해 열어둠
-    public void checkEndDateTime() {
+    public void validateEndDateTime() {
         if(endDateTime.isBefore(LocalDateTime.now())) {
             // throw new IllegalArgumentException("올바른 일정을 설정해주세요.");
         };
+    }
+
+    public void validateWriter(Schedule originSchedule, Schedule schedule) {
+        if(!schedule.isWriter(originSchedule.getMemberId())) {
+            throw new UnauthorizedException("일정을 수정할 권한이 없습니다.");
+        }
+    }
+
+    public void validateScheduleCompletionDate(Schedule schedule, LocalDate date) {
+        boolean isValidCompletionDate = schedule.getIsRecurring()
+                ? schedule.isScheduleMatchingToday(schedule, date)
+                : Objects.equals(schedule.getStartDateTime().toLocalDate(), date);
+
+        if (!isValidCompletionDate) {
+            throw new ConflictException("일정을 완료할 수 있는 일자가 아닙니다.");
+        }
     }
 
     public String getDdayMessage(LocalDateTime now) {
@@ -142,12 +161,15 @@ public class Schedule implements Comparable<Schedule>{
         return this.startDateTime.compareTo(o.startDateTime);
     }
 
+    public void setStatus(boolean isCompleted) {
+        this.isCompleted = isCompleted;
+    }
+
     private Schedule updateStartDate(Schedule schedule, LocalDate currentDate) {
         return Schedule.builder()
                 .scheduleId(schedule.getScheduleId())
                 .memberId(schedule.getMemberId())
                 .title(schedule.getTitle())
-                .isCompleted(schedule.getIsCompleted())
                 .startDateTime(currentDate.atTime(schedule.startDateTime.toLocalTime()))
                 .endDateTime(schedule.getEndDateTime())
                 .isRecurring(schedule.getIsRecurring())

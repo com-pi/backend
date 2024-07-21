@@ -2,8 +2,10 @@ package com.example.myplant.adapter.out.persistence;
 
 import com.example.common.exception.NotFoundException;
 import com.example.myplant.adapter.in.web.command.GetDiaryScheduleCommand;
+import com.example.myplant.adapter.out.persistence.entity.CompletedScheduleEntity;
 import com.example.myplant.adapter.out.persistence.entity.ScheduleEntity;
 import com.example.myplant.application.port.out.ScheduleQueryPort;
+import com.example.myplant.domain.CompletedSchedule;
 import com.example.myplant.domain.Schedule;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -17,6 +19,7 @@ import java.util.stream.Collectors;
 public class ScheduleQueryPortAdapter implements ScheduleQueryPort {
 
     private final ScheduleRepository scheduleRepository;
+    private final CompletedScheduleRepository completedScheduleRepository;
 
     @Override
     public Schedule findByScheduleId(Long scheduleId) {
@@ -24,23 +27,17 @@ public class ScheduleQueryPortAdapter implements ScheduleQueryPort {
             .orElseThrow(() -> new NotFoundException(ScheduleEntity.class))
             .toDomain();
     }
-    @Override
-    public List<Schedule> getMainPageScheduleList(Long memberId, Boolean isCompleted) {
-        return scheduleRepository.findByMemberIdAndIsCompletedOrderByEndDateTime(memberId, isCompleted).stream()
-                .map(ScheduleEntity::toDomain).
-                toList();
-    }
 
     @Override
-    public List<Schedule> getTodayScheduleList(Long memberId, boolean isCompleted) {
-        return scheduleRepository.getTodayScheduleList(memberId, isCompleted).stream()
+    public List<Schedule> getTodayScheduleList(Long memberId) {
+        return scheduleRepository.getTodayScheduleList(memberId).stream()
                 .map(ScheduleEntity::toDomain)
                 .toList();
     }
 
     @Override
-    public List<Schedule> getRecurringScheduleList(Long memberId, boolean isCompleted) {
-        return scheduleRepository.getRecurringScheduleList(memberId, isCompleted).stream()
+    public List<Schedule> getRecurringScheduleList(Long memberId) {
+        return scheduleRepository.getRecurringScheduleList(memberId).stream()
                 .map(ScheduleEntity::toDomain)
                 .toList();
     }
@@ -91,9 +88,11 @@ public class ScheduleQueryPortAdapter implements ScheduleQueryPort {
     }
 
     @Override
-    public List<Schedule> getScheduleList(Long memberId) {
-        return scheduleRepository.findByMemberIdAndIsCompletedOrderByEndDateTime(memberId, false).stream()
-                .map(ScheduleEntity::toDomain)
+    public List<CompletedSchedule> isCompleted(List<Long> scheduleIdList, LocalDate date) {
+        List<CompletedScheduleEntity> completedScheduleEntityList =
+                completedScheduleRepository.findBySchedule_ScheduleIdInAndCompletedDate(scheduleIdList, date);
+        return completedScheduleEntityList.stream()
+                .map(CompletedScheduleEntity::toDomain)
                 .toList();
     }
 

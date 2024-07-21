@@ -8,5 +8,5 @@ public interface ScheduleCommandPort {
 
     Long updateSchedule(Schedule schedule);
 
-    Long updateScheduleStatus(Schedule schedule, Boolean originIsCompleted);
+    Long updateScheduleStatus(Schedule schedule);
 }

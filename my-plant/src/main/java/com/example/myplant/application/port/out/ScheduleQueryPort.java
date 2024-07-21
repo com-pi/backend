@@ -1,6 +1,7 @@
 package com.example.myplant.application.port.out;
 
 import com.example.myplant.adapter.in.web.command.GetDiaryScheduleCommand;
+import com.example.myplant.domain.CompletedSchedule;
 import com.example.myplant.domain.Schedule;
 
 import java.time.LocalDate;
@@ -10,17 +11,13 @@ public interface ScheduleQueryPort {
 
     Schedule findByScheduleId(Long scheduleId);
 
-    List<Schedule> getMainPageScheduleList(Long memberId, Boolean isCompleted);
-
-    List<Schedule> getTodayScheduleList(Long memberId, boolean isCompleted);
+    List<Schedule> getTodayScheduleList(Long memberId);
 
     List<Schedule> getUpcomingScheduleList(LocalDate startDate, LocalDate endDate, Long memberId);
 
     List<Schedule> getUpcomingRecurringScheduleList(LocalDate startDate, LocalDate endDate, Long memberId);
 
-    List<Schedule> getScheduleList(Long memberId);
-
-    List<Schedule> getRecurringScheduleList(Long memberId, boolean isCompleted);
+    List<Schedule> getRecurringScheduleList(Long memberId);
 
     List<Schedule> getRecurringScheduleCalendarList(LocalDate startDate, LocalDate endDate, Long memberId);
 
@@ -28,4 +25,5 @@ public interface ScheduleQueryPort {
 
     List<Schedule> getSingleScheduleCalender(LocalDate date, Long memberId);
 
+    List<CompletedSchedule> isCompleted(List<Long> schedule, LocalDate date);
 }

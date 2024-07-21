@@ -44,6 +44,7 @@ public class ScheduleController implements ScheduleSwaggerUI {
     }
 
     @Override
+    @Authenticate(Role.MEMBER)
     @PatchMapping("/status/{scheduleId}")
     public ResponseEntity<CommonResponse<Long>> updateScheduleStatus(@PathVariable Long scheduleId) {
         UpdateScheduleStatusCommand command = UpdateScheduleStatusCommand.of(scheduleId, PassportHolder.getPassport().memberId());

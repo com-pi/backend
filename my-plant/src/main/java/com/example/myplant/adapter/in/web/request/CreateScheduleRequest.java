@@ -20,7 +20,6 @@ public record CreateScheduleRequest(
             .endDateTime(endDateTime)
             .frequency(frequency)
             .colorType(colorType)
-            .isCompleted(false)
             .isRecurring(Objects.nonNull(frequency))
             .build();
     }

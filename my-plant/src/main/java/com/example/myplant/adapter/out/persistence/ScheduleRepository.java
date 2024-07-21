@@ -9,31 +9,34 @@ import java.time.LocalDate;
 import java.util.List;
 public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> {
 
-    List<ScheduleEntity> findByMemberIdAndIsCompletedOrderByEndDateTime(Long memberId, Boolean isCompleted);
-
     @Query("""
         SELECT s
         FROM ScheduleEntity s
+        LEFT JOIN CompletedScheduleEntity c ON s.scheduleId = c.schedule.scheduleId
+            AND c.completedDate = CURRENT_DATE
         WHERE FUNCTION('DATE', s.startDateTime) = CURRENT_DATE
             AND s.memberId = :memberId
-            AND s.isCompleted = :isCompleted
             AND s.isRecurring = false
+            AND c.schedule IS NULL
     """)
     List<ScheduleEntity> getTodayScheduleList(
-            @Param("memberId") Long memberId,
-            @Param("isCompleted") boolean isCompleted
+            @Param("memberId") Long memberId
     );
 
     @Query("""
         SELECT s
         FROM ScheduleEntity s
+        LEFT JOIN CompletedScheduleEntity c ON s.scheduleId = c.schedule.scheduleId
+            AND c.completedDate = CURRENT_DATE
         WHERE CURRENT_DATE >= FUNCTION('DATE', s.startDateTime)
             AND CURRENT_DATE <= FUNCTION('DATE', s.endDateTime)
             AND s.memberId = :memberId
-            AND s.isCompleted = :isCompleted
             AND s.isRecurring = true
+            AND c.schedule IS NULL
     """)
-    List<ScheduleEntity> getRecurringScheduleList(Long memberId, boolean isCompleted);
+    List<ScheduleEntity> getRecurringScheduleList(
+            @Param("memberId") Long memberId
+    );
 
     @Query("""
         SELECT s FROM ScheduleEntity s
@@ -112,6 +115,5 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> 
             @Param("date") LocalDate date,
             @Param("memberId") Long memberId
     );
-
 
 }
