@@ -2,6 +2,7 @@ package com.example.boardservice.adapter.in.web.controller;
 
 import com.example.boardservice.adapter.in.web.command.GetArticleCommand;
 import com.example.boardservice.adapter.in.web.command.GetArticleListCommand;
+import com.example.boardservice.adapter.in.web.command.GetSearchedArticleListCommand;
 import com.example.boardservice.adapter.in.web.response.CommonArticleListResponse;
 import com.example.boardservice.adapter.in.web.response.CommonArticleResponse;
 import com.example.boardservice.application.port.in.CommonArticleUseCase;
@@ -68,5 +69,26 @@ public class CommonArticleController {
         CommonArticleListResponse response = CommonArticleListResponse.from(useCase.getArticleListByHashtag(name, pageable));
         return ResponseEntity.ok(response);
     }
+
+    @Operation(summary = "게시글 검색", description = " 목록으로 조회합니다.")
+    @Authenticate(Role.MEMBER)
+    @GetMapping("/search")
+    @Parameters({
+            @Parameter(name = "page", description = "페이지 번호", example = "0"),
+            @Parameter(name = "size", description = "페이지 크기", example = "4"),
+            @Parameter(name = "sort", description = "정렬 기준", example = "createdAt,DESC"),
+            @Parameter(name = "keyword", description = "검색 키워드", example = "게시글"),
+            @Parameter(name = "type", description = "1. 전체: common, 2. 자유: general, 3. 질문: qna, 4. 일지: diary", example = "common")
+    })
+    public ResponseEntity<CommonArticleListResponse> searchArticleList(
+            @PageableDefault(size = 4, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestParam String keyword,
+            @RequestParam String type) {
+        GetSearchedArticleListCommand command = GetSearchedArticleListCommand.of(
+                PassportHolder.getPassport().memberId(), keyword, type, pageable);
+        CommonArticleListResponse response = CommonArticleListResponse.from(useCase.searchArticleList(command));
+        return ResponseEntity.ok(response);
+    }
+
 
 }

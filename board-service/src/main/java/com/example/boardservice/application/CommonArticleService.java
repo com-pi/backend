@@ -30,4 +30,11 @@ public class CommonArticleService {
     public Article getArticle(Long articleId) {
         return articleQueryPort.getArticle(articleId);
     }
+
+    public Page<Article> searchArticleList(String keyword, String type, Pageable pageable) {
+        ArticleType articleType = ArticleType.from(type);
+        return articleType == ArticleType.COMMON_ARTICLE ?
+                articleQueryPort.searchArticleList(keyword, pageable)
+                : articleQueryPort.searchArticleList(keyword, articleType, pageable);
+    }
 }

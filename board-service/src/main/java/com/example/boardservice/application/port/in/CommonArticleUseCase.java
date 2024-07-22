@@ -1,6 +1,7 @@
 package com.example.boardservice.application.port.in;
 
 import com.example.boardservice.adapter.in.web.command.GetArticleListCommand;
+import com.example.boardservice.adapter.in.web.command.GetSearchedArticleListCommand;
 import com.example.boardservice.domain.Article;
 import org.springframework.data.domain.Pageable;
 
@@ -13,4 +14,6 @@ public interface CommonArticleUseCase {
     Article getArticle(Article article);
 
     List<Article> getArticleListByHashtag(String name, Pageable pageable);
+
+    List<Article> searchArticleList(GetSearchedArticleListCommand command);
 }

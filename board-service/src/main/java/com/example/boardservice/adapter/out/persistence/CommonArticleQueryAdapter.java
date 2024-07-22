@@ -46,4 +46,17 @@ public class CommonArticleQueryAdapter implements CommonArticleQueryPort {
         return entity.toArticle();
     }
 
+    @Override
+    public Page<Article> searchArticleList(String keyword, Pageable pageable) {
+        Page<CommonArticleEntity> commonArticleEntityPage = articleRepository.searchArticleList(keyword, "N", pageable);
+        return commonArticleEntityPage.map(CommonArticleEntity::toArticle);
+    }
+
+    @Override
+    public Page<Article> searchArticleList(String keyword, ArticleType type, Pageable pageable) {
+        Page<CommonArticleEntity> commonArticleEntityPage = articleRepository.searchArticleListWithType(keyword, type, "N", pageable);
+        return commonArticleEntityPage.map(CommonArticleEntity::toArticle);
+    }
+
+
 }

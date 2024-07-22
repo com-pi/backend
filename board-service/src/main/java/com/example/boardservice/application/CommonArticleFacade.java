@@ -1,6 +1,7 @@
 package com.example.boardservice.application;
 
 import com.example.boardservice.adapter.in.web.command.GetArticleListCommand;
+import com.example.boardservice.adapter.in.web.command.GetSearchedArticleListCommand;
 import com.example.boardservice.application.port.in.CommonArticleUseCase;
 import com.example.boardservice.domain.Article;
 import com.example.boardservice.domain.ArticleHashtag;
@@ -53,6 +54,16 @@ public class CommonArticleFacade implements CommonArticleUseCase {
 
         return originArticle;
     }
+
+    @Override
+    public List<Article> searchArticleList(GetSearchedArticleListCommand command) {
+        Page<Article> articlePage = articleService.searchArticleList(command.getKeyword(), command.getType(), command.getPageable());
+        articlePage.forEach(this::addHashtags);
+        addLikeStatusList(articlePage.getContent(), command.getMemberId());
+
+        return articlePage.toList();
+    }
+
 
     /**
      * private

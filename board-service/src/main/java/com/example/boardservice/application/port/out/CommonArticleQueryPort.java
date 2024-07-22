@@ -15,4 +15,8 @@ public interface CommonArticleQueryPort {
     List<Article> getArticleListByArticleId(List<Long> articleIdList, Pageable pageable);
 
     Article getArticle(Long articleId);
+
+    Page<Article> searchArticleList(String keyword, Pageable pageable);
+
+    Page<Article> searchArticleList(String keyword, ArticleType type, Pageable pageable);
 }
