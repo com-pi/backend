@@ -1,5 +1,6 @@
 package com.example.boardservice.application;
 
+import com.example.boardservice.adapter.in.web.command.GetArticleListCommand;
 import com.example.boardservice.application.port.in.CommonArticleUseCase;
 import com.example.boardservice.domain.Article;
 import com.example.boardservice.domain.ArticleHashtag;
@@ -19,26 +20,18 @@ public class CommonArticleFacade implements CommonArticleUseCase {
     private final CommonArticleService articleService;
     private final ArticleHashtagService articleHashtagService;
     private final LikeService likeService;
-    private final CommentService commentService;
 
-    public List<Article> getArticleList(String type, Pageable pageable) {
-        Page<Article> articlePage = articleService.getArticleList(type, pageable);
-        return articlePage
-                .stream()
-                .peek(article -> {
-                    List<ArticleHashtag> articleHashtags = articleHashtagService.getHashtagListByArticle(article.getArticleId());
-                    List<String> hashtagList = articleHashtags.stream()
-                            .map(articleHashtag -> articleHashtag.getHashtag().getName())
-                            .toList();
-                    article.addHashtagList(hashtagList);
-                })
-                .toList();
+    public List<Article> getArticleList(GetArticleListCommand command) {
+        Page<Article> articlePage = articleService.getArticleList(command.getType(), command.getPageable());
+        articlePage.forEach(this::addHashtags);
+        addLikeStatusList(articlePage.getContent(), command.getMemberId());
+
+        return articlePage.toList();
     }
 
     @Override
     public List<Article> getArticleListByHashtag(String name, Pageable pageable) {
-        Long hashtagId = articleHashtagService.getArticleIdByHashtagName(name);
-
+        Long hashtagId = articleHashtagService.getHashtagIdByName(name);
         if(Objects.isNull(hashtagId)) {
             return Collections.emptyList();
         }
@@ -49,24 +42,42 @@ public class CommonArticleFacade implements CommonArticleUseCase {
 
         List<Article> articleList = articleService.getArticleListByArticleId(articleIdList, pageable);
 
-        articleList.forEach(article -> {
-            List<String> hashtagList = articleHashtagService.getHashtagListByArticle(article.getArticleId()).stream()
-                    .map(articleHashtag -> articleHashtag.getHashtag().getName())
-                    .toList();
-            article.addHashtagList(hashtagList);
-        });
+        articleList.forEach(this::addHashtags);
         return articleList;
     }
 
-    public Article getArticle(Long articleId) {
-        Article article = this.articleService.getArticle(articleId);
-        // 해시태그
-        List<String> hashtagList = articleHashtagService.getHashtagListByArticle(articleId)
-                .stream()
+    public Article getArticle(Article article) {
+        Article originArticle = this.articleService.getArticle(article.getArticleId());
+        addHashtags(originArticle);
+        addLikeStatus(originArticle, article.getMemberId());
+
+        return originArticle;
+    }
+
+    /**
+     * private
+     */
+    private void addHashtags(Article article) {
+        List<ArticleHashtag> articleHashtags = articleHashtagService.getHashtagListByArticle(article.getArticleId());
+        List<String> hashtagList = articleHashtags.stream()
                 .map(articleHashtag -> articleHashtag.getHashtag().getName())
                 .toList();
         article.addHashtagList(hashtagList);
+    }
 
-        return article;
+    private void addLikeStatusList(List<Article> articleList, Long memberId) {
+        List<Long> articleIdList = articleList.stream()
+                .map(Article::getArticleId)
+                .toList();
+
+        List<Boolean> likeStatus = likeService.getLikeStatusByArticleList(articleIdList, memberId);
+        for (int i = 0; i < articleList.size(); i++) {
+            articleList.get(i).addLikeStatus(likeStatus.get(i));
+        }
+    }
+
+    private void addLikeStatus(Article article, Long memberId) {
+        boolean likeStatus = likeService.getLikeStatusByArticle(article.getArticleId(), memberId);
+        article.addLikeStatus(likeStatus);
     }
 }

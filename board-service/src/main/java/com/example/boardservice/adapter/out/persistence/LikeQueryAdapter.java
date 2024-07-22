@@ -7,6 +7,7 @@ import com.example.common.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -38,5 +39,14 @@ public class LikeQueryAdapter implements LikeQueryPort {
     public int getLikeCount(Long articleId) {
         return likeRepository.countByArticle_ArticleId(articleId);
     }
+
+    @Override
+    public List<Like> getLikeByArticleList(List<Long> articleIdList, Long memberId) {
+        List<LikeEntity> likeEntityList =  likeRepository.findByArticle_ArticleIdInAndMemberId(articleIdList, memberId);
+        return likeEntityList.stream()
+                .map(LikeEntity::toDomain)
+                .toList();
+    }
+
 
 }

@@ -32,10 +32,16 @@ public class Article {
 
     private int likeCount;
 
+    private boolean isLiked;
+
     private int commentCount;
 
     public void addHashtagList(List<String> hashtagList) {
         this.hashtagList = hashtagList;
+    }
+
+    public void addLikeStatus(boolean isLiked) {
+        this.isLiked = isLiked;
     }
 
 }

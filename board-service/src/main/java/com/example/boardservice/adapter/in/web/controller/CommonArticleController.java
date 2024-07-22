@@ -1,8 +1,11 @@
 package com.example.boardservice.adapter.in.web.controller;
 
+import com.example.boardservice.adapter.in.web.command.GetArticleCommand;
+import com.example.boardservice.adapter.in.web.command.GetArticleListCommand;
 import com.example.boardservice.adapter.in.web.response.CommonArticleListResponse;
 import com.example.boardservice.adapter.in.web.response.CommonArticleResponse;
 import com.example.boardservice.application.port.in.CommonArticleUseCase;
+import com.example.boardservice.security.PassportHolder;
 import com.example.common.annotation.Authenticate;
 import com.example.common.domain.Role;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,7 +40,17 @@ public class CommonArticleController {
             @RequestParam("type") String type,
             @PageableDefault(size = 4, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
-        CommonArticleListResponse response = CommonArticleListResponse.from(useCase.getArticleList(type, pageable));
+        GetArticleListCommand command = GetArticleListCommand.of(PassportHolder.getPassport().memberId(), type, pageable);
+        CommonArticleListResponse response = CommonArticleListResponse.from(useCase.getArticleList(command));
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "게시글 상세 조회", description = "게시글을 상세 조회합니다.")
+    @Authenticate(Role.MEMBER)
+    @GetMapping("/detail/{articleId}")
+    public ResponseEntity<CommonArticleResponse> getArticle(@PathVariable Long articleId) {
+        GetArticleCommand command = GetArticleCommand.of(PassportHolder.getPassport().memberId(), articleId);
+        CommonArticleResponse response = CommonArticleResponse.from(useCase.getArticle(command.toDomain()));
         return ResponseEntity.ok(response);
     }
 
@@ -53,14 +66,6 @@ public class CommonArticleController {
             @RequestParam final String name,
             @PageableDefault(size = 4, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         CommonArticleListResponse response = CommonArticleListResponse.from(useCase.getArticleListByHashtag(name, pageable));
-        return ResponseEntity.ok(response);
-    }
-
-    @Operation(summary = "게시글 상세 조회", description = "게시글을 상세 조회합니다.")
-    @Authenticate(Role.MEMBER)
-    @GetMapping("/detail/{articleId}")
-    public ResponseEntity<CommonArticleResponse> getArticle(@PathVariable Long articleId) {
-        CommonArticleResponse response = CommonArticleResponse.from(useCase.getArticle(articleId));
         return ResponseEntity.ok(response);
     }
 

@@ -27,16 +27,8 @@ public class ArticleHashtagService {
     @Transactional
     public void generateHashtags(Long articleId, List<String> hashtagNameList) {
         hashtagNameList.stream()
-                .map(name -> {
-                    Hashtag findedHashtag = hashtagQueryPort.findHashtagByName(name);
-                    if (Objects.isNull(findedHashtag)) {
-                        Hashtag hashtag = Hashtag.generateHashtag(name);
-                        Hashtag savedHashtag = hashtagCommandPort.save(hashtag);
-                        return ArticleHashtag.generateArticleHashtag(articleId, savedHashtag);
-                    } else {
-                        return ArticleHashtag.generateArticleHashtag(articleId, findedHashtag);
-                    }
-                })
+                .map(name -> getOrCreateHashtag(name))
+                .map(hashtag -> ArticleHashtag.generateArticleHashtag(articleId, hashtag))
                 .forEach(articleHashtagCommandPort::save);
     }
 
@@ -54,11 +46,24 @@ public class ArticleHashtagService {
     }
 
     @Nullable
-    public Long getArticleIdByHashtagName(String name) {
+    public Long getHashtagIdByName(String name) {
         Hashtag hashtag = hashtagQueryPort.findHashtagByName(name);
         if(Objects.nonNull(hashtag)) {
             return hashtag.getHashtagId();
         }
         return null;
     }
+
+    /*
+     * private
+     */
+    private Hashtag getOrCreateHashtag(String name) {
+        Hashtag foundHashtag = hashtagQueryPort.findHashtagByName(name);
+        if (Objects.isNull(foundHashtag)) {
+            Hashtag newHashtag = Hashtag.generateHashtag(name);
+            return hashtagCommandPort.save(newHashtag);
+        }
+        return foundHashtag;
+    }
+
 }

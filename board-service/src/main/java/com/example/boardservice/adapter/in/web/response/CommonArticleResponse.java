@@ -14,6 +14,7 @@ public record CommonArticleResponse(
         String content,
         int likeCount,
         int commentCount,
+        boolean isLiked,
         List<String> hashtagList,
         List<String> imageUrls
 ) {
@@ -26,6 +27,7 @@ public record CommonArticleResponse(
                 article.getContent(),
                 article.getLikeCount(),
                 article.getCommentCount(),
+                article.isLiked(),
                 article.getHashtagList(),
                 article.getImageUrls()
         );
