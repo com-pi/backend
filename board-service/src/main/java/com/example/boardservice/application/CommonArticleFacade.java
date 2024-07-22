@@ -64,6 +64,15 @@ public class CommonArticleFacade implements CommonArticleUseCase {
         return articlePage.toList();
     }
 
+    @Override
+    public List<Article> getArticleListByMember(Long memberId, Pageable pageable) {
+        Page<Article> articlePage = articleService.getArticleListByMemberId(memberId, pageable);
+        articlePage.forEach(this::addHashtags);
+        addLikeStatusList(articlePage.getContent(), memberId);
+
+        return articlePage.toList();
+    }
+
 
     /**
      * private

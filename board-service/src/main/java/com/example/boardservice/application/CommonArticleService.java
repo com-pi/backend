@@ -37,4 +37,8 @@ public class CommonArticleService {
                 articleQueryPort.searchArticleList(keyword, pageable)
                 : articleQueryPort.searchArticleList(keyword, articleType, pageable);
     }
+
+    public Page<Article> getArticleListByMemberId(Long memberId, Pageable pageable) {
+        return articleQueryPort.getArticleListByMemberId(memberId, pageable);
+    }
 }

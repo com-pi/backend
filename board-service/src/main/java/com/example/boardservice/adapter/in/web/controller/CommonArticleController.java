@@ -90,5 +90,18 @@ public class CommonArticleController {
         return ResponseEntity.ok(response);
     }
 
-
+    @Operation(summary = "사용자별 게시글 목록 조회", description = "게시글 목록을 사용자별로 조회합니다.")
+    @Authenticate(Role.MEMBER)
+    @GetMapping("/list/members")
+    @Parameters({
+            @Parameter(name = "page", description = "페이지 번호", example = "0"),
+            @Parameter(name = "size", description = "페이지 크기", example = "4"),
+            @Parameter(name = "sort", description = "정렬 기준", example = "createdAt,DESC")
+    })
+    public ResponseEntity<CommonArticleListResponse> getArticleListByMember(
+            @PageableDefault(size = 4, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        CommonArticleListResponse response = CommonArticleListResponse.from(
+                useCase.getArticleListByMember(PassportHolder.getPassport().memberId(), pageable));
+        return ResponseEntity.ok(response);
+    }
 }

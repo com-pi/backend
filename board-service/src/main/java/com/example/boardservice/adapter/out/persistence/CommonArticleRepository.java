@@ -47,4 +47,6 @@ public interface CommonArticleRepository extends JpaRepository<CommonArticleEnti
             @Param("type") ArticleType type,
             @Param("deletionYn") String deletionYn, Pageable pageable
     );
+
+    Page<CommonArticleEntity> findByMemberIdAndDeletionYn(Long memberId, String deletionYn, Pageable pageable);
 }

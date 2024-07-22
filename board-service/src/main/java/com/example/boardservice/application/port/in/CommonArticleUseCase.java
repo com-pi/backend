@@ -16,4 +16,6 @@ public interface CommonArticleUseCase {
     List<Article> getArticleListByHashtag(String name, Pageable pageable);
 
     List<Article> searchArticleList(GetSearchedArticleListCommand command);
+
+    List<Article> getArticleListByMember(Long memberId, Pageable pageable);
 }
