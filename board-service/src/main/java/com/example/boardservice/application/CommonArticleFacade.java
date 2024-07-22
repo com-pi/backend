@@ -73,6 +73,14 @@ public class CommonArticleFacade implements CommonArticleUseCase {
         return articlePage.toList();
     }
 
+    @Override
+    public List<Article> getLikedArticleListByMember(Long memberId, Pageable pageable) {
+        Page<Article> articlePage = articleService.getLikedArticleId(memberId, pageable);
+        articlePage.forEach(this::addHashtags);
+        addLikeStatusList(articlePage.getContent());
+        return articlePage.toList();
+    }
+
 
     /**
      * private
@@ -99,5 +107,11 @@ public class CommonArticleFacade implements CommonArticleUseCase {
     private void addLikeStatus(Article article, Long memberId) {
         boolean likeStatus = likeService.getLikeStatusByArticle(article.getArticleId(), memberId);
         article.addLikeStatus(likeStatus);
+    }
+
+    private void addLikeStatusList(List<Article> articleList) {
+        articleList.forEach(article -> {
+            article.addLikeStatus(true);
+        });
     }
 }

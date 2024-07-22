@@ -18,4 +18,6 @@ public interface CommonArticleUseCase {
     List<Article> searchArticleList(GetSearchedArticleListCommand command);
 
     List<Article> getArticleListByMember(Long memberId, Pageable pageable);
+
+    List<Article> getLikedArticleListByMember(Long memberId, Pageable pageable);
 }

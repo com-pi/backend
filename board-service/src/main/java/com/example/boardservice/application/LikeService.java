@@ -4,8 +4,11 @@ import com.example.boardservice.application.port.in.LikeUseCase;
 import com.example.boardservice.application.port.out.CommonArticleCommandPort;
 import com.example.boardservice.application.port.out.LikeCommandPort;
 import com.example.boardservice.application.port.out.LikeQueryPort;
+import com.example.boardservice.domain.Article;
 import com.example.boardservice.domain.Like;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

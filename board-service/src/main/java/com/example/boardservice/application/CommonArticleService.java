@@ -41,4 +41,8 @@ public class CommonArticleService {
     public Page<Article> getArticleListByMemberId(Long memberId, Pageable pageable) {
         return articleQueryPort.getArticleListByMemberId(memberId, pageable);
     }
+
+    public Page<Article> getLikedArticleId(Long memberId, Pageable pageable) {
+        return articleQueryPort.getLikedArticleId(memberId, pageable);
+    }
 }
