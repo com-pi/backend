@@ -2,6 +2,7 @@ package com.example.myplant.domain;
 
 import com.example.common.exception.ConflictException;
 import com.example.common.exception.UnauthorizedException;
+import com.example.myplant.event.CommonEvent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.Getter;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,7 +19,7 @@ import java.util.stream.Stream;
 @Getter
 @Builder
 @AllArgsConstructor
-public class Schedule implements Comparable<Schedule>{
+public class Schedule extends CommonEvent implements Comparable<Schedule>{
 
     private Long scheduleId;
 
@@ -178,6 +180,16 @@ public class Schedule implements Comparable<Schedule>{
                 .build();
     }
 
-
+    public static Schedule from(MyPlant myPlant) {
+        return Schedule.builder()
+                .memberId(myPlant.getMemberId())
+                .title(myPlant.getPlantName() + " 물 주기")
+                .startDateTime(myPlant.getLastWateringDate().atTime(LocalTime.NOON))
+                .endDateTime(myPlant.getLastWateringDate().atTime(LocalTime.NOON).plusYears(100))
+                .isRecurring(true)
+                .frequency(myPlant.getWateringIntervalInDays())
+                .colorType("#C26CC3")
+                .build();
+    }
 
 }

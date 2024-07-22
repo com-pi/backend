@@ -5,6 +5,8 @@ import com.example.myplant.application.port.in.MyPlantUseCase;
 import com.example.myplant.application.port.out.MyPlantCommandPort;
 import com.example.myplant.application.port.out.MyPlantQueryPort;
 import com.example.myplant.domain.MyPlant;
+import com.example.myplant.domain.Schedule;
+import com.example.myplant.event.MyPlantEventPublisher;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,11 +22,16 @@ public class MyPlantService implements MyPlantUseCase {
 
     private final MyPlantCommandPort myPlantCommandPort;
     private final MyPlantQueryPort myPlantQueryPort;
+    private final MyPlantEventPublisher eventPublisher;
 
     @Override
     @Transactional
     public Long createPlant(MyPlant myPlant) {
-        return myPlantCommandPort.save(myPlant);
+        MyPlant savedmyPlant = myPlantCommandPort.save(myPlant);
+
+        /* 식물-일정 연동 */
+        eventPublisher.publishPlantSchedule(Schedule.from(myPlant));
+        return savedmyPlant.getMyPlantId();
     }
 
     @Override

@@ -16,10 +16,10 @@ public class MyPlantCommandPortAdapter implements MyPlantCommandPort {
     private final MyPlantRepository myPlantRepository;
 
     @Override
-    public Long save(MyPlant myPlant) {
+    public MyPlant save(MyPlant myPlant) {
         try {
             MyPlantEntity myPlantEntity = MyPlantEntity.fromDomain(myPlant);
-            return myPlantRepository.save(myPlantEntity).toDomain().getMyPlantId();
+            return myPlantRepository.save(myPlantEntity).toDomain();
         } catch (DataIntegrityViolationException e) {
             throw new NotFoundException(PlantCharacterEntity.class);
         }
@@ -38,4 +38,5 @@ public class MyPlantCommandPortAdapter implements MyPlantCommandPort {
                 .orElseThrow(() -> new NotFoundException(MyPlantEntity.class));
         myPlantEntity.delete();
     }
+
 }

@@ -45,6 +45,7 @@ public class DiaryService implements DiaryUseCase {
         }
         Long savedDiaryId = diaryCommandPort.save(diary);
 
+        /* 일지-게시글 연동 */
         if(diary.isSyncable()) {
             diaryCommandPort.postDiaryArticle(diary);
         }
