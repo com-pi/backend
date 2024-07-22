@@ -61,7 +61,7 @@ public class EncyclopediaService implements EncyclopediaUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public SearchPlantQueryResult searchByName(String keyword, int page, int size) {
+    public SearchPlantByKeywordResult searchByName(String keyword, int page, int size) {
         return encyclopediaQuery.searchByKeyword(keyword, page, size);
     }
 

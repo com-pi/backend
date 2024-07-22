@@ -104,8 +104,8 @@ public class PlantIdentificationResult {
         }
     }
 
-    public PlantIdentifyResponse toResponse() {
-        List<PlantIdentifyResponse.PlantEstimate> list = results.stream().map(result -> {
+    public List<PlantIdentifyResponse.PlantEstimate> toResponse() {
+        return results.stream().map(result -> {
             PlantTaxonomy taxonomy = PlantTaxonomy.builder()
                     .species(result.getSpecies().getScientificNameWithoutAuthor())
                     .genus(result.getSpecies().getGenus().getScientificNameWithoutAuthor())
@@ -117,7 +117,5 @@ public class PlantIdentificationResult {
                     .commonNames(result.getSpecies().commonNames)
                     .build();
         }).toList();
-
-        return new PlantIdentifyResponse(list);
     }
 }

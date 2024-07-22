@@ -25,6 +25,8 @@ public interface EncyclopediaRepository extends JpaRepository<PlantSpeciesEntity
     @Query("SELECT pai FROM PlantAddInquiryEntity pai WHERE pai.id = :id")
     Optional<PlantAddInquiryEntity> findAddInquiryById(Long id);
 
+    @Query("SELECT p FROM PlantSpeciesEntity p WHERE p.plantTaxonomy.genus = :genus and p.plantTaxonomy.species = :species")
+    Optional<PlantSpeciesEntity> searchUsingSpecies(String genus, String species);
 
     boolean existsByCommonName(String commonName);
 

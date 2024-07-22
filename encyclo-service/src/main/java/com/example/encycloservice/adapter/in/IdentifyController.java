@@ -30,9 +30,8 @@ public class IdentifyController {
     public ResponseEntity<CommonResponse<PlantIdentifyResponse>> identify(
             @RequestPart List<MultipartFile> images
     ) {
-        PlantIdentifyResponse response = identifyPlantUseCase.identifyPlant(images);
-
-        return CommonResponse.okWithMessage("식물 인식 성공", response);
+        PlantIdentifyResponse plantIdentifyResponse = identifyPlantUseCase.identifyPlant(images);
+        return CommonResponse.okWithMessage("식물 인식 성공", plantIdentifyResponse);
     }
 
 }

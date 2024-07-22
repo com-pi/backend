@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface ScraperPort {
 
-    SearchResultByScraper searchPlant(java.lang.String keyword);
-    PlantDetailResult plantDetail(java.lang.String plantName);
+    SearchResultByScraper searchPlant(String keyword);
+    PlantDetailResult plantDetail(String plantName);
     PlantIdentificationResult identifyPlant(List<MultipartFile> images);
 
 }

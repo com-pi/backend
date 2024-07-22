@@ -40,12 +40,12 @@ public class PlantSpecies {
                 .build();
     }
 
-    public static PlantBrief toBrief(PlantSpecies plantSpecies) {
+    public PlantBrief toBrief() {
         return PlantBrief.builder()
-                .plantSpeciesId(plantSpecies.getId())
-                .commonName(plantSpecies.getCommonName())
-                .scientificName(String.format("%s %s", plantSpecies.getPlantTaxonomy().getSpecies(), plantSpecies.getPlantTaxonomy().getFamily()))
-                .imageUrl(plantSpecies.getImageUrls().get(0))
+                .plantSpeciesId(this.getId())
+                .commonName(this.getCommonName())
+                .scientificName(String.format("%s %s", this.getPlantTaxonomy().getSpecies(), this.getPlantTaxonomy().getFamily()))
+                .imageUrl(this.getImageUrls().get(0))
                 .build();
     }
 

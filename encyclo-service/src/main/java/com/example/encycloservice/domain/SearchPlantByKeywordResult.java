@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @Builder
-public class SearchPlantQueryResult {
+public class SearchPlantByKeywordResult {
 
     private long totalElement;
     private int totalPage;

@@ -12,7 +12,7 @@ public interface EncyclopediaUseCase {
     void syncDatabase(String keyword);
     void savePlantAddInquiry(PlantAddRequest plantAddRequest);
     PlantBriefListResponse getPlantBriefByIds(List<Long> plantIds);
-    SearchPlantQueryResult searchByName(String keyword, int page, int size);
+    SearchPlantByKeywordResult searchByName(String keyword, int page, int size);
     PlantSpecies getPlantDetailById(Long id);
     PlantAddInquiryResponse getPlantAddInquiry(Integer page, Integer size, PlantAddInquiry.Status status);
 

@@ -11,7 +11,7 @@ import com.example.encycloservice.application.PlantBriefListResponse;
 import com.example.encycloservice.domain.PlantAddInquiry;
 import com.example.encycloservice.domain.PlantAddInquiryProcess;
 import com.example.encycloservice.domain.PlantSpecies;
-import com.example.encycloservice.domain.SearchPlantQueryResult;
+import com.example.encycloservice.domain.SearchPlantByKeywordResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -45,7 +45,7 @@ public class EncyclopediaController {
 
     @GetMapping("/plant")
     @Operation(summary = "식물 검색", description = "식물 도감에서 식물을 검색합니다.")
-    public ResponseEntity<CommonResponse<SearchPlantQueryResult>> searchPlant(
+    public ResponseEntity<CommonResponse<SearchPlantByKeywordResult>> searchPlant(
             @Parameter(description = "검색어", example = "칼랑코에")
             @Valid @Size(min = 2)
             @RequestParam("keyword") String keyword,
@@ -54,8 +54,8 @@ public class EncyclopediaController {
             @Parameter(description = "사이즈", example = "10")
             @Valid @Max(20)
             @RequestParam int size) {
-        SearchPlantQueryResult searchPlantQueryResult = encyclopediaService.searchByName(keyword, page, size);
-        return CommonResponse.okWithMessage("검색 성공", searchPlantQueryResult);
+        SearchPlantByKeywordResult searchPlantByKeywordResult = encyclopediaService.searchByName(keyword, page, size);
+        return CommonResponse.okWithMessage("검색 성공", searchPlantByKeywordResult);
     }
 
     @GetMapping("/plant/detail/{id}")

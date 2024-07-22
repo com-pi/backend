@@ -9,7 +9,7 @@ import com.example.encycloservice.application.port.out.EncyclopediaQuery;
 import com.example.encycloservice.domain.PlantAddInquiry;
 import com.example.encycloservice.domain.PlantBrief;
 import com.example.encycloservice.domain.PlantSpecies;
-import com.example.encycloservice.domain.SearchPlantQueryResult;
+import com.example.encycloservice.domain.SearchPlantByKeywordResult;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.cache.annotation.Cacheable;
@@ -27,13 +27,19 @@ public class EncyclopediaQueryAdapter implements EncyclopediaQuery {
     private final EncyclopediaRepository encyclopediaRepository;
 
     @Override
-    public SearchPlantQueryResult searchByKeyword(String keyword, int page, int size) {
+    public SearchPlantByKeywordResult searchByKeyword(String keyword, int page, int size) {
         var queryResult = encyclopediaRepository.searchUsingNamePattern(keyword, PageRequest.of(page, size));
-        return SearchPlantQueryResult.builder()
+        return SearchPlantByKeywordResult.builder()
                 .totalElement(queryResult.getTotalElements())
                 .totalPage(queryResult.getTotalPages())
                 .results(queryResult.get().map(DomainMapper::toDomain).toList())
                 .build();
+    }
+
+    @Override
+    public Optional<PlantSpecies> searchBySpecies(String genus, String species) {
+        return encyclopediaRepository.searchUsingSpecies(genus, species)
+                .map(PlantSpeciesEntity::toDomain);
     }
 
     @Nullable
