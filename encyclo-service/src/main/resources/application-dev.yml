@@ -11,7 +11,7 @@ server:
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://mysql:3306/encyclopedia
+    url: jdbc:mysql://mysql-dev:3306/encyclopedia
     username: root
     password: 1234
 
