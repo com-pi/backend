@@ -10,7 +10,7 @@ server:
 --- # DB 설정
 spring:
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://mysql-dev:3306/encyclopedia
     username: root
     password: 1234
