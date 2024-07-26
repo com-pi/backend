@@ -4,6 +4,7 @@ import com.example.common.annotation.Authenticate;
 import com.example.common.domain.Passport;
 import com.example.common.domain.Role;
 import com.example.common.exception.UnauthorizedException;
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -15,6 +16,7 @@ import java.lang.reflect.Method;
 
 @Aspect
 @Component
+@Slf4j
 public class authenticationAop {
 
     @Pointcut("@annotation(com.example.common.annotation.Authenticate)")
@@ -32,11 +34,12 @@ public class authenticationAop {
 
         Role permission = authenticate.value();
         Role role = passport.role();
+        log.info("current role: " + role.name());
         if(!role.hasPermission(permission)){
             if(role.equals(Role.ANONYMOUS)){
-                throw new UnauthorizedException("로그인이 필요한 요청입니다.");
+                throw new UnauthorizedException("Login is required for these requests.");
             } else {
-                throw new UnauthorizedException("접근 권한이 없습니다.");
+                throw new UnauthorizedException("Access is denied.");
             }
         }
     }
