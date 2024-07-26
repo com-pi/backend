@@ -10,10 +10,12 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class PassportFilter implements Filter {
 
     private final ObjectMapper objectMapper;
@@ -26,6 +28,8 @@ public class PassportFilter implements Filter {
         try {
             String passportJson = httpRequest.getHeader("passport");
 
+            log.info("passportJson: {}", passportJson);
+            log.info("isFromSwagger: {}", isFromSwagger(httpRequest));
             if(passportJson == null && isFromSwagger(httpRequest)) {
                 filterChain.doFilter(servletRequest, servletResponse);
             }
@@ -50,6 +54,7 @@ public class PassportFilter implements Filter {
     }
 
     private Boolean isFromSwagger(HttpServletRequest request){
+        log.info("request uri: {}", request.getRequestURI());
         return  request.getRequestURI().endsWith("/v3/api-docs");
     }
 
