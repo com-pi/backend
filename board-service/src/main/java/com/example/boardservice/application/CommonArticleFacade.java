@@ -57,7 +57,9 @@ public class CommonArticleFacade implements CommonArticleUseCase {
 
     @Override
     public List<Article> searchArticleList(GetSearchedArticleListCommand command) {
-        Page<Article> articlePage = articleService.searchArticleList(command.getKeyword(), command.getType(), command.getPageable());
+        Page<Article> articlePage = Objects.isNull(command.getKeyword()) ?
+                articleService.getArticleList(command.getType(), command.getPageable())
+                : articleService.searchArticleList(command.getKeyword(), command.getType(), command.getPageable());
         articlePage.forEach(this::addHashtags);
         addLikeStatusList(articlePage.getContent(), command.getMemberId());
 

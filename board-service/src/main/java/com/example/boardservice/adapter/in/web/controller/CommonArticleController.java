@@ -82,7 +82,7 @@ public class CommonArticleController {
     })
     public ResponseEntity<CommonArticleListResponse> searchArticleList(
             @PageableDefault(size = 4, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
-            @RequestParam String keyword,
+            @RequestParam(required = false) String keyword,
             @RequestParam String type) {
         GetSearchedArticleListCommand command = GetSearchedArticleListCommand.of(
                 PassportHolder.getPassport().memberId(), keyword, type, pageable);

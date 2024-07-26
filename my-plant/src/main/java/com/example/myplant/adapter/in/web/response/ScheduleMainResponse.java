@@ -9,9 +9,12 @@ import java.time.LocalDateTime;
 public record ScheduleMainResponse(
     Long scheduleId,
     String title,
-    LocalDateTime startDateTime,
     Boolean isCompleted,
-    String endDateTimeMessage
+    LocalDateTime startDateTime,
+    LocalDateTime endDateTime,
+    String colorType,
+    Integer frequency,
+String endDateTimeMessage
 ) {
 
     public static ScheduleMainResponse from(LocalDateTime now, Schedule schedule) {
@@ -19,7 +22,10 @@ public record ScheduleMainResponse(
             .scheduleId(schedule.getScheduleId())
             .title(schedule.getTitle())
             .startDateTime(schedule.getStartDateTime())
+            .endDateTime(schedule.getEndDateTime())
             .isCompleted(schedule.getIsCompleted())
+            .colorType(schedule.getColorType())
+            .frequency(schedule.getFrequency())
             .endDateTimeMessage(schedule.getDdayMessage(now))
             .build();
     }
