@@ -47,7 +47,7 @@ public class SwaggerConfig {
 
         return new OpenAPI()
                 .info(new Info().title("꼼삐 Swagger").description("식물생활 서비스 API"))
-                .components(new Components().addSecuritySchemes("bearer", securityScheme))
+                .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
                 .security(Collections.singletonList(securityRequirement))
                 .addServersItem(new Server().url("https://api.com-p.site/board-service/"));
     }
