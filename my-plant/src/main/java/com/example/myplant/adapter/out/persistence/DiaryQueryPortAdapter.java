@@ -29,15 +29,7 @@ public class DiaryQueryPortAdapter implements DiaryQueryPort {
 
     @Override
     public List<Diary> getDiaryStatus(LocalDate startDate, LocalDate endDate, Long myPlantId, Long memberId) {
-        log.info("startDate: {}, endDate: {}, myPlantId: {}, memberId: {}", startDate, endDate, myPlantId, memberId);
-        List<DiaryEntity> diaryEntityList = null;
-        try {
-            diaryEntityList = diaryRepository.findByCreatedDateBetweenAndMemberIdAndMyPlantIdAndDeletionYn(myPlantId, memberId, "N");
-        } catch(Exception e) {
-            e.printStackTrace();
-        }
-
-        log.info("entity size: {}", diaryEntityList.size());
+        List<DiaryEntity> diaryEntityList = diaryRepository.findByCreatedDateBetweenAndMemberIdAndMyPlantIdAndDeletionYn(startDate, endDate, memberId, myPlantId, "N");
         return diaryEntityList.stream()
                 .map(DiaryEntity::toDomain)
                 .toList();

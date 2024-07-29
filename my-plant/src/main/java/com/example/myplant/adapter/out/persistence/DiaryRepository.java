@@ -15,12 +15,15 @@ public interface DiaryRepository extends JpaRepository<DiaryEntity, Long> {
     @Query("""
         SELECT d
         FROM DiaryEntity d
-        WHERE 
-          d.memberId = :memberId
+        WHERE d.createdDate >= :startDate
+          AND d.createdDate <= :endDate
+          ANd d.memberId = :memberId
           AND d.myPlantId = :myPlantId
           AND d.deletionYn = :deletionYn
     """)
     List<DiaryEntity> findByCreatedDateBetweenAndMemberIdAndMyPlantIdAndDeletionYn(
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate,
             @Param("memberId") Long memberId,
             @Param("myPlantId") Long myPlantId,
             @Param("deletionYn") String deletionYn

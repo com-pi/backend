@@ -96,7 +96,6 @@ public class DiaryController {
                                                                          @RequestParam Long myPlantId) {
         GetDiaryStatusCommand command = GetDiaryStatusCommand.of(startDate, endDate, myPlantId, PassportHolder.getPassport().memberId());
         List<Diary> diaryList = diaryUseCase.getDiaryStatus(command);
-        log.info("diaryId: {}", diaryList.get(0).getDiaryId());
         List<DiaryCreatedDateResponse> responseList = diaryList.stream()
                 .map(DiaryCreatedDateResponse::from)
                 .toList();
