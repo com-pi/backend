@@ -2,6 +2,7 @@ package com.example.authserver.application;
 
 import com.example.authserver.adapter.in.request.LoginRequest;
 import com.example.authserver.adapter.in.response.LoginResponse;
+import com.example.authserver.application.port.out.persistence.RedisPort;
 import com.example.authserver.util.JwtUtilImpl;
 import com.example.authserver.application.port.in.LoginUseCase;
 import com.example.authserver.application.port.out.persistence.MemberQuery;
@@ -24,6 +25,7 @@ public class LoginService implements LoginUseCase {
 
     private final MemberQuery memberQuery;
     private final JwtUtilImpl jwtUtil;
+    private final RedisPort redisPort;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
@@ -36,7 +38,7 @@ public class LoginService implements LoginUseCase {
         member.authenticateWithPassword(loginRequest.password(), passwordEncoder);
 
         ComPToken refreshToken = jwtUtil.generateToken(member, TokenType.REFRESH_TOKEN);
-
+        redisPort.saveRefreshToken(member, refreshToken);
         CookieUtil.setRefreshCookie(refreshToken, response);
         ComPToken accessToken = jwtUtil.generateToken(member, TokenType.ACCESS_TOKEN);
 
