@@ -79,6 +79,16 @@ public class MyPlantController {
         return ResponseEntity.ok(MyPlantListResponse.of(responseList));
     }
 
+    @Operation(summary = "사용자별 식물 목록 조회", description = "사용자별 식물을 목록으로 조회합니다.")
+    @Authenticate(Role.MEMBER)
+    @GetMapping("/list/{memberId}")
+    public ResponseEntity<MyPlantListResponse> getMyPlantListByMember(@PathVariable Long memberId) {
+        List<MyPlantResponse> responseList = myPlantUseCase.getMyPlantList(memberId).stream()
+                .map(MyPlantResponse::from)
+                .toList();
+        return ResponseEntity.ok(MyPlantListResponse.of(responseList));
+    }
+
     @Operation(summary = "내 식물 상세 조회", description = "내 식물을 상세 조회합니다.")
     @Authenticate(Role.MEMBER)
     @GetMapping("/{myPlantId}")
@@ -94,4 +104,6 @@ public class MyPlantController {
         MyPlant myPlant = myPlantUseCase.getMyPlant(myPlantId);
         return ResponseEntity.ok(MyPlantForUpdateResponse.from(myPlant));
     }
+
+
 }

@@ -4,7 +4,6 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,7 +19,7 @@ public class Comment {
 
     private Comment parent;
 
-    private List<Comment> children = new ArrayList<>();
+    private List<Comment> children;
 
     private Long articleId;
 

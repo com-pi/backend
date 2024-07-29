@@ -4,6 +4,7 @@ import com.example.boardservice.exception.DuplicateLikeException;
 import com.example.common.baseentity.CommonResponse;
 import com.example.common.exception.InternalServerException;
 import com.example.common.exception.NotFoundException;
+import com.example.common.exception.UnauthorizedException;
 import com.example.imagemodule.exception.FileUploadException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DuplicateLikeException.class)
     public ResponseEntity<CommonResponse<Void>> handleDuplicatedLikeException(DuplicateLikeException exception) {
         return CommonResponse.conflictWithMessage(exception.getMessage());
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<CommonResponse<Void>> handleUnauthorizedException(UnauthorizedException exception) {
+        return CommonResponse.unauthorizedWithMessage(exception.getMessage());
     }
 
     @ExceptionHandler(Exception.class)

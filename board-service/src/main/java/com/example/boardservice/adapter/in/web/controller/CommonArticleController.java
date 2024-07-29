@@ -90,7 +90,7 @@ public class CommonArticleController {
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "사용자별 게시글 목록 조회", description = "게시글 목록을 사용자별로 조회합니다.")
+    @Operation(summary = "내 게시글 목록 조회", description = "현재 사용자가 작성한 게시글 목록을 조회합니다.")
     @Authenticate(Role.MEMBER)
     @GetMapping("/list/members")
     @Parameters({
@@ -98,14 +98,29 @@ public class CommonArticleController {
             @Parameter(name = "size", description = "페이지 크기", example = "4"),
             @Parameter(name = "sort", description = "정렬 기준", example = "createdAt,DESC")
     })
-    public ResponseEntity<CommonArticleListResponse> getArticleListByMember(
+    public ResponseEntity<CommonArticleListResponse> getArticleList(
             @PageableDefault(size = 4, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         CommonArticleListResponse response = CommonArticleListResponse.from(
                 useCase.getArticleListByMember(PassportHolder.getPassport().memberId(), pageable));
         return ResponseEntity.ok(response);
     }
 
-    @Operation(summary = "사용자별 좋아요한 게시글 목록 조회", description = "사용자별 좋아요한 게시글 목록을 조회합니다.")
+    @Operation(summary = "사용자별 게시글 목록 조회", description = "게시글 목록을 사용자별로 조회합니다.")
+    @Authenticate(Role.MEMBER)
+    @GetMapping("/list/members/{memberId}")
+    @Parameters({
+            @Parameter(name = "page", description = "페이지 번호", example = "0"),
+            @Parameter(name = "size", description = "페이지 크기", example = "4"),
+            @Parameter(name = "sort", description = "정렬 기준", example = "createdAt,DESC")
+    })
+    public ResponseEntity<CommonArticleListResponse> getArticleListByMember(
+            @PageableDefault(size = 4, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            @PathVariable Long memberId) {
+        CommonArticleListResponse response = CommonArticleListResponse.from(useCase.getArticleListByMember(memberId, pageable));
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "내가 좋아요한 게시글 목록 조회", description = "내가 좋아요한 게시글 목록을 조회합니다.")
     @Authenticate(Role.MEMBER)
     @GetMapping("/list/members/likes")
     @Parameters({
@@ -113,10 +128,25 @@ public class CommonArticleController {
             @Parameter(name = "size", description = "페이지 크기", example = "4"),
             @Parameter(name = "sort", description = "정렬 기준", example = "createdAt,DESC")
     })
-    public ResponseEntity<CommonArticleListResponse> getLikedArticleListByMember(
+    public ResponseEntity<CommonArticleListResponse> getLikedArticleList(
             @PageableDefault(size = 4, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         CommonArticleListResponse response = CommonArticleListResponse.from(
                 useCase.getLikedArticleListByMember(PassportHolder.getPassport().memberId(), pageable));
+        return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "사용자별 좋아요한 게시글 목록 조회", description = "사용자별 좋아요한 게시글 목록을 조회합니다.")
+    @Authenticate(Role.MEMBER)
+    @GetMapping("/list/members/likes/{memberId}")
+    @Parameters({
+            @Parameter(name = "page", description = "페이지 번호", example = "0"),
+            @Parameter(name = "size", description = "페이지 크기", example = "4"),
+            @Parameter(name = "sort", description = "정렬 기준", example = "createdAt,DESC")
+    })
+    public ResponseEntity<CommonArticleListResponse> getLikedArticleListByMember(
+            @PageableDefault(size = 4, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable,
+            @PathVariable final Long memberId) {
+        CommonArticleListResponse response = CommonArticleListResponse.from(useCase.getLikedArticleListByMember(memberId, pageable));
         return ResponseEntity.ok(response);
     }
 }

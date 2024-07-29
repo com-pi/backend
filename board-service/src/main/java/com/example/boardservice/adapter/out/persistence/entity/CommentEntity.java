@@ -90,7 +90,7 @@ public class CommentEntity extends DeletedAtAbstractEntity {
         Comment.CommentBuilder commentBuilder = Comment.builder()
                 .commentId(this.commentId)
                 .memberId(this.memberId)
-                .articleId(this.article.articleId)
+                .articleId(this.article.getArticleId())
                 .content(this.content)
                 .createdDate(this.createdDate);
 

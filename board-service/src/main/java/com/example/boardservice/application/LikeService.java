@@ -4,11 +4,8 @@ import com.example.boardservice.application.port.in.LikeUseCase;
 import com.example.boardservice.application.port.out.CommonArticleCommandPort;
 import com.example.boardservice.application.port.out.LikeCommandPort;
 import com.example.boardservice.application.port.out.LikeQueryPort;
-import com.example.boardservice.domain.Article;
 import com.example.boardservice.domain.Like;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,7 +40,7 @@ public class LikeService implements LikeUseCase {
     @Override
     @Transactional
     public Long unlike(Like like) {
-        Like originLike = likeQueryPort.getLikeByLikeId(like.getLikeId());
+        Like originLike = likeQueryPort.getLikeByArticleIdAndMemberId(like.getArticleId(), like.getMemberId());
         like.validatePermission(originLike.getMemberId());
         like.validateStatus(originLike.isLiked());
 

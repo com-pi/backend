@@ -16,8 +16,9 @@ public class CommentCommandAdapter implements CommentCommandPort {
 
     @Override
     public Comment save(Comment comment) {
-        CommentEntity commentEntity = commentRepository.save(CommentEntity.fromDomain(comment));
-        return commentEntity.toDomain();
+        CommentEntity commentEntity = CommentEntity.fromDomain(comment);
+        commentEntity.addArticle(comment.getArticleId());
+        return commentRepository.save(commentEntity).toDomain();
     }
 
     @Override

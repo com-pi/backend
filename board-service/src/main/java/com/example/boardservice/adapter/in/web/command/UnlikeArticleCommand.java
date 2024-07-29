@@ -9,19 +9,19 @@ import lombok.Getter;
 @Builder
 @AllArgsConstructor
 public class UnlikeArticleCommand {
-    private Long likeId;
+    private Long articleId;
     private Long memberId;
 
-    public static UnlikeArticleCommand of(Long likeId, Long memberId) {
+    public static UnlikeArticleCommand of(Long articleId, Long memberId) {
         return UnlikeArticleCommand.builder()
-                .likeId(likeId)
+                .articleId(articleId)
                 .memberId(memberId)
                 .build();
     }
 
     public Like toDomain() {
         return Like.builder()
-                .likeId(likeId)
+                .articleId(articleId)
                 .memberId(memberId)
                 .build();
     }

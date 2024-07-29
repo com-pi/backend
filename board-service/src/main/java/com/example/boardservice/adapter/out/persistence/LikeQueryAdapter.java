@@ -24,6 +24,13 @@ public class LikeQueryAdapter implements LikeQueryPort {
     }
 
     @Override
+    public Like getLikeByArticleIdAndMemberId(Long articleId, Long memberId) {
+        LikeEntity likeEntity = likeRepository.findByArticle_ArticleIdAndMemberId(articleId, memberId)
+                .orElseThrow(() -> new NotFoundException(LikeEntity.class));
+        return likeEntity.toDomain();
+    }
+
+    @Override
     public Optional<Like> findLikeByArticleIdAndMemberId(Long articleId, Long memberId) {
         Optional<LikeEntity> likeEntity = likeRepository.findByArticle_ArticleIdAndMemberId(articleId, memberId);
         return likeEntity.map(LikeEntity::toDomain);
@@ -33,11 +40,6 @@ public class LikeQueryAdapter implements LikeQueryPort {
     public Optional<Like> findLikeByArticleIdAndMemberIdAndIsLiked(Long articleId, Long memberId, boolean isLiked) {
         Optional<LikeEntity> likeEntity = likeRepository.findByArticle_ArticleIdAndMemberIdAndIsLiked(articleId, memberId, isLiked);
         return likeEntity.map(LikeEntity::toDomain);
-    }
-
-    @Override
-    public int getLikeCount(Long articleId) {
-        return likeRepository.countByArticle_ArticleId(articleId);
     }
 
     @Override

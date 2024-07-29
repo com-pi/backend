@@ -33,9 +33,9 @@ public class LikeController {
 
     @Operation(summary = "좋아요 해제", description = "게시글에 좋아요를 해제합니다.")
     @Authenticate(Role.MEMBER)
-    @DeleteMapping("/{likeId}")
-    public ResponseEntity<CommonResponse<Long>> unlike(@PathVariable Long likeId) {
-        UnlikeArticleCommand command = UnlikeArticleCommand.of(likeId, PassportHolder.getPassport().memberId());
+    @DeleteMapping("/{articleId}")
+    public ResponseEntity<CommonResponse<Long>> unlike(@PathVariable Long articleId) {
+        UnlikeArticleCommand command = UnlikeArticleCommand.of(articleId, PassportHolder.getPassport().memberId());
         Long unlikedId = likeUseCase.unlike(command.toDomain());
         return CommonResponse.okWithMessage("게시글에 좋아요를 해제했습니다.", unlikedId);
     }

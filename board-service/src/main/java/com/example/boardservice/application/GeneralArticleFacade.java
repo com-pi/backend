@@ -1,7 +1,5 @@
 package com.example.boardservice.application;
 
-import com.example.boardservice.application.ArticleHashtagService;
-import com.example.boardservice.application.GeneralArticleService;
 import com.example.boardservice.application.port.in.GeneralArticleUseCase;
 import com.example.boardservice.domain.ArticleHashtag;
 import com.example.boardservice.domain.GeneralArticle;
@@ -31,6 +29,7 @@ public class GeneralArticleFacade implements GeneralArticleUseCase {
     }
 
     @Override
+    @Transactional
     public Long update(GeneralArticleCommand articleUpdate, List<MultipartFile> imageFiles) {
         if(!articleUpdate.getHashtagList().isEmpty()) {
             articleHashtagService.deleteAllByArticleId(articleUpdate.getArticleId());

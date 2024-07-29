@@ -72,7 +72,7 @@ public class CommentController {
             @PathVariable Long commentId
     ) {
         Long updatedCommentId = commentUseCase.update(UpdateCommentCommand.of(request, commentId, PassportHolder.getPassport().memberId()).toDomain());
-        return ResponseEntity.ok(new CommonResponse<>("댓글이 수정되었습니다.", commentId));
+        return ResponseEntity.ok(new CommonResponse<>("댓글이 수정되었습니다.", updatedCommentId));
     }
 
     @Operation(summary = "댓글 삭제", description = "댓글을 삭제합니다.")
