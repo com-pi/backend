@@ -62,7 +62,7 @@ public class MemberController {
             @Parameter(description = "경도, 125 ~ 132")
             @RequestPart(value = "longitude", required = false) String longitude,
             @Parameter(description = "프로필 사진 업로드 여부")
-            @RequestPart(value = "isPicUploaded") Boolean isPicUploaded,
+            @RequestPart(value = "isPicUploaded") String isPicUploaded,
             @Parameter(description = "사진")
             @RequestPart(value = "profileImage", required = false) MultipartFile profileImage) {
         Passport passport = PassportHolder.getPassport();
@@ -77,7 +77,7 @@ public class MemberController {
                 .nickname(nickName)
                 .introduction(introduction)
                 .location(location)
-                .isPicUploaded(isPicUploaded)
+                .isPicUploaded(Boolean.valueOf(isPicUploaded))
                 .profileImage(profileImage)
                 .build();
 
