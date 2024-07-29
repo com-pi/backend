@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -32,6 +33,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/diaries")
 @RequiredArgsConstructor
+@Slf4j
 @Tag(name = "일지 관리", description = "일지 작성 및 관리 API")
 public class DiaryController {
 
@@ -94,6 +96,7 @@ public class DiaryController {
                                                                          @RequestParam Long myPlantId) {
         GetDiaryStatusCommand command = GetDiaryStatusCommand.of(startDate, endDate, myPlantId, PassportHolder.getPassport().memberId());
         List<Diary> diaryList = diaryUseCase.getDiaryStatus(command);
+        log.info("diaryId: {}", diaryList.get(0).getDiaryId());
         List<DiaryCreatedDateResponse> responseList = diaryList.stream()
                 .map(DiaryCreatedDateResponse::from)
                 .toList();

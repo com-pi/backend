@@ -5,6 +5,7 @@ import com.example.myplant.adapter.out.persistence.entity.DiaryEntity;
 import com.example.myplant.application.port.out.DiaryQueryPort;
 import com.example.myplant.domain.Diary;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +15,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class DiaryQueryPortAdapter implements DiaryQueryPort {
 
     private final DiaryRepository diaryRepository;
@@ -27,6 +29,7 @@ public class DiaryQueryPortAdapter implements DiaryQueryPort {
 
     @Override
     public List<Diary> getDiaryStatus(LocalDate startDate, LocalDate endDate, Long myPlantId, Long memberId) {
+        log.info("startDate: {}, endDate: {}, myPlantId: {}, memberId: {}", startDate, endDate, myPlantId, memberId);
         List<DiaryEntity> diaryEntityList = diaryRepository.findByCreatedDateBetweenAndMemberIdAndMyPlantIdAndDeletionYn(startDate, endDate, myPlantId, memberId, "N");
         return diaryEntityList.stream()
                 .map(DiaryEntity::toDomain)
