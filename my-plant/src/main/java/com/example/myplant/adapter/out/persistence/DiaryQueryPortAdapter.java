@@ -32,7 +32,7 @@ public class DiaryQueryPortAdapter implements DiaryQueryPort {
         log.info("startDate: {}, endDate: {}, myPlantId: {}, memberId: {}", startDate, endDate, myPlantId, memberId);
         List<DiaryEntity> diaryEntityList = null;
         try {
-            diaryEntityList = diaryRepository.findByCreatedDateBetweenAndMemberIdAndMyPlantIdAndDeletionYn(startDate, endDate, myPlantId, memberId, "N");
+            diaryEntityList = diaryRepository.findByCreatedDateBetweenAndMemberIdAndMyPlantIdAndDeletionYn(myPlantId, memberId, "N");
         } catch(Exception e) {
             e.printStackTrace();
         }
