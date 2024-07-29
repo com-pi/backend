@@ -1,10 +1,12 @@
 package com.example.authserver.adapter.in;
 
+import com.example.authserver.aop.filter.PassportHolder;
 import com.example.authserver.application.port.in.FollowUseCase;
 import com.example.authserver.domain.FollowerPagingResult;
 import com.example.authserver.domain.FollowingPagingResult;
 import com.example.common.annotation.Authenticate;
 import com.example.common.baseentity.CommonResponse;
+import com.example.common.domain.Passport;
 import com.example.common.domain.Role;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -54,13 +56,37 @@ public class FollowController {
 
     @GetMapping("/{memberId}/follow")
     @Authenticate(Role.MEMBER)
-    @Operation(summary = "팔로잉 목록 초회", description = "팔로잉 하는 회원 목록을 조회합니다.")
+    @Operation(summary = "팔로잉 목록 조회", description = "팔로잉 하는 회원 목록을 조회합니다.")
     public ResponseEntity<CommonResponse<FollowingPagingResult>> getFollowingList (
             @PathVariable Long memberId,
             @RequestParam(required = false, defaultValue = "0") Integer page,
             @RequestParam(required = false, defaultValue = "10") Integer size
     ) {
         FollowingPagingResult followingList = followUseCase.getFollowingList(memberId, page, size);
+        return CommonResponse.okWithMessage("팔로잉 목록 조회 성공", followingList);
+    }
+
+    @GetMapping("/follower")
+    @Authenticate(Role.MEMBER)
+    @Operation(summary = "나의 팔로워 목록 조회", description = "내가 팔로우 하는 회원 목록을 조회합니다.")
+    public ResponseEntity<CommonResponse<FollowerPagingResult>> getMyFollowerList (
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size
+    ) {
+        Passport passport = PassportHolder.getPassport();
+        FollowerPagingResult followerList = followUseCase.getFollowerList(passport.memberId(), page, size);
+        return CommonResponse.okWithMessage("팔로워 목록 조회 성공", followerList);
+    }
+
+    @GetMapping("/follow")
+    @Authenticate(Role.MEMBER)
+    @Operation(summary = "나의 팔로잉 목록 조회", description = "내가 팔로잉 하는 회원 목록을 조회합니다.")
+    public ResponseEntity<CommonResponse<FollowingPagingResult>> getMyFollowingList (
+            @RequestParam(required = false, defaultValue = "0") Integer page,
+            @RequestParam(required = false, defaultValue = "10") Integer size
+    ) {
+        Passport passport = PassportHolder.getPassport();
+        FollowingPagingResult followingList = followUseCase.getFollowingList(passport.memberId(), page, size);
         return CommonResponse.okWithMessage("팔로잉 목록 조회 성공", followingList);
     }
 
