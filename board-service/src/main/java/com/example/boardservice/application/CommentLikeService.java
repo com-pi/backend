@@ -9,6 +9,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class CommentLikeService implements CommentLikeUseCase {
@@ -45,5 +49,14 @@ public class CommentLikeService implements CommentLikeUseCase {
         return like.getLikeId();
     }
 
+    @Override
+    public List<Boolean> getLikeStatusByCommentList(List<Long> commentIdList, Long memberId) {
+        List<CommentLike> likeList =  commentLikeQueryPort.getLikeByCommentList(commentIdList, memberId);
+        Map<Long, Boolean> likeStatus = likeList.stream()
+                .collect(Collectors.toMap(CommentLike::getCommentId, CommentLike::isLiked));
+        return commentIdList.stream()
+                .map(commentId -> likeStatus.getOrDefault(commentId, false))
+                .collect(Collectors.toList());
+    }
 
 }

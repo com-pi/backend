@@ -14,5 +14,5 @@ public interface CommentUseCase {
 
     Long delete(Comment comment);
 
-    List<CommentWithReplies> getCommentList(Long articleId);
+    List<CommentWithReplies> getCommentList(Comment comment);
 }

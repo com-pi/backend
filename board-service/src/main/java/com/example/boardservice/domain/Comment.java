@@ -29,6 +29,10 @@ public class Comment {
 
     private Integer likeCount;
 
+    private Boolean isLiked;
+
+    private Integer commentCount;
+
     public static Comment ofId(Long commentId) {
         return Comment.builder()
                 .commentId(commentId)
@@ -37,6 +41,10 @@ public class Comment {
 
     public void addEditable(Long currentMemberId) {
         this.isEditable = Objects.equals(this.memberId, currentMemberId);
+    }
+
+    public void addLikeStatus(boolean isLiked) {
+        this.isLiked = isLiked;
     }
 
 }

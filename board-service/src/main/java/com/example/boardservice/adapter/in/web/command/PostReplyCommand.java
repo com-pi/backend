@@ -29,6 +29,7 @@ public class PostReplyCommand {
                 .content(content)
                 .parent(Comment.ofId(parentId))
                 .createdDate(LocalDate.now())
+                .likeCount(0)
                 .build();
     }
 }

@@ -1,13 +1,11 @@
 package com.example.boardservice.application;
 
-import com.example.boardservice.application.port.in.CommentUseCase;
 import com.example.boardservice.application.port.out.CommentCommandPort;
 import com.example.boardservice.application.port.out.CommentQueryPort;
 import com.example.boardservice.application.port.out.CommonArticleCommandPort;
 import com.example.boardservice.domain.Comment;
 import com.example.boardservice.domain.CommentWithReplies;
 import com.example.boardservice.security.PassportHolder;
-import com.example.common.exception.NotFoundException;
 import com.example.common.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,13 +16,12 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-public class CommentService implements CommentUseCase {
+public class CommentService {
 
     private final CommentCommandPort commentCommandPort;
     private final CommentQueryPort commentQueryPort;
     private final CommonArticleCommandPort articleCommandPort;
 
-    @Override
     @Transactional
     public Long post(Comment comment) {
         Comment savedComment = commentCommandPort.save(comment);
@@ -32,7 +29,7 @@ public class CommentService implements CommentUseCase {
         return savedComment.getCommentId();
     }
 
-    @Override
+    @Transactional
     public Long postReply(Comment comment) {
         canPostReply(comment.getParent().getCommentId());
         Comment savedComment = commentCommandPort.saveReply(comment);
@@ -40,7 +37,6 @@ public class CommentService implements CommentUseCase {
         return savedComment.getCommentId();
     }
 
-    @Override
     @Transactional
     public Long update(Comment comment) {
         Comment originComment = commentQueryPort.getComment(comment.getCommentId());
@@ -50,7 +46,6 @@ public class CommentService implements CommentUseCase {
         return comment.getCommentId();
     }
 
-    @Override
     @Transactional
     public Long delete(Comment comment) {
         Comment originComment = commentQueryPort.getComment(comment.getCommentId());
@@ -61,7 +56,6 @@ public class CommentService implements CommentUseCase {
         return comment.getCommentId();
     }
 
-    @Override
     public List<CommentWithReplies> getCommentList(Long articleId) {
         List<Comment> commentList = commentQueryPort.getCommentList(articleId);
         checkEditable(commentList);
@@ -90,9 +84,8 @@ public class CommentService implements CommentUseCase {
     }
 
     private void canPostReply(Long commentId) {
-        try {
-            commentQueryPort.getComment(commentId);
-        } catch (NotFoundException e) {
+        Comment comment = commentQueryPort.getComment(commentId);
+        if(Objects.isNull(comment)) {
             throw new UnauthorizedException("답글 댓글을 작성할 수 없는 부모 댓글입니다.");
         }
     }

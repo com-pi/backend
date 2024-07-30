@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface CommentQueryPort {
 
+    Comment findComment(Long commentId);
+
     Comment getComment(Long commentId);
 
     List<Comment> getCommentList(Long articleId);

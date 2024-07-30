@@ -7,6 +7,7 @@ import com.example.common.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -27,5 +28,13 @@ public class CommentLikeQueryAdapter implements CommentLikeQueryPort {
         CommentLikeEntity likeEntity = commentLikeRepository.findByComment_CommentIdAndMemberId(commentId, memberId)
                 .orElseThrow(() -> new NotFoundException(CommentLikeEntity.class));
         return likeEntity.toDomain();
+    }
+
+    @Override
+    public List<CommentLike> getLikeByCommentList(List<Long> commentIdList, Long memberId) {
+        List<CommentLikeEntity> likeEntityList =  commentLikeRepository.findByComment_CommentIdInAndMemberId(commentIdList, memberId);
+        return likeEntityList.stream()
+                .map(CommentLikeEntity::toDomain)
+                .toList();
     }
 }

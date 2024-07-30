@@ -6,7 +6,6 @@ import com.example.boardservice.domain.Comment;
 import com.example.common.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @RequiredArgsConstructor
@@ -22,7 +21,6 @@ public class CommentCommandAdapter implements CommentCommandPort {
     }
 
     @Override
-    @Transactional
     public Comment saveReply(Comment comment) {
         CommentEntity parentEntity = commentRepository.findById(comment.getParent().getCommentId())
                 .orElseThrow(() -> new NotFoundException(CommentEntity.class));

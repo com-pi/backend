@@ -1,9 +1,6 @@
 package com.example.boardservice.adapter.in.web.controller;
 
-import com.example.boardservice.adapter.in.web.command.DeleteCommentCommand;
-import com.example.boardservice.adapter.in.web.command.PostCommentCommand;
-import com.example.boardservice.adapter.in.web.command.PostReplyCommand;
-import com.example.boardservice.adapter.in.web.command.UpdateCommentCommand;
+import com.example.boardservice.adapter.in.web.command.*;
 import com.example.boardservice.adapter.in.web.request.PostCommentRequest;
 import com.example.boardservice.adapter.in.web.request.PostReplyRequest;
 import com.example.boardservice.adapter.in.web.request.UpdateCommentRequest;
@@ -99,7 +96,8 @@ public class CommentController {
             @RequestParam("children-size") int childrenSize,
             @PathVariable final Long articleId
         ) {
-        List<CommentWithReplies> commentWithRepliesList = commentUseCase.getCommentList(articleId);
+        GetCommentListCommand command = GetCommentListCommand.of(articleId, PassportHolder.getPassport().memberId());
+        List<CommentWithReplies> commentWithRepliesList = commentUseCase.getCommentList(command.toDomain());
         return ResponseEntity.ok(commentWithRepliesList.stream().map(CommentWithRepliesResponse::from).toList());
     }
 }

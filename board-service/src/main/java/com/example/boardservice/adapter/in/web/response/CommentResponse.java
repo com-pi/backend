@@ -10,7 +10,9 @@ public record CommentResponse(
         Long memberId,
         String content,
         LocalDate createdDate,
-        boolean isEditable
+        Boolean isEditable,
+        Boolean isLiked,
+        Integer likeCount
 ) {
     public static CommentResponse from(Comment comment) {
         return new CommentResponse(
@@ -19,7 +21,9 @@ public record CommentResponse(
                 comment.getMemberId(),
                 comment.getContent(),
                 comment.getCreatedDate(),
-                comment.getIsEditable()
+                comment.getIsEditable(),
+                comment.getIsLiked(),
+                comment.getLikeCount()
         );
     }
 }

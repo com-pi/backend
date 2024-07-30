@@ -8,12 +8,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
 public class CommentQueryAdapter implements CommentQueryPort {
 
     private final CommentRepository commentRepository;
+
+    @Override
+    public Comment findComment(Long commentId) {
+        Optional<CommentEntity> commentEntityOp = commentRepository.findById(commentId);
+        return commentEntityOp.map(CommentEntity::toDomain).orElse(null);
+    }
 
     @Override
     public Comment getComment(Long commentId) {
