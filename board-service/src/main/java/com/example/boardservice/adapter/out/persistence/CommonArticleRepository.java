@@ -53,7 +53,7 @@ public interface CommonArticleRepository extends JpaRepository<CommonArticleEnti
     @Query("""
         SELECT c
         FROM CommonArticleEntity c
-        JOIN LikeEntity l ON c.articleId = l.article.articleId
+        JOIN ArticleLikeEntity l ON c.articleId = l.article.articleId
         WHERE l.isLiked = true
             AND l.memberId = :memberId
             AND c.deletionYn = :deletionYn

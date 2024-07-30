@@ -1,6 +1,6 @@
 package com.example.boardservice.adapter.in.web.command;
 
-import com.example.boardservice.domain.Like;
+import com.example.boardservice.domain.ArticleLike;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,8 +19,8 @@ public class UnlikeArticleCommand {
                 .build();
     }
 
-    public Like toDomain() {
-        return Like.builder()
+    public ArticleLike toDomain() {
+        return ArticleLike.builder()
                 .articleId(articleId)
                 .memberId(memberId)
                 .build();

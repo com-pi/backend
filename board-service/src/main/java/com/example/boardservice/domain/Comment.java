@@ -27,6 +27,8 @@ public class Comment {
 
     private Boolean isEditable;
 
+    private Integer likeCount;
+
     public static Comment ofId(Long commentId) {
         return Comment.builder()
                 .commentId(commentId)

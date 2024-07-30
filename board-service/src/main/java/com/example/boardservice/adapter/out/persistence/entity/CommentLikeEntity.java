@@ -1,7 +1,6 @@
 package com.example.boardservice.adapter.out.persistence.entity;
 
-
-import com.example.boardservice.domain.Like;
+import com.example.boardservice.domain.CommentLike;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,37 +9,36 @@ import lombok.*;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
-@Table(name = "likes", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"article_id", "member_id"})
+@Table(name = "comment_likes", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"comment_id", "member_id"})
 })
-public class LikeEntity {
+public class CommentLikeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long likeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "article_id")
-    private CommonArticleEntity article;
+    @JoinColumn(name = "comment_id")
+    private CommentEntity comment;
 
     private Long memberId;
 
     private Boolean isLiked;
 
-
-    public static LikeEntity from(Like like) {
-        return LikeEntity.builder()
+    public static CommentLikeEntity from(CommentLike like) {
+        return CommentLikeEntity.builder()
                 .likeId(like.getLikeId())
-                .article(CommonArticleEntity.ofId(like.getArticleId()))
+                .comment(CommentEntity.ofId(like.getCommentId()))
                 .memberId(like.getMemberId())
                 .isLiked(like.getIsLiked())
                 .build();
     }
 
-    public Like toDomain() {
-        return Like.builder()
+    public CommentLike toDomain() {
+        return CommentLike.builder()
                 .likeId(this.likeId)
-                .articleId(this.article.getArticleId())
+                .commentId(this.comment.getCommentId())
                 .memberId(this.memberId)
                 .isLiked(this.isLiked)
                 .build();

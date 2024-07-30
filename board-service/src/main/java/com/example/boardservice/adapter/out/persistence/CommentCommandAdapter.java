@@ -47,4 +47,18 @@ public class CommentCommandAdapter implements CommentCommandPort {
                 .orElseThrow(() -> new NotFoundException(CommentEntity.class));
         commentEntity.delete();
     }
+
+    @Override
+    public void increaseLikeCount(Long commentId) {
+        CommentEntity commentEntity = commentRepository.findById(commentId)
+                .orElseThrow(() -> new NotFoundException(CommentEntity.class));
+        commentEntity.increaseLikeCount();
+    }
+
+    @Override
+    public void decreaseLikeCount(Long commentId) {
+        CommentEntity commentEntity = commentRepository.findById(commentId)
+                .orElseThrow(() -> new NotFoundException(CommentEntity.class));
+        commentEntity.decreaseLikeCount();
+    }
 }

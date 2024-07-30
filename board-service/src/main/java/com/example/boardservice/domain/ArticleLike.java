@@ -10,7 +10,7 @@ import java.util.Objects;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor
-public class Like {
+public class ArticleLike {
 
     private Long likeId;
 
@@ -24,13 +24,13 @@ public class Like {
     /**
      * 생성자
      */
-    public Like(Long likeId, Boolean isLiked) {
+    public ArticleLike(Long likeId, Boolean isLiked) {
         this.likeId = likeId;
         this.isLiked = isLiked;
     }
 
-    public static Like ofStatus(Long likeId, Boolean isLiked) {
-        return new Like(likeId, isLiked);
+    public static ArticleLike ofStatus(Long likeId, Boolean isLiked) {
+        return new ArticleLike(likeId, isLiked);
     }
 
     public void like() {

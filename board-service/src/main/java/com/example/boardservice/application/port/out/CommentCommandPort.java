@@ -11,5 +11,7 @@ public interface CommentCommandPort {
 
     void delete(Comment comment);
 
+    void increaseLikeCount(Long commentId);
 
+    void decreaseLikeCount(Long commentId);
 }

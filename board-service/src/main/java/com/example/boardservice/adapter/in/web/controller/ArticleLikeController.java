@@ -3,7 +3,7 @@ package com.example.boardservice.adapter.in.web.controller;
 import com.example.boardservice.adapter.in.web.command.LikeArticleCommand;
 import com.example.boardservice.adapter.in.web.command.UnlikeArticleCommand;
 import com.example.boardservice.adapter.in.web.response.LikeStatusResponse;
-import com.example.boardservice.application.port.in.LikeUseCase;
+import com.example.boardservice.application.port.in.ArticleLikeUseCase;
 import com.example.boardservice.security.PassportHolder;
 import com.example.common.annotation.Authenticate;
 import com.example.common.baseentity.CommonResponse;
@@ -18,9 +18,9 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/likes")
 @Tag(name = "게시글 좋아요", description = "게시글 좋아요 API")
-public class LikeController {
+public class ArticleLikeController {
 
-    private final LikeUseCase likeUseCase;
+    private final ArticleLikeUseCase likeUseCase;
 
     @Operation(summary = "좋아요 등록", description = "게시글에 좋아요를 등록합니다.")
     @Authenticate(Role.MEMBER)
@@ -47,4 +47,6 @@ public class LikeController {
         LikeStatusResponse response = LikeStatusResponse.from(likeUseCase.getLikeStatusByCurrentMember(articleId, PassportHolder.getPassport().memberId()));
         return ResponseEntity.ok(response);
     }
+
+
 }

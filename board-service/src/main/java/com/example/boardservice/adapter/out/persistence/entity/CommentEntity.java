@@ -39,8 +39,10 @@ public class CommentEntity extends DeletedAtAbstractEntity {
 
     private LocalDate createdDate;
 
+    private Integer likeCount;
+
     @Builder
-    public CommentEntity(Long commentId, String content, Long memberId, CommentEntity parent, List<CommentEntity> children, CommonArticleEntity article, LocalDate createdDate) {
+    public CommentEntity(Long commentId, String content, Long memberId, CommentEntity parent, List<CommentEntity> children, CommonArticleEntity article, LocalDate createdDate, Integer likeCount) {
         this.commentId = commentId;
         this.content = content;
         this.memberId = memberId;
@@ -48,6 +50,7 @@ public class CommentEntity extends DeletedAtAbstractEntity {
         this.children = children;
         this.article = article;
         this.createdDate = createdDate;
+        this.likeCount = likeCount;
     }
 
     /**
@@ -71,7 +74,8 @@ public class CommentEntity extends DeletedAtAbstractEntity {
                 .memberId(comment.getMemberId())
                 .article(CommonArticleEntity.ofId(comment.getArticleId()))
                 .content(comment.getContent())
-                .createdDate(comment.getCreatedDate());
+                .createdDate(comment.getCreatedDate())
+                .likeCount(comment.getLikeCount());
 
         Optional.ofNullable(comment.getParent())
                 .map(parent -> CommentEntity.ofId(parent.getCommentId()))
@@ -121,4 +125,13 @@ public class CommentEntity extends DeletedAtAbstractEntity {
     public void delete() {
         super.delete();
     }
+
+    public void increaseLikeCount() {
+        this.likeCount += 1;
+    }
+
+    public void decreaseLikeCount() {
+        this.likeCount -= 1;
+    }
+
 }

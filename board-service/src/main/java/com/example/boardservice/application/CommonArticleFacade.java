@@ -20,7 +20,7 @@ public class CommonArticleFacade implements CommonArticleUseCase {
 
     private final CommonArticleService articleService;
     private final ArticleHashtagService articleHashtagService;
-    private final LikeService likeService;
+    private final ArticleLikeService likeService;
 
     public List<Article> getArticleList(GetArticleListCommand command) {
         Page<Article> articlePage = articleService.getArticleList(command.getType(), command.getPageable());

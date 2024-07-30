@@ -28,6 +28,7 @@ public class PostCommentCommand {
                 .memberId(memberId)
                 .content(content)
                 .articleId(articleId)
+                .likeCount(0)
                 .createdDate(LocalDate.now())
                 .build();
     }
