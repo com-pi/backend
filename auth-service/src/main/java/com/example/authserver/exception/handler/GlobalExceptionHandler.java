@@ -31,6 +31,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<CommonResponse<Void>> handleNotFoundException(NotFoundException exception) {
+        log.error(exception.getMessage(), exception);
         return switch (exception.getResourceClass().getName()) {
             case "Member" -> CommonResponse.notFoundWithMessage("회원을 찾을 수 없습니다.");
             case "MemberDocument" -> CommonResponse.notFoundWithMessage("회원 도큐먼트를 찾을 수 없습니다.");
@@ -40,6 +41,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(OAuthLoginException.class)
     public ResponseEntity<CommonResponse<Void>> handleFeignException(OAuthLoginException exception) {
+        log.error(exception.getMessage(), exception);
         String message = exception.getMessage();
         try {
             JsonNode jsonNode = objectMapper.readTree(exception.getMessage());
@@ -67,41 +69,49 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<CommonResponse<Void>> handleInvalidTokenException(InvalidTokenException exception) {
+        log.error(exception.getMessage(), exception);
         return CommonResponse.badRequestWithMessage(exception.getTokenType().getInvalidMessage());
     }
 
     @ExceptionHandler(AlreadyLoggedInException.class)
     public ResponseEntity<CommonResponse<Void>> handleAlreadyLoggedInException(AlreadyLoggedInException exception) {
+        log.error(exception.getMessage(), exception);
         return CommonResponse.conflictWithMessage(exception.getMessage());
     }
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<CommonResponse<Void>> handleUnauthorizedException(UnauthorizedException exception) {
+        log.error(exception.getMessage(), exception);
         return CommonResponse.unauthorizedWithMessage(exception.getMessage());
     }
 
     @ExceptionHandler(ForbiddenException.class)
     public ResponseEntity<CommonResponse<Void>> handleForbiddenException(ForbiddenException exception) {
+        log.error(exception.getMessage(), exception);
         return CommonResponse.forbiddenWithMessage(exception.getMessage());
     }
 
     @ExceptionHandler(VerificationFailException.class)
     public ResponseEntity<CommonResponse<Void>> handleVerificationFailException(VerificationFailException exception) {
+        log.error(exception.getMessage(), exception);
         return CommonResponse.forbiddenWithMessage(exception.getMessage());
     }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<CommonResponse<Void>> handleBadRequestException(BadRequestException exception) {
+        log.error(exception.getMessage(), exception);
         return CommonResponse.badRequestWithMessage(exception.getMessage());
     }
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<CommonResponse<Void>> handleRuntimeException(RuntimeException exception) {
+        log.error(exception.getMessage(), exception);
         return CommonResponse.internalServerErrorWithMessage(exception.getMessage());
     }
 
     @ExceptionHandler(ConflictException.class)
     public ResponseEntity<CommonResponse<Void>> handleConflictException(ConflictException exception) {
+        log.error(exception.getMessage(), exception);
         return CommonResponse.conflictWithMessage(exception.getMessage());
     }
 
