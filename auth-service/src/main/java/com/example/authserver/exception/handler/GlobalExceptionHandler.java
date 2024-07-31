@@ -27,8 +27,6 @@ public class GlobalExceptionHandler {
 
     private final ObjectMapper objectMapper;
 
-    // Todo : 에러 로깅
-
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<CommonResponse<Void>> handleNotFoundException(NotFoundException exception) {
         log.error(exception.getMessage(), exception);
@@ -70,7 +68,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<CommonResponse<Void>> handleInvalidTokenException(InvalidTokenException exception) {
         log.error(exception.getMessage(), exception);
-        return CommonResponse.badRequestWithMessage(exception.getTokenType().getInvalidMessage());
+        return CommonResponse.badRequestWithMessage(exception.getMessage());
     }
 
     @ExceptionHandler(AlreadyLoggedInException.class)
