@@ -15,6 +15,7 @@ public class GatewayConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOrigin("http://localhost:5500");
         config.addAllowedOrigin("https://frontend-roan-five-28.vercel.app");
         config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
