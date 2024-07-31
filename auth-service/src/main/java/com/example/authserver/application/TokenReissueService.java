@@ -25,7 +25,7 @@ public class TokenReissueService {
     public TokenReIssueResponse reissueToken(HttpServletRequest request, HttpServletResponse response) {
 
         String refreshToken = CookieUtil.getRefreshToken(request)
-                .orElseThrow(() -> new InvalidTokenException(REFRESH_TOKEN));
+                .orElseThrow(() -> new InvalidTokenException(REFRESH_TOKEN, "리프레시 토큰이 없습니다."));
         Passport passport = jwtUtil.validateToken(refreshToken, REFRESH_TOKEN)
                 .orElseThrow(() -> new InvalidTokenException(REFRESH_TOKEN));
         String storedToken = redisPort.getRefreshToken(passport)

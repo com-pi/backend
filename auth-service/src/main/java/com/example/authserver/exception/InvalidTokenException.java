@@ -13,4 +13,9 @@ public class InvalidTokenException extends RuntimeException {
         this.tokenType = tokenType;
     }
 
+    public InvalidTokenException(TokenType tokenType, String message) {
+        super(message);
+        this.tokenType = tokenType;
+    }
+
 }
