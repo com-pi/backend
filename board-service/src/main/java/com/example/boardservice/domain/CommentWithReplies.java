@@ -19,4 +19,17 @@ public class CommentWithReplies {
                 .build();
     }
 
+    public static List<Long> getParentIdList(List<CommentWithReplies> commentList) {
+        return commentList.stream()
+                .map(commentWithReplies -> commentWithReplies.getComment().getCommentId())
+                .toList();
+    }
+
+    public static List<Long> getChildIdList(List<CommentWithReplies> commentList) {
+        return commentList.stream()
+                .flatMap(commentWithReplies -> commentWithReplies.getChildren().stream())
+                .map(Comment::getCommentId)
+                .toList();
+    }
+
 }

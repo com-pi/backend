@@ -96,7 +96,8 @@ public class CommentEntity extends DeletedAtAbstractEntity {
                 .memberId(this.memberId)
                 .articleId(this.article.getArticleId())
                 .content(this.content)
-                .createdDate(this.createdDate);
+                .createdDate(this.createdDate)
+                .likeCount(this.likeCount);
 
         Optional.ofNullable(this.getParent())
                 .map(parent -> Comment.ofId(parent.getCommentId()))

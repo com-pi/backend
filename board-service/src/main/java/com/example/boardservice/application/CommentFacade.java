@@ -6,7 +6,6 @@ import com.example.boardservice.domain.CommentWithReplies;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -48,29 +47,20 @@ public class CommentFacade implements CommentUseCase {
      */
     private void addLikeStatusList(List<CommentWithReplies> commentList, Long memberId) {
         // 부모
-        List<Long> parentCommentIdlist = new ArrayList<>();
-        for (CommentWithReplies commentWithReplies : commentList) {
-            parentCommentIdlist.add(commentWithReplies.getComment().getCommentId());
-        }
+        List<Long> parentCommentIdlist = CommentWithReplies.getParentIdList(commentList);
         List<Boolean> parentLikeStatus = likeService.getLikeStatusByCommentList(parentCommentIdlist, memberId);
         for (int i = 0; i < commentList.size(); i++) {
             commentList.get(i).getComment().addLikeStatus(parentLikeStatus.get(i));
         }
 
         // 자식
-        List<Long> childCommentIdList = new ArrayList<>();
-        for (CommentWithReplies commentWithReplies : commentList) {
-            for(Comment comment : commentWithReplies.getChildren()) {
-                childCommentIdList.add(comment.getCommentId());
-            }
-        }
+        List<Long> childCommentIdList = CommentWithReplies.getChildIdList(commentList);
         List<Boolean> childLikeStatus = likeService.getLikeStatusByCommentList(childCommentIdList, memberId);
-        for(int i = 0 ; i < commentList.size(); i++) {
-            for(int j = 0; j< commentList.get(i).getChildren().size(); j++) {
-                commentList.get(i).getChildren().get(j).addLikeStatus(childLikeStatus.get(j));
+        int childIndex = 0;
+        for (CommentWithReplies commentWithReplies : commentList) {
+            for (Comment childComment : commentWithReplies.getChildren()) {
+                childComment.addLikeStatus(childLikeStatus.get(childIndex++));
             }
         }
     }
-
-
 }

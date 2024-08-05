@@ -31,8 +31,6 @@ public class Comment {
 
     private Boolean isLiked;
 
-    private Integer commentCount;
-
     public static Comment ofId(Long commentId) {
         return Comment.builder()
                 .commentId(commentId)
