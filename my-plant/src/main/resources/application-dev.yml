@@ -21,4 +21,4 @@ feign:
   client:
     config:
       diary-article:
-        url: http://board-service:8080/board-service/diaries
+        url: http://board-service:8080
