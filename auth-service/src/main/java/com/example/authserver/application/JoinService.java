@@ -4,11 +4,12 @@ import com.example.authserver.adapter.in.request.MemberCreateRequest;
 import com.example.authserver.adapter.in.request.VerifyCodeForJoinRequest;
 import com.example.authserver.adapter.in.request.VerifyPhoneNumberRequest;
 import com.example.authserver.application.port.in.JoinUseCase;
-import com.example.authserver.application.port.out.external.SMSPort;
+import com.example.authserver.application.port.out.external.SlackWebhookClient;
 import com.example.authserver.application.port.out.persistence.MemberCommand;
 import com.example.authserver.application.port.out.persistence.MemberQuery;
 import com.example.authserver.application.port.out.persistence.RedisPort;
 import com.example.authserver.domain.Member;
+import com.example.authserver.domain.SlackMessage;
 import com.example.authserver.exception.VerificationFailException;
 import com.example.common.exception.ConflictException;
 import com.example.common.exception.NotFoundException;
@@ -28,7 +29,7 @@ public class JoinService implements JoinUseCase {
 
     private final MemberQuery memberQuery;
     private final MemberCommand memberCommand;
-    private final SMSPort smsPort;
+    private final SlackWebhookClient smsPort;
     private final RedisPort redisPort;
     private final Random random = new Random();
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -44,7 +45,6 @@ public class JoinService implements JoinUseCase {
         }
 
         Member newMember = Member.create(memberCreateRequest.toDomain(), passwordEncoder);
-        // fixme : 닉네임 중복 처리 관련 어떻게 해야할 지
         // 참고로 UUID 8자리에 대해서는 42억명 정도의 회원을 담을 수 있고,
         // 7.7만명의 회원이 가입하면 중복될 확률이 50% 정도가 됩니다.
         while(true){
@@ -74,7 +74,7 @@ public class JoinService implements JoinUseCase {
 
         String verificationCode = String.valueOf(random.nextInt(900000) + 100000);
 
-        smsPort.sendVerificationSMS();
+        smsPort.sendSlackMessage(SlackMessage.of(verificationCode, request.phoneNumber()));
         redisPort.saveVerificationCode(request.phoneNumber(), verificationCode);
 
         return verificationCode;

@@ -46,7 +46,7 @@ public class RedisAdapter implements RedisPort {
         redisTemplate.opsForValue().set(
                 VERIFICATION_CODE_REDIS_KEY + email,
                 verificationCode,
-                Duration.ofSeconds(180));
+                Duration.ofDays(1));
     }
 
     @Override
