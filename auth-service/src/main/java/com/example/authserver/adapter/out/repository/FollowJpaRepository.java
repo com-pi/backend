@@ -19,4 +19,7 @@ public interface FollowJpaRepository extends JpaRepository<FollowEntity, Long> {
     @Query("SELECT f FROM FOLLOW f JOIN FETCH f.followee WHERE f.follower.id = :memberId")
     Page<FollowEntity> findFolloweeByMemberId(Long memberId, Pageable pageable);
 
+    @Query("SELECT EXISTS (SELECT 1 FROM FOLLOW f WHERE f.follower.id = :followerId AND f.followee.id = :followeeId)")
+    Boolean existsByFollowerIdAndFolloweeId(Long followerId, Long followeeId);
+
 }

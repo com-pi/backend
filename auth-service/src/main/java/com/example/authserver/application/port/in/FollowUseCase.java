@@ -8,7 +8,7 @@ public interface FollowUseCase {
     void follow(Long followeeId);
     void unFollow(Long followeeId);
 
-    FollowerPagingResult getFollowerList(Long memberId, Integer page, Integer size);
-    FollowingPagingResult getFollowingList(Long memberId, Integer page, Integer size);
+    FollowerPagingResult getFollowerList(Long myId, Long memberId, Integer page, Integer size);
+    FollowingPagingResult getFollowingList(Long myId, Long memberId, Integer page, Integer size);
 
 }

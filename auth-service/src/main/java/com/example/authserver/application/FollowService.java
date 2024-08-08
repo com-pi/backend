@@ -1,5 +1,7 @@
 package com.example.authserver.application;
 
+import com.example.authserver.adapter.out.entity.FollowEntity;
+import com.example.authserver.adapter.out.entity.MemberEntity;
 import com.example.authserver.aop.filter.PassportHolder;
 import com.example.authserver.application.port.in.FollowUseCase;
 import com.example.authserver.application.port.out.persistence.FollowCommand;
@@ -9,8 +11,11 @@ import com.example.authserver.domain.*;
 import com.example.common.domain.Passport;
 import com.example.common.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashMap;
 
 @Component
 @RequiredArgsConstructor
@@ -29,7 +34,6 @@ public class FollowService implements FollowUseCase {
                 .follower(Member.ofId(passport.memberId()))
                 .followee(followee)
                 .build();
-
         followCommand.save(follow);
     }
 
@@ -45,14 +49,43 @@ public class FollowService implements FollowUseCase {
     }
 
     @Override
-    @Transactional
-    public FollowerPagingResult getFollowerList(Long memberId, Integer page, Integer size) {
-        return followQuery.followersList(memberId, page, size);
+    public FollowerPagingResult getFollowerList(Long myId, Long memberId, Integer page, Integer size) {
+        Page<FollowEntity> followEntities = followQuery.followersList(memberId, page, size);
+        HashMap<Long, Boolean> followedByMe = followQuery.isFollowedByMe(myId,
+                followEntities.get().map(followEntity -> followEntity.getFollower().getId()).toList());
+        return FollowerPagingResult.builder()
+                .totalPage(followEntities.getTotalPages())
+                .totalElement(followEntities.getTotalElements())
+                .followerMemberList(followEntities.get().map(followEntity -> {
+                    MemberEntity follower = followEntity.getFollower();
+                    return FollowMember.builder()
+                            .id(follower.getId())
+                            .nickname(follower.getNickname())
+                            .thumbnailUrl(follower.getThumbnailUrl())
+                            .imageUrl(follower.getImageUrl())
+                            .isFollowed(followedByMe.get(follower.getId()))
+                            .build();
+                }).toList()).build();
     }
 
     @Override
-    public FollowingPagingResult getFollowingList(Long memberId, Integer page, Integer size) {
-        return followQuery.followingList(memberId, page, size);
+    public FollowingPagingResult getFollowingList(Long myId, Long memberId, Integer page, Integer size) {
+        Page<FollowEntity> followEntities = followQuery.followingList(memberId, page, size);
+        HashMap<Long, Boolean> followedByMe = followQuery.isFollowedByMe(myId,
+                followEntities.get().map(followEntity -> followEntity.getFollowee().getId()).toList());
+        return FollowingPagingResult.builder()
+                .totalPage(followEntities.getTotalPages())
+                .totalElement(followEntities.getTotalElements())
+                .followingMemberList(followEntities.get().map(followEntity -> {
+                    MemberEntity followee = followEntity.getFollowee();
+                    return FollowMember.builder()
+                            .id(followee.getId())
+                            .nickname(followee.getNickname())
+                            .thumbnailUrl(followee.getThumbnailUrl())
+                            .imageUrl(followee.getImageUrl())
+                            .isFollowed(followedByMe.get(followee.getId()))
+                            .build();
+                }).toList()).build();
     }
 
 }

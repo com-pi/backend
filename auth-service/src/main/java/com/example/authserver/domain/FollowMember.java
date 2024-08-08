@@ -7,7 +7,8 @@ public record FollowMember(
         Long id,
         String nickname,
         String imageUrl,
-        String thumbnailUrl
+        String thumbnailUrl,
+        Boolean isFollowed
 ) {
 
 }
