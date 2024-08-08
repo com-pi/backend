@@ -49,6 +49,6 @@ public class SwaggerConfig {
                 .info(new Info().title("꼼삐 Swagger").description("식물생활 서비스 API"))
                 .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
                 .security(Collections.singletonList(securityRequirement))
-                .addServersItem(new Server().url("https://api.com-p.site/board-service/"));
+                .addServersItem(new Server().url("https://api.comppi.site/board-service/"));
     }
 }

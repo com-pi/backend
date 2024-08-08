@@ -15,13 +15,13 @@ springdoc:
   swagger-ui:
     urls[0]:
       name: 인증/인가 서비스
-      url: https://api.com-p.site/auth-service/v3/api-docs
+      url: https://api.comppi.site/auth-service/v3/api-docs
     urls[1]:
       name: 식물생활 서비스
-      url: https://api.com-p.site/board-service/v3/api-docs
+      url: https://api.comppi.site/board-service/v3/api-docs
     urls[2]:
       name: 내 식물 서비스
-      url: https://api.com-p.site/my-plant/v3/api-docs
+      url: https://api.comppi.site/my-plant/v3/api-docs
     urls[3]:
       name: 싹싹도감 서비스
-      url: https://api.com-p.site/encyclo-service/v3/api-docs
+      url: https://api.comppi.site/encyclo-service/v3/api-docs

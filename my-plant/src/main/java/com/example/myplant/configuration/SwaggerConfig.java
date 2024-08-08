@@ -49,7 +49,7 @@ public class SwaggerConfig {
                 .info(new Info().title("꼼삐 Swagger").description("내 식물 API"))
                 .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
                 .security(Collections.singletonList(securityRequirement))
-                .addServersItem(new Server().url("https://api.com-p.site/my-plant/"));
+                .addServersItem(new Server().url("https://api.comppi.site/my-plant/"));
     }
 }
 

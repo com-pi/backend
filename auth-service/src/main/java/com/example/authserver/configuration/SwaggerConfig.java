@@ -23,7 +23,7 @@ public class SwaggerConfig {
         if(Arrays.asList(activeProfiles).contains("local")) {
             docsUrl = "/auth-service";
         } else {
-            docsUrl = "https://api.com-p.site/auth-service/";
+            docsUrl = "https://api.comppi.site/auth-service/";
         }
     }
 
