@@ -96,7 +96,7 @@ public class DiaryEntity extends DeletedAtAbstractEntity {
 
     public void update(Diary diary) {
         this.title = diary.getTitle();
-        this.content = diary.getTitle();
+        this.content = diary.getContent();
         this.plantCareList = diary.getPlantCareList();
         this.imageUrlList = diary.getImageUrlList();
         this.isPublished = diary.getIsPublished();

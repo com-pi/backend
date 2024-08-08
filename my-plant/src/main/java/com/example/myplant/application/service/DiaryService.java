@@ -16,10 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -58,11 +58,7 @@ public class DiaryService implements DiaryUseCase {
     public Long updateDiary(Diary diary, List<MultipartFile> imageFiles) {
         Diary originDiary = diaryQueryPort.getDiaryByDiaryId(diary.getDiaryId());
         validatePermission(originDiary.getMemberId(), diary.getMemberId());
-
-        List<String> imageUrlList = CollectionUtils.isEmpty(imageFiles)
-                ? originDiary.getImageUrlList()
-                : getImageUrls(imageFiles);
-        diary.updateImageUrlList(imageUrlList);
+        diary.updateImageUrlList(getImageUrls(imageFiles));
 
         diaryCommandPort.update(diary);
         return diary.getDiaryId();
@@ -110,6 +106,9 @@ public class DiaryService implements DiaryUseCase {
     }
 
     private List<String> getImageUrls(List<MultipartFile> imageFiles) {
+        if(Objects.isNull(imageFiles))
+            return Collections.emptyList();
+
         List<String> objectNames = imageCommand.saveImages(
                 new SaveImagesCommand(imageFiles, MinioBucket.DIARY_IMAGES)
         );
