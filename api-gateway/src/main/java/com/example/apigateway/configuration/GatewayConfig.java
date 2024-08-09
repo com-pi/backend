@@ -17,7 +17,6 @@ public class GatewayConfig {
         config.addAllowedOrigin("http://localhost:3000");
         config.addAllowedOrigin("http://localhost:5500");
         config.addAllowedOrigin("https://comppi.vercel.app/");
-        config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 
