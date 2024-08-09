@@ -2,18 +2,14 @@ package com.example.common.domain;
 
 public record Passport(
     Long memberId,
-    Role role,
-    String nickName,
-    String thumbnail
+    Role role
 ) {
     public static Passport of(String id,
-                              String role,
-                              String nickName,
-                              String thumbnail) {
+                              String role) {
         try {
             long memberId = Long.parseLong(id);
             Role memberRole = Role.of(role);
-            return new Passport(memberId, memberRole, nickName, thumbnail);
+            return new Passport(memberId, memberRole);
         } catch (NumberFormatException e) {
             // 멤버 아이디 파싱 오류
             return null;
@@ -23,7 +19,7 @@ public record Passport(
         }
     }
     public static Passport anonymous(){
-        return new Passport(0L, Role.ANONYMOUS, "", "");
+        return new Passport(0L, Role.ANONYMOUS);
     }
 
 }

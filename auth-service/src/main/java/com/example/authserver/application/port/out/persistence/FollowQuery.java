@@ -8,7 +8,13 @@ import java.util.List;
 
 public interface FollowQuery {
 
+    Integer countFollowee(Long memberId);
+
+    Integer countFollower(Long memberId);
+
     Page<FollowEntity> followingList(Long memberId, Integer page, Integer size);
     Page<FollowEntity> followersList(Long memberId, Integer page, Integer size);
-    HashMap<Long, Boolean> isFollowedByMe(Long memberId, List<Long> followeeId);
+    HashMap<Long, Boolean> isFollowedByMember(Long memberId, List<Long> followeeId);
+
+    Boolean isFollowedByMember(Long memberId, Long followeeId);
 }

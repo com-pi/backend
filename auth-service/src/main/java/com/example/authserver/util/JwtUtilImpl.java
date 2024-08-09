@@ -36,9 +36,6 @@ public class JwtUtilImpl implements JwtUtil {
                 .withExpiresAt(tokenType.getInstant())
                 .withSubject(member.getId().toString())
                 .withClaim("rol", member.getRole().name())
-                .withClaim("nik", member.getNickname())
-                .withClaim("img", member.getImageUrl())
-                .withClaim("thm", member.getThumbnailUrl())
                 .sign(Algorithm.HMAC256(tokenType.getSecret(this)));
 
         return ComPToken.of(tokenType, token);
@@ -51,8 +48,6 @@ public class JwtUtilImpl implements JwtUtil {
                 .withExpiresAt(tokenType.getInstant())
                 .withSubject(passPort.memberId().toString())
                 .withClaim("rol", passPort.role().name())
-                .withClaim("nik", passPort.nickName())
-                .withClaim("img", passPort.thumbnail())
                 .sign(Algorithm.HMAC256(tokenType.getSecret(this)));
 
         return ComPToken.of(tokenType, token);
@@ -65,9 +60,7 @@ public class JwtUtilImpl implements JwtUtil {
                     .verify(token);
             return Optional.ofNullable(Passport.of(
                     decodedJWT.getSubject(),
-                    decodedJWT.getClaim("rol").asString(),
-                    decodedJWT.getClaim("nik").asString(),
-                    decodedJWT.getClaim("img").asString()));
+                    decodedJWT.getClaim("rol").asString()));
         } catch (JWTVerificationException e) {
             return Optional.empty();
         }

@@ -1,8 +1,8 @@
 package com.example.authserver.adapter.out.entity;
 
 import com.example.authserver.adapter.out.command.MemberEntityListener;
-import com.example.authserver.domain.FollowMember;
 import com.example.authserver.domain.Member;
+import com.example.authserver.domain.MemberBrief;
 import com.example.authserver.util.GeomUtil;
 import com.example.common.baseentity.DeletedAtAbstractEntity;
 import com.example.common.domain.Address;
@@ -93,8 +93,8 @@ public class MemberEntity extends DeletedAtAbstractEntity {
                 .build();
     }
 
-    public static FollowMember toFollowMember(MemberEntity memberEntity) {
-        return FollowMember.builder()
+    public static MemberBrief toBrief(MemberEntity memberEntity) {
+        return MemberBrief.builder()
                 .id(memberEntity.getId())
                 .nickname(memberEntity.getNickname())
                 .imageUrl(memberEntity.getImageUrl())

@@ -9,7 +9,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,6 +18,16 @@ public class FollowQueryImpl implements FollowQuery {
 
     private final FollowJpaRepository followJpaRepository;
     private final FollowCacheRepository followCacheRepository;
+
+    @Override
+    public Integer countFollowee(Long memberId) {
+        return followJpaRepository.countByFollowerId(memberId);
+    }
+
+    @Override
+    public Integer countFollower(Long memberId) {
+        return followJpaRepository.countByFolloweeId(memberId);
+    }
 
     @Override
     public Page<FollowEntity> followingList(Long memberId, Integer page, Integer size) {
@@ -37,27 +46,28 @@ public class FollowQueryImpl implements FollowQuery {
     }
 
     @Override
-    public HashMap<Long, Boolean> isFollowedByMe(Long memberId, List<Long> followeeId) {
+    public HashMap<Long, Boolean> isFollowedByMember(Long memberId, List<Long> followeeIds) {
         HashMap<Long, Boolean> result = new HashMap<>();
-        List<Long> notCached = new ArrayList<>();
-        for(Long id : followeeId){
-            Boolean isFollowedByMe = followCacheRepository.isFollowedByMe(memberId, id);
-            if(isFollowedByMe == null){
-                notCached.add(id);
-            } else {
-                result.put(id, isFollowedByMe);
-            }
-        }
-        for(Long id : notCached){
-            Boolean isFollowedByMe = followJpaRepository.existsByFollowerIdAndFolloweeId(memberId, id);
-            result.put(id, isFollowedByMe);
-            if(isFollowedByMe) {
-                followCacheRepository.recordFollow(memberId, id);
-            } else {
-                followCacheRepository.removeFollow(memberId, id);
-            }
+        for (Long id : followeeIds) {
+            Boolean isFollowed = isFollowedByMember(memberId, id);
+            result.put(id, isFollowed);
         }
         return result;
+    }
+
+    @Override
+    public Boolean isFollowedByMember(Long memberId, Long followeeId) {
+        Boolean isFollowedByMe = followCacheRepository.isFollowedByMe(memberId, followeeId);
+        if(isFollowedByMe != null){
+            return isFollowedByMe;
+        }
+        Boolean isFollowed = followJpaRepository.existsByFollowerIdAndFolloweeId(memberId, followeeId);
+        if(isFollowed){
+            followCacheRepository.recordFollow(memberId, followeeId);
+        } else {
+            followCacheRepository.removeFollow(memberId, followeeId);
+        }
+        return isFollowed;
     }
 
 }

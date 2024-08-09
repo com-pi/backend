@@ -20,15 +20,13 @@ public class JwtValidator {
     public Passport validateToken(String token) {
         try {
             DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(accessTokenSecret)).build().verify(token);
-            String subject = decodedJWT.getSubject();
-            String memberId = decodedJWT.getClaim("rol").asString();
-            String nickName = decodedJWT.getClaim("nik").asString();
-            String thumbnail = decodedJWT.getClaim("img").asString();
-            return Passport.of(subject, memberId, nickName, thumbnail);
+            String memberId = decodedJWT.getSubject();
+            String role = decodedJWT.getClaim("rol").asString();
+            return Passport.of(memberId, role);
         } catch(TokenExpiredException e) {
-            throw new InvalidTokenException("토큰이 만료 되었습니다.", e);
+            throw new InvalidTokenException("토큰이 만료 되었습니다.", TokenType.ACCESS_TOKEN, e);
         } catch (JWTVerificationException e) {
-            throw new InvalidTokenException(TokenType.ACCESS_TOKEN, e);
+            throw new InvalidTokenException("엑세스 토큰이 유효하지 않습니다.", TokenType.ACCESS_TOKEN, e);
         }
 
     }

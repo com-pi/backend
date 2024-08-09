@@ -14,9 +14,11 @@ public record MyInfoResponse(
         String imageUrl,
         String thumbnailUrl,
         Address address,
-        Location location
+        Location location,
+        Integer followerCount,
+        Integer followingCount
 ) {
-    public static MyInfoResponse of(Member member){
+    public static MyInfoResponse of(Member member, Integer followerCount, Integer followingCount) {
         return new MyInfoResponse(
                 member.getEmail(),
                 member.getPhoneNumber(),
@@ -26,7 +28,9 @@ public record MyInfoResponse(
                 member.getImageUrl(),
                 member.getThumbnailUrl(),
                 member.getAddress(),
-                member.getLocation()
+                member.getLocation(),
+                followerCount,
+                followingCount
         );
     }
 

@@ -1,13 +1,17 @@
 package com.example.authserver.adapter.out.query;
 
+import com.example.authserver.adapter.out.repository.MemberCacheRepository;
 import com.example.authserver.adapter.out.entity.MemberEntity;
 import com.example.authserver.adapter.out.repository.MemberJpaRepository;
 import com.example.authserver.application.port.out.persistence.MemberQuery;
 import com.example.authserver.domain.Member;
+import com.example.authserver.domain.MemberBrief;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -16,11 +20,30 @@ import java.util.Optional;
 public class JpaMemberQueryImpl implements MemberQuery {
 
     private final MemberJpaRepository memberRepository;
+    private final MemberCacheRepository memberCacheRepository;
 
     @Override
     public Optional<Member> findById(Long id) {
         return memberRepository.findById(id)
                 .flatMap(memberEntity -> Optional.ofNullable(MemberEntity.toDomain(memberEntity)));
+    }
+
+    @Nullable
+    @Override
+    public MemberBrief findBriefById(Long id) {
+        return memberCacheRepository.getMemberBrief(id);
+    }
+
+    @Override
+    public List<MemberBrief> findAllBriefById(List<Long> ids) {
+        List<MemberEntity> memberEntityList = memberRepository.findAllById(ids);
+        return memberEntityList.stream().map(
+                memberEntity -> {
+                    MemberBrief memberBrief = MemberEntity.toBrief(memberEntity);
+                    memberCacheRepository.saveMemberBrief(memberBrief);
+                    return memberBrief;
+                }
+        ).toList();
     }
 
     @Override

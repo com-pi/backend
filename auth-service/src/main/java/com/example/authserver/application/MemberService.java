@@ -1,15 +1,18 @@
 package com.example.authserver.application;
 
 import com.example.authserver.adapter.in.request.ModifyMemberInfoRequest;
+import com.example.authserver.adapter.in.response.MemberBriefInfoResponse;
 import com.example.authserver.adapter.in.response.MemberInfoResponse;
 import com.example.authserver.adapter.in.response.MyInfoResponse;
 import com.example.authserver.adapter.out.entity.MemberEntity;
 import com.example.authserver.aop.filter.PassportHolder;
 import com.example.authserver.application.port.in.MemberUseCase;
 import com.example.authserver.application.port.out.external.AddressConverterPort;
+import com.example.authserver.application.port.out.persistence.FollowQuery;
 import com.example.authserver.application.port.out.persistence.MemberCommand;
 import com.example.authserver.application.port.out.persistence.MemberQuery;
 import com.example.authserver.domain.Member;
+import com.example.authserver.domain.MemberBrief;
 import com.example.authserver.exception.BadRequestException;
 import com.example.common.domain.Address;
 import com.example.common.domain.Location;
@@ -19,11 +22,15 @@ import com.example.imagemodule.domain.ImageAndThumbnail;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class MemberService implements MemberUseCase {
 
     private final MemberQuery memberQuery;
+    private final FollowQuery followQuery;
     private final MemberCommand memberCommand;
     private final ImageCommand imageCommand;
     private final AddressConverterPort addressConverter;
@@ -33,7 +40,26 @@ public class MemberService implements MemberUseCase {
         Member me = memberQuery.findById(PassportHolder.getPassport().memberId())
                 .orElseThrow(() -> new NotFoundException(Member.class));
 
-        return MyInfoResponse.of(me);
+        Integer followerCount = followQuery.countFollower(me.getId());
+        Integer followeeCount = followQuery.countFollowee(me.getId());
+
+        return MyInfoResponse.of(me, followerCount, followeeCount);
+    }
+
+    @Override
+    public MemberBriefInfoResponse getMemberBriefInfo(List<Long> memberIds) {
+        List<MemberBrief> memberBriefList = new ArrayList<>();
+        List<Long> notCached = new ArrayList<>();
+        for(Long memberId : memberIds){
+            MemberBrief briefById = memberQuery.findBriefById(memberId);
+            if(briefById == null){
+                notCached.add(memberId);
+            } else {
+                memberBriefList.add(briefById);
+            }
+        }
+        memberBriefList.addAll(memberQuery.findAllBriefById(notCached));
+        return MemberBriefInfoResponse.of(memberBriefList);
     }
 
     @Override
@@ -79,7 +105,11 @@ public class MemberService implements MemberUseCase {
         Member foundMember = memberQuery.findById(memberId)
                 .orElseThrow(() -> new NotFoundException(MemberEntity.class));
 
-        return MemberInfoResponse.from(foundMember);
+        Integer followerCount = followQuery.countFollower(memberId);
+        Integer followingCount = followQuery.countFollowee(memberId);
+        Boolean isFollowed = followQuery.isFollowedByMember(PassportHolder.getPassport().memberId(), memberId);
+
+        return MemberInfoResponse.from(foundMember, followerCount, followingCount, isFollowed);
     }
 
 }

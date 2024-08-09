@@ -6,13 +6,11 @@ import lombok.Getter;
 @Getter
 public class InvalidTokenException extends RuntimeException {
 
+    private final TokenType tokenType;
 
-    public InvalidTokenException(TokenType tokenType, Throwable cause) {
-        super(tokenType.getInvalidMessage(), cause);
-    }
-
-    public InvalidTokenException(String message, Throwable cause) {
+    public InvalidTokenException(String message, TokenType tokenType, Throwable cause) {
         super(message, cause);
+        this.tokenType = tokenType;
     }
 
 }

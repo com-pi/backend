@@ -51,7 +51,7 @@ public class FollowService implements FollowUseCase {
     @Override
     public FollowerPagingResult getFollowerList(Long myId, Long memberId, Integer page, Integer size) {
         Page<FollowEntity> followEntities = followQuery.followersList(memberId, page, size);
-        HashMap<Long, Boolean> followedByMe = followQuery.isFollowedByMe(myId,
+        HashMap<Long, Boolean> followedByMe = followQuery.isFollowedByMember(myId,
                 followEntities.get().map(followEntity -> followEntity.getFollower().getId()).toList());
         return FollowerPagingResult.builder()
                 .totalPage(followEntities.getTotalPages())
@@ -71,7 +71,7 @@ public class FollowService implements FollowUseCase {
     @Override
     public FollowingPagingResult getFollowingList(Long myId, Long memberId, Integer page, Integer size) {
         Page<FollowEntity> followEntities = followQuery.followingList(memberId, page, size);
-        HashMap<Long, Boolean> followedByMe = followQuery.isFollowedByMe(myId,
+        HashMap<Long, Boolean> followedByMe = followQuery.isFollowedByMember(myId,
                 followEntities.get().map(followEntity -> followEntity.getFollowee().getId()).toList());
         return FollowingPagingResult.builder()
                 .totalPage(followEntities.getTotalPages())

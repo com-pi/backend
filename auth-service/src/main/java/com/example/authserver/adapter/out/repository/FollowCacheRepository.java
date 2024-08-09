@@ -15,6 +15,8 @@ public class FollowCacheRepository {
     private final RedisTemplate<String, Object> redisTemplate;
     private static final String FOLLOWER_KEY = "follower:";
 
+    // Todo: 팔로우 카운트 캐시 추가 검토
+
     @Async
     public void recordFollow(Long followerId, List<Long> followeeId) {
         followeeId.forEach(id -> recordFollow(followerId, id));

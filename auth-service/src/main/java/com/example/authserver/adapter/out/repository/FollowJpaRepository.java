@@ -22,4 +22,10 @@ public interface FollowJpaRepository extends JpaRepository<FollowEntity, Long> {
     @Query("SELECT EXISTS (SELECT 1 FROM FOLLOW f WHERE f.follower.id = :followerId AND f.followee.id = :followeeId)")
     Boolean existsByFollowerIdAndFolloweeId(Long followerId, Long followeeId);
 
+    @Query("SELECT COUNT(f) FROM FOLLOW f WHERE f.follower.id = :memberId")
+    Integer countByFollowerId(Long memberId);
+
+    @Query("SELECT COUNT(f) FROM FOLLOW f WHERE f.followee.id = :memberId")
+    Integer countByFolloweeId(Long memberId);
+
 }

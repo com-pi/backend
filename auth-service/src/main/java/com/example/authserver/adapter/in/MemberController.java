@@ -2,6 +2,7 @@ package com.example.authserver.adapter.in;
 
 import com.example.authserver.adapter.in.request.LocationRequest;
 import com.example.authserver.adapter.in.request.ModifyMemberInfoRequest;
+import com.example.authserver.adapter.in.response.MemberBriefInfoResponse;
 import com.example.authserver.adapter.in.response.MemberInfoResponse;
 import com.example.authserver.adapter.in.response.MyInfoResponse;
 import com.example.authserver.aop.filter.PassportHolder;
@@ -18,6 +19,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Tag(name = "회원 조회 / 회원 정보 변경", description = "자신 또는 다른 회원의 프로필(사진, 닉네임, 위치 등)을 조회하거나 <br>" +
         "자신의 정보를 변경합니다. 엑세스 토큰이 필요합니다.")
@@ -47,6 +50,18 @@ public class MemberController {
         MemberInfoResponse memberInfo = memberUseCase.getMemberInfo(memberId);
 
         return CommonResponse.okWithMessage("내 정보를 조회하였습니다.", memberInfo);
+    }
+
+    @Operation(summary = "회원 요약정보 조회", description = "다른 회원의 요약정보를 조회합니다.")
+    @GetMapping("/brief")
+    @Authenticate(Role.MEMBER)
+    public ResponseEntity<CommonResponse<MemberBriefInfoResponse>> getOtherBriefInfo(
+            @Parameter(description = "회원 ID", required = true)
+            @RequestParam("memberId") List<Long> memberIds
+    ){
+        MemberBriefInfoResponse memberBriefInfo = memberUseCase.getMemberBriefInfo(memberIds);
+
+        return CommonResponse.okWithMessage("회원의 요약정보를 조회하였습니다.", memberBriefInfo);
     }
     
     @Operation(summary = "회원 정보 변경")

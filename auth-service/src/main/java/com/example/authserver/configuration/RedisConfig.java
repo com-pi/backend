@@ -1,5 +1,6 @@
 package com.example.authserver.configuration;
 
+import com.example.authserver.domain.MemberBrief;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -17,6 +18,16 @@ public class RedisConfig {
 
         redisTemplate.setKeySerializer(new StringRedisSerializer());
         redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(Object.class));
+        return redisTemplate;
+    }
+
+    @Bean
+    public RedisTemplate<String, MemberBrief> redisMemberTemplate(RedisConnectionFactory redisConnectionFactory) {
+        RedisTemplate<String, MemberBrief> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(redisConnectionFactory);
+
+        redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new Jackson2JsonRedisSerializer<>(MemberBrief.class));
         return redisTemplate;
     }
 

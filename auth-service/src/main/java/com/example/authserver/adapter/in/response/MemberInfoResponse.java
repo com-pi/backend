@@ -8,15 +8,21 @@ public record MemberInfoResponse(
         String introduction,
         String imageUrl,
         String thumbnailUrl,
-        Address address
+        Address address,
+        Integer followerCount,
+        Integer followingCount,
+        Boolean isFollowed
 ) {
-    public static MemberInfoResponse from(Member member) {
+    public static MemberInfoResponse from(Member member, Integer followerCount, Integer followingCount, Boolean isFollowed) {
         return new MemberInfoResponse(
                 member.getNickname(),
                 member.getIntroduction(),
                 member.getImageUrl(),
                 member.getThumbnailUrl(),
-                member.getAddress()
+                member.getAddress(),
+                followerCount,
+                followingCount,
+                isFollowed
         );
     }
 }

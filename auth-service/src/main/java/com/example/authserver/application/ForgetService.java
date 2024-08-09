@@ -98,7 +98,7 @@ public class ForgetService {
     @Transactional
     public void changePassword(ChangePasswordRequest request) {
         Passport passport = jwtUtil.validateToken(request.changePasswordToken(), TokenType.PASSWORD_CHANGE_TOKEN)
-                .orElseThrow(() -> new InvalidTokenException(TokenType.PASSWORD_CHANGE_TOKEN));
+                .orElseThrow(() -> new InvalidTokenException("패스워드 변경을 위한 토큰이 유효하지 않습니다.", TokenType.PASSWORD_CHANGE_TOKEN));
 
         Member member = memberQuery.findById(passport.memberId())
                 .orElseThrow(() -> new NotFoundException(Member.class));
@@ -109,7 +109,7 @@ public class ForgetService {
                 request.changePasswordToken());
 
         if(!isMatch){
-            throw new RuntimeException(TokenType.PASSWORD_CHANGE_TOKEN.getInvalidMessage());
+            throw new InvalidTokenException("패스워드 변경을 위한 토큰이 유효하지 않습니다.", TokenType.PASSWORD_CHANGE_TOKEN);
         }
 
         Member modifiedMember = member.changePassword(request.changePasswordToken(), passwordEncoder);

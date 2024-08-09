@@ -12,6 +12,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 import static com.example.authserver.domain.TokenType.ACCESS_TOKEN;
 import static com.example.authserver.domain.TokenType.REFRESH_TOKEN;
 
@@ -25,18 +27,21 @@ public class TokenReissueService {
     public TokenReIssueResponse reissueToken(HttpServletRequest request, HttpServletResponse response) {
 
         String refreshToken = CookieUtil.getRefreshToken(request)
-                .orElseThrow(() -> new InvalidTokenException(REFRESH_TOKEN, "리프레시 토큰이 없습니다."));
+                .orElseThrow(() -> new InvalidTokenException("리프레시 토큰이 없습니다.", REFRESH_TOKEN));
         Passport passport = jwtUtil.validateToken(refreshToken, REFRESH_TOKEN)
-                .orElseThrow(() -> new InvalidTokenException(REFRESH_TOKEN));
-        String storedToken = redisPort.getRefreshToken(passport)
-                .orElseThrow(() -> new InvalidTokenException(REFRESH_TOKEN));
+                .orElseThrow(() -> new InvalidTokenException("리프레시 토큰이 유효하지 않습니다.", REFRESH_TOKEN));
+        Optional<String> storedToken = redisPort.getRefreshToken(passport);
+        if(storedToken.isEmpty()) {
+            CookieUtil.removeRefreshTokenCookies(response);
+            throw new InvalidTokenException("검증되지 않은 리프레시 토큰입니다.", REFRESH_TOKEN);
+        }
 
-        if (refreshToken.equals(storedToken)) {
+        if (refreshToken.equals(storedToken.get())) {
             ComPToken comPToken = jwtUtil.generateToken(passport, ACCESS_TOKEN);
             return TokenReIssueResponse.of(comPToken);
         }
 
         CookieUtil.removeRefreshTokenCookies(response);
-        throw new InvalidTokenException(REFRESH_TOKEN);
+        throw new InvalidTokenException("리프레시 토큰 에러", REFRESH_TOKEN);
     }
 }

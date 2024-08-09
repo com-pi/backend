@@ -4,9 +4,11 @@ import com.example.authserver.adapter.out.entity.MemberDocument;
 import com.example.authserver.adapter.out.repository.MemberMongoRepository;
 import com.example.authserver.application.port.out.persistence.MemberQuery;
 import com.example.authserver.domain.Member;
+import com.example.authserver.domain.MemberBrief;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -19,6 +21,16 @@ public class MongodbMemberQueryImpl implements MemberQuery {
     public Optional<Member> findById(Long id) {
         return repository.findById(id.toString())
                 .flatMap(entity -> Optional.of(MemberDocument.toDomain(entity)));
+    }
+
+    @Override
+    public MemberBrief findBriefById(Long id) {
+        return null;
+    }
+
+    @Override
+    public List<MemberBrief> findAllBriefById(List<Long> ids) {
+        return List.of();
     }
 
     @Override

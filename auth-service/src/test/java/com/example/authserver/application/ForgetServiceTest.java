@@ -247,7 +247,7 @@ class ForgetServiceTest {
                 .phoneNumber("01012345678")
                 .build();
 
-        Passport passport = new Passport(1L, Role.MEMBER, null, null);
+        Passport passport = new Passport(1L, Role.MEMBER);
 
         given(jwtUtil.validateToken(comPToken.getToken(), comPToken.getTokenType()))
                 .willReturn(Optional.of(passport));
