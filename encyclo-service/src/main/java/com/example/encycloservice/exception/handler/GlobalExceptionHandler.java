@@ -18,8 +18,7 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-
-
+    // Todo : 익셉션 관리 좀 잘하기
     @ExceptionHandler(CommonException.class)
     public ResponseEntity<CommonResponse<Void>> handleNotFoundException(CommonException exception) {
         log.info(exception.getMessage(), exception);

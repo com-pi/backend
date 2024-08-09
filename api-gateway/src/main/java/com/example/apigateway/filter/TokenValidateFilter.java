@@ -1,7 +1,7 @@
 package com.example.apigateway.filter;
 
 import com.example.apigateway.domain.Passport;
-import com.example.apigateway.util.CookieUtil;
+import com.example.apigateway.exception.InvalidTokenException;
 import com.example.apigateway.util.JwtValidator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,13 +10,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.OrderedGatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
-import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
 import java.util.Optional;
 
 
@@ -35,30 +32,15 @@ public class TokenValidateFilter extends AbstractGatewayFilterFactory<TokenValid
     public GatewayFilter apply(TokenValidateFilter.Config config) {
         return new OrderedGatewayFilter(
                 (exchange, chain) -> {
-                    Optional<String> accessTokenHeader = getAccessToken(exchange);
-
                     if(isApiDocRequest(exchange)) {
                         return chain.filter(exchange);
                     }
 
-                    if(accessTokenHeader.isPresent()) {
-                        Passport passport = jwtValidator.validateToken(accessTokenHeader.get());
-                        return chain.filter(exchangeWithPassport(exchange, passport));
-                    }
+                    String accessTokenHeader = getAccessToken(exchange)
+                            .orElseThrow(() -> new InvalidTokenException("엑세스 토큰이 필요한 요청입니다."));
+                    Passport passport = jwtValidator.validateToken(accessTokenHeader);
+                    return chain.filter(exchangeWithPassport(exchange, passport));
 
-                    if(CookieUtil.hasRefreshTokenCookie(exchange)){
-                        final String tokenReissueEndPoint = "/auth-service/token";
-
-                        String redirectUrl = UriComponentsBuilder.fromUri(exchange.getRequest().getURI())
-                                .replacePath(tokenReissueEndPoint)
-                                .build().toUriString();
-
-                        exchange.getResponse().setStatusCode(HttpStatus.SEE_OTHER);
-                        exchange.getResponse().getHeaders().setLocation(URI.create(redirectUrl));
-                        return exchange.getResponse().setComplete();
-                    }
-
-                    return chain.filter(exchange);
                 },
                 10);
     }

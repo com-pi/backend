@@ -1,6 +1,7 @@
 package com.example.apigateway.filter;
 
 import com.example.apigateway.exception.ExceptionResponse;
+import com.example.apigateway.exception.InvalidTokenException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -33,24 +34,32 @@ public class ExceptionHandlerFilter extends AbstractGatewayFilterFactory<Excepti
     }
 
     private Mono<Void> handleException(ServerWebExchange exchange, Throwable e) {
+        ExceptionResponse responseBody;
 
-        ExceptionResponse responseBody = ExceptionResponse.of("Gateway Exception 발생");
-
-        if(e instanceof RuntimeException) {
-            responseBody = ExceptionResponse.of((RuntimeException) e);
+        if (e instanceof InvalidTokenException invalidTokenException) {
+            responseBody = ExceptionResponse.of(InvalidTokenException.STATUS, invalidTokenException.getMessage());
+        } else {
+            responseBody = ExceptionResponse.of(HttpStatus.INTERNAL_SERVER_ERROR, e);
         }
 
-        String responseBodyJson = "{\"message\":\"Gateway Exception 발생.\"}";
+        return writeResponse(exchange, responseBody, e);
+    }
+
+    private Mono<Void> writeResponse(ServerWebExchange exchange, ExceptionResponse responseBody, Throwable e) {
+        String responseBodyJson;
 
         try {
             responseBodyJson = objectMapper.writeValueAsString(responseBody);
-        } catch (JsonProcessingException ignore) {
+        } catch (JsonProcessingException ex) {
+            responseBodyJson = e.getMessage();
         }
 
         DataBuffer bodyBuffer = exchange.getResponse().bufferFactory().wrap(responseBodyJson.getBytes(StandardCharsets.UTF_8));
-        exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
+        exchange.getResponse().setStatusCode(HttpStatus.resolve(responseBody.getStatus()));
         exchange.getResponse().getHeaders().add("Content-Type", "application/json");
-        log.info("Gateway Exception 발생", e);
+
+        log.info("Exception 발생", e);
+
         return exchange.getResponse().writeWith(Mono.just(bodyBuffer));
     }
 

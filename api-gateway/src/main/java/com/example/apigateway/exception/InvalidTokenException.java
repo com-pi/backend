@@ -1,16 +1,18 @@
 package com.example.apigateway.exception;
 
-import com.example.apigateway.domain.TokenType;
 import lombok.Getter;
 
 @Getter
 public class InvalidTokenException extends RuntimeException {
 
-    private final TokenType tokenType;
+    public static int STATUS = 401;
 
-    public InvalidTokenException(String message, TokenType tokenType, Throwable cause) {
+    public InvalidTokenException(String message, Throwable cause) {
         super(message, cause);
-        this.tokenType = tokenType;
+    }
+
+    public InvalidTokenException(String message) {
+        super(message);
     }
 
 }

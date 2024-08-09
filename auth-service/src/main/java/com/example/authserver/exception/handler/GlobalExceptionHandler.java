@@ -45,8 +45,9 @@ public class GlobalExceptionHandler {
             JsonNode jsonNode = objectMapper.readTree(exception.getMessage());
             message = jsonNode.path("message").asText();
         } catch (JsonProcessingException ignored) {
+
         }
-        return CommonResponse.unauthorizedWithMessage("소셜 로그인 중 예외 발생 : " + message);
+        return CommonResponse.internalServerErrorWithMessage("소셜 로그인 중 예외 발생 : " + message);
     }
 
     @ExceptionHandler(BindException.class)

@@ -29,6 +29,9 @@ public class FollowService implements FollowUseCase {
     @Transactional
     public void follow(Long followeeId) {
         Passport passport = PassportHolder.getPassport();
+        if(followeeId.equals(passport.memberId())){
+            throw new IllegalArgumentException("자기 자신을 팔로우할 수 없습니다.");
+        }
         Member followee = memberQuery.findById(followeeId).orElseThrow(() -> new NotFoundException(Member.class));
         Follow follow = Follow.builder()
                 .follower(Member.ofId(passport.memberId()))
