@@ -7,16 +7,15 @@ import com.example.boardservice.domain.GeneralArticleCommand;
 import com.example.common.exception.UnauthorizedException;
 import com.example.imagemodule.application.port.ImageCommand;
 import com.example.imagemodule.application.port.SaveImagesCommand;
-import com.example.imagemodule.domain.MinioBucket;
 import com.example.imagemodule.util.ObjectUrlMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -33,18 +32,14 @@ public class GeneralArticleService {
     private final ObjectUrlMapper objectUrlMapper;
 
     public GeneralArticle post(GeneralArticleCommand articleCreate, List<MultipartFile> imageFiles) {
-        if(!CollectionUtils.isEmpty(imageFiles)) {
-            articleCreate.updateImageUrls(getImageUrls(imageFiles));
-        }
+        articleCreate.updateImageUrls(getImageUrls(imageFiles));
         return generalArticleCommandPort.save(articleCreate.toDomain());
     }
 
     public Long update(GeneralArticleCommand articleUpdate, List<MultipartFile> imageFiles) {
         GeneralArticle originArticle = generalArticleQueryPort.getArticle(articleUpdate.getArticleId());
         validatePermission(originArticle.getMemberId(), articleUpdate.getMemberId());
-        articleUpdate.updateImageUrls(
-                CollectionUtils.isEmpty(imageFiles) ? originArticle.getImageUrls() : getImageUrls(imageFiles)
-        );
+        articleUpdate.updateImageUrls(getImageUrls(imageFiles));
         generalArticleCommandPort.update(articleUpdate.toDomain());
         return articleUpdate.getArticleId();
     }
@@ -68,10 +63,13 @@ public class GeneralArticleService {
      * private
      */
     private List<String> getImageUrls (List<MultipartFile> imageFiles) {
+        if(Objects.isNull(imageFiles))
+            return Collections.emptyList();
+
         List<String> objectNames = imageCommand.saveImages(
                 new SaveImagesCommand(imageFiles, GENERAL_BOARD.getBucket())
         );
-        return objectUrlMapper.toUrl(objectNames, MinioBucket.ARTICLE_TRADE);
+        return objectUrlMapper.toUrl(objectNames, GENERAL_BOARD.getBucket());
     }
 
     private void validatePermission(final Long originMemberId, final Long memberId) {

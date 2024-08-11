@@ -28,7 +28,6 @@ public class MemberService {
 
         } else {
             MemberEntity member = storedMember.get();
-            member.update(passport);
             memberCommandPort.save(member);
         }
     }

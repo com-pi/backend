@@ -106,7 +106,7 @@ public class DiaryService implements DiaryUseCase {
     }
 
     private List<String> getImageUrls(List<MultipartFile> imageFiles) {
-        if(Objects.isNull(imageFiles))
+        if (Objects.isNull(imageFiles))
             return Collections.emptyList();
 
         List<String> objectNames = imageCommand.saveImages(

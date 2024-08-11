@@ -27,7 +27,7 @@ public class ArticleHashtagService {
     @Transactional
     public void generateHashtags(Long articleId, List<String> hashtagNameList) {
         hashtagNameList.stream()
-                .map(name -> getOrCreateHashtag(name))
+                .map(this::getOrCreateHashtag)
                 .map(hashtag -> ArticleHashtag.generateArticleHashtag(articleId, hashtag))
                 .forEach(articleHashtagCommandPort::save);
     }

@@ -7,7 +7,6 @@ import com.example.boardservice.domain.QnaArticleCommand;
 import com.example.common.exception.UnauthorizedException;
 import com.example.imagemodule.application.port.ImageCommand;
 import com.example.imagemodule.application.port.SaveImagesCommand;
-import com.example.imagemodule.domain.MinioBucket;
 import com.example.imagemodule.util.ObjectUrlMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,8 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+
 import static com.example.boardservice.domain.ArticleType.QNA_BOARD;
 
 @Service
@@ -39,9 +40,7 @@ public class QnaArticleService {
     public Long update(QnaArticleCommand command, List<MultipartFile> imageFiles) {
         QnaArticle originArticle = qnaArticleQueryPort.getArticle(command.getArticleId());
         validatePermission(originArticle.getMemberId(), command.getMemberId());
-        command.updateImageUrls(
-                CollectionUtils.isEmpty(imageFiles) ? originArticle.getImageUrls() : getImageUrls(imageFiles)
-        );
+        command.updateImageUrls(getImageUrls(imageFiles));
         qnaArticleCommandPort.update(command.toDomain());
         return command.getArticleId();
     }
@@ -65,10 +64,13 @@ public class QnaArticleService {
      * private
      */
     private List<String> getImageUrls (List<MultipartFile> imageFiles) {
+        if (Objects.isNull(imageFiles))
+            return Collections.emptyList();
+
         List<String> objectNames = imageCommand.saveImages(
                 new SaveImagesCommand(imageFiles, QNA_BOARD.getBucket())
         );
-        return objectUrlMapper.toUrl(objectNames, MinioBucket.ARTICLE_TRADE);
+        return objectUrlMapper.toUrl(objectNames, QNA_BOARD.getBucket());
     }
 
     private void validatePermission(final Long originMemberId, final Long memberId) {

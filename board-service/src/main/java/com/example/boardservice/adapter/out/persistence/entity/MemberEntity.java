@@ -35,8 +35,6 @@ public class MemberEntity {
     public static MemberEntity fromPassport(Passport passport){
         return MemberEntity.builder()
                 .memberId(passport.memberId())
-                .nickname(passport.nickName())
-                .imageUrl(passport.thumbnail())
                 .build();
     }
 
@@ -50,10 +48,5 @@ public class MemberEntity {
 
     public static MemberEntity from(Long memberId) {
         return new MemberEntity(memberId);
-    }
-
-    public void update(Passport passport){
-        this.nickname = passport.nickName();
-        this.imageUrl = passport.thumbnail();
     }
 }
