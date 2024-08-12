@@ -185,7 +185,7 @@ public class Schedule extends CommonEvent implements Comparable<Schedule>{
                 .memberId(myPlant.getMemberId())
                 .title(myPlant.getPlantName() + " 물 주기")
                 .startDateTime(myPlant.getLastWateringDate().atTime(LocalTime.NOON))
-                .endDateTime(myPlant.getLastWateringDate().atTime(LocalTime.NOON).plusYears(100))
+                .endDateTime(myPlant.getLastWateringDate().atTime(LocalTime.NOON).plusYears(1)) // @TODO 임시
                 .isRecurring(true)
                 .frequency(myPlant.getWateringIntervalInDays())
                 .colorType("#C26CC3")
