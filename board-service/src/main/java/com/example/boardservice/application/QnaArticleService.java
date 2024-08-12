@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
@@ -31,9 +30,7 @@ public class QnaArticleService {
     private final ObjectUrlMapper objectUrlMapper;
     
     public QnaArticle post(QnaArticleCommand command, List<MultipartFile> imageFiles) {
-        if(!CollectionUtils.isEmpty(imageFiles)) {
-            command.updateImageUrls(getImageUrls(imageFiles));
-        }
+        command.updateImageUrls(getImageUrls(imageFiles));
         return qnaArticleCommandPort.save(command.toDomain());
     }
 

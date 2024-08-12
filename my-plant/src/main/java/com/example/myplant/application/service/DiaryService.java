@@ -39,10 +39,7 @@ public class DiaryService implements DiaryUseCase {
     @Transactional
     public Long registerDiary(Diary diary, List<MultipartFile> imageFiles) {
         isPostAlreadyPublished(diary.getMyPlantId(), diary.getCreatedDate());
-
-        if(diary.hasImageFiles(imageFiles)) {
-            diary.updateImageUrlList(getImageUrls(imageFiles));
-        }
+        diary.updateImageUrlList(getImageUrls(imageFiles));
         Long savedDiaryId = diaryCommandPort.save(diary);
 
         /* 일지-게시글 연동 */
