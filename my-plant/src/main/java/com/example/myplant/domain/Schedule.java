@@ -11,6 +11,7 @@ import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -83,11 +84,6 @@ public class Schedule extends CommonEvent implements Comparable<Schedule>{
         return duration.toHours() + "시간 전";
     }
 
-    public LocalDateTime getUpcomingDate() {
-        LocalDateTime now = LocalDateTime.now();
-        return now.plusDays(7);
-    }
-
     public List<Schedule> findMatchingSchedules(List<Schedule> recurringScheduleList, LocalDate today) {
         return recurringScheduleList.stream()
                 .filter(schedule -> isScheduleMatchingToday(schedule, today))
@@ -106,13 +102,18 @@ public class Schedule extends CommonEvent implements Comparable<Schedule>{
         LocalDateTime endDateTime = schedule.getEndDateTime();
         int frequency = schedule.getFrequency();
 
-        LocalDate currentDate = startDateTime.toLocalDate();
-        while (!currentDate.isAfter(endDateTime.toLocalDate())) {
-            if (currentDate.equals(today)) {
-                return true;
-            }
-            currentDate = currentDate.plusDays(frequency);
+        LocalDate startDate = startDateTime.toLocalDate();
+        LocalDate endDate = endDateTime.toLocalDate();
+
+        if (startDate.isAfter(today)) {
+            return false;
         }
+
+        long daysBetween = ChronoUnit.DAYS.between(startDate, today);
+        if (daysBetween % frequency == 0 && !today.isAfter(endDate)) {
+            return true;
+        }
+
         return false;
     }
 
@@ -141,19 +142,34 @@ public class Schedule extends CommonEvent implements Comparable<Schedule>{
         LocalDateTime startDateTime = schedule.getStartDateTime();
         LocalDateTime endDateTime = schedule.getEndDateTime();
         int frequency = schedule.getFrequency();
-
-        LocalDate currentDate = startDateTime.toLocalDate();
         List<Schedule> recurringScheduleList = new ArrayList<>();
 
-        while (!currentDate.isAfter(endDateTime.toLocalDate())) {
-            if(!currentDate.isBefore(startDate) && !currentDate.isAfter(endDate)) {
+        LocalDate now = LocalDate.now();
+        LocalDate sevenDaysLater = now.plusDays(7);
+
+        // 시작 날짜
+        LocalDate currentDate = startDateTime.toLocalDate();
+        if (currentDate.isBefore(startDate)) {
+            long daysUntilStart = ChronoUnit.DAYS.between(currentDate, startDate);
+            long periodsToSkip = daysUntilStart / frequency;
+            currentDate = currentDate.plusDays(periodsToSkip * frequency);
+        }
+
+        // 현재 날짜
+        if (currentDate.isBefore(now)) {
+            long daysUntilNow = ChronoUnit.DAYS.between(currentDate, now);
+            long periodsToSkip = daysUntilNow / frequency;
+            currentDate = currentDate.plusDays(periodsToSkip * frequency);
+        }
+
+        // 일정 추가
+        while (!currentDate.isAfter(endDateTime.toLocalDate()) &&
+                !currentDate.isAfter(endDate) &&
+                !currentDate.isAfter(sevenDaysLater)) {
+            if (!currentDate.isBefore(now)) {
                 recurringScheduleList.add(updateStartDate(schedule, currentDate));
             }
-
             currentDate = currentDate.plusDays(frequency);
-            if(currentDate.isAfter(endDateTime.toLocalDate())) {
-                break;
-            }
         }
         return recurringScheduleList;
     }
@@ -185,7 +201,7 @@ public class Schedule extends CommonEvent implements Comparable<Schedule>{
                 .memberId(myPlant.getMemberId())
                 .title(myPlant.getPlantName() + " 물 주기")
                 .startDateTime(myPlant.getLastWateringDate().atTime(LocalTime.NOON))
-                .endDateTime(myPlant.getLastWateringDate().atTime(LocalTime.NOON).plusYears(1)) // @TODO 임시
+                .endDateTime(myPlant.getLastWateringDate().atTime(LocalTime.NOON).plusYears(100))
                 .isRecurring(true)
                 .frequency(myPlant.getWateringIntervalInDays())
                 .colorType("#C26CC3")
