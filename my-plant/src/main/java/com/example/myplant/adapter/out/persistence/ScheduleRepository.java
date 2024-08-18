@@ -18,6 +18,7 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> 
             AND s.memberId = :memberId
             AND s.isRecurring = false
             AND c.schedule IS NULL
+            AND s.deletionYn = 'N'
     """)
     List<ScheduleEntity> getTodayScheduleList(
             @Param("memberId") Long memberId
@@ -33,6 +34,7 @@ public interface ScheduleRepository extends JpaRepository<ScheduleEntity, Long> 
             AND s.memberId = :memberId
             AND s.isRecurring = true
             AND c.schedule IS NULL
+            AND s.deletionYn = 'N'
     """)
     List<ScheduleEntity> getRecurringScheduleList(
             @Param("memberId") Long memberId

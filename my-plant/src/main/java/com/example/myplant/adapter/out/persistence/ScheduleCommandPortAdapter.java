@@ -45,4 +45,12 @@ public class ScheduleCommandPortAdapter implements ScheduleCommandPort {
         return scheduleEntity.getScheduleId();
     }
 
+    @Override
+    public Long deleteSchedule(Schedule schedule) {
+        ScheduleEntity scheduleEntity = scheduleRepository.findById(schedule.getScheduleId())
+                .orElseThrow(() -> new NotFoundException(ScheduleEntity.class));
+        scheduleEntity.delete();
+        return scheduleEntity.getScheduleId();
+    }
+
 }

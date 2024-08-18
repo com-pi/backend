@@ -3,6 +3,7 @@ package com.example.myplant.adapter.in.web.controller;
 import com.example.common.annotation.Authenticate;
 import com.example.common.baseentity.CommonResponse;
 import com.example.common.domain.Role;
+import com.example.myplant.adapter.in.web.command.DeleteScheduleCommand;
 import com.example.myplant.adapter.in.web.command.GetDiaryScheduleCommand;
 import com.example.myplant.adapter.in.web.command.GetScheduleCommand;
 import com.example.myplant.adapter.in.web.command.UpdateScheduleStatusCommand;
@@ -50,6 +51,15 @@ public class ScheduleController implements ScheduleSwaggerUI {
         UpdateScheduleStatusCommand command = UpdateScheduleStatusCommand.of(scheduleId, PassportHolder.getPassport().memberId());
         Long id = scheduleUseCase.updateScheduleStatus(command.toDomain());
         return ResponseEntity.ok(new CommonResponse<>("일정의 완료 상태가 수정되었습니다.", id));
+    }
+
+    @Override
+    @Authenticate(Role.MEMBER)
+    @DeleteMapping("/{scheduleId}")
+    public ResponseEntity<CommonResponse<Long>> deleteSchedule(@PathVariable Long scheduleId) {
+        DeleteScheduleCommand command = DeleteScheduleCommand.of(scheduleId, PassportHolder.getPassport().memberId());
+        Long id = scheduleUseCase.deleteSchedule(command.toDomain());
+        return ResponseEntity.ok(new CommonResponse<>("일정이 삭제되었습니다.", id));
     }
 
     @Override

@@ -69,4 +69,9 @@ public class ScheduleEntity extends DeletedAtAbstractEntity {
         this.isRecurring = schedule.getIsRecurring();
     }
 
+    @Override
+    public void delete() {
+        super.delete();
+    }
+
 }

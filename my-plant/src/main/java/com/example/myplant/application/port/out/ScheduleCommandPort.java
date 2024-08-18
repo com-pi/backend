@@ -9,4 +9,6 @@ public interface ScheduleCommandPort {
     Long updateSchedule(Schedule schedule);
 
     Long updateScheduleStatus(Schedule schedule);
+
+    Long deleteSchedule(Schedule schedule);
 }

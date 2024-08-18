@@ -16,6 +16,8 @@ public interface ScheduleUseCase {
 
     Long updateScheduleStatus(Schedule schedule);
 
+    Long deleteSchedule(Schedule schedule);
+
     ScheduleMainResponseList getTodayScheduleList(Schedule schedule);
 
     ScheduleMainResponseList getUpcomingScheduleList(Schedule schedule);
@@ -23,4 +25,5 @@ public interface ScheduleUseCase {
     List<ScheduleCalendarResponse> getScheduleCalendarList(GetDiaryScheduleCommand command);
 
     ScheduleMainResponseList getScheduleByDate(LocalDate date, Schedule schedule);
+
 }

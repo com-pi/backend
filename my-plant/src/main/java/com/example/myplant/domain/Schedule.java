@@ -52,8 +52,8 @@ public class Schedule extends CommonEvent implements Comparable<Schedule>{
         };
     }
 
-    public void validateWriter(Schedule originSchedule, Schedule schedule) {
-        if(!schedule.isWriter(originSchedule.getMemberId())) {
+    public void validateWriter(Schedule originSchedule) {
+        if(!this.isWriter(originSchedule.getMemberId())) {
             throw new UnauthorizedException("일정을 수정할 권한이 없습니다.");
         }
     }

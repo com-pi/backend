@@ -38,7 +38,7 @@ public class ScheduleService implements ScheduleUseCase {
     public Long updateSchedule(Schedule schedule) {
         Schedule originSchedule = scheduleQueryPort.findByScheduleId(schedule.getScheduleId());
         schedule.validateEndDateTime();
-        schedule.validateWriter(originSchedule, schedule);
+        schedule.validateWriter(originSchedule);
         return scheduleCommandPort.updateSchedule(schedule);
     }
 
@@ -46,9 +46,17 @@ public class ScheduleService implements ScheduleUseCase {
     @Transactional
     public Long updateScheduleStatus(Schedule schedule) {
         Schedule originSchedule = scheduleQueryPort.findByScheduleId(schedule.getScheduleId());
-        schedule.validateWriter(originSchedule, schedule);
+        schedule.validateWriter(originSchedule);
         schedule.validateScheduleCompletionDate(originSchedule, LocalDate.now());
         return scheduleCommandPort.updateScheduleStatus(schedule);
+    }
+
+    @Override
+    @Transactional
+    public Long deleteSchedule(Schedule schedule) {
+        Schedule originSchedule = scheduleQueryPort.findByScheduleId(schedule.getScheduleId());
+        schedule.validateWriter(originSchedule);
+        return scheduleCommandPort.deleteSchedule(schedule);
     }
 
     @Override

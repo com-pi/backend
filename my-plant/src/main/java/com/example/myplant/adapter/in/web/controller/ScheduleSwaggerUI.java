@@ -41,6 +41,9 @@ public interface ScheduleSwaggerUI {
     @Operation(summary = "일정 상태 수정", description = "일정의 상태를 수정합니다.")
     ResponseEntity<CommonResponse<Long>> updateScheduleStatus(Long scheduleId);
 
+    @Operation(summary = "일정 삭제", description = "일정을 삭제합니다.")
+    ResponseEntity<CommonResponse<Long>> deleteSchedule(Long scheduleId);
+
     @Operation(summary = "오늘의 일정 조회", description = "오늘의 일정을 조회합니다.")
     ResponseEntity<ScheduleMainResponseList> getTodayScheduleList();
 
