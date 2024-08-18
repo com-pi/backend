@@ -7,8 +7,7 @@ import java.util.List;
 
 public record CommonArticleResponse(
         Long articleId,
-// @TODO Member
-//        MemberResponse member,
+        MemberResponse member,
         LocalDateTime createdAt,
         String title,
         String content,
@@ -21,7 +20,7 @@ public record CommonArticleResponse(
     public static CommonArticleResponse from(Article article) {
         return new CommonArticleResponse(
                 article.getArticleId(),
-//                MemberResponse.from(member),
+                MemberResponse.from(article.getMember()),
                 article.getCreatedAt(),
                 article.getTitle(),
                 article.getContent(),

@@ -36,7 +36,7 @@ public class QnaArticleService {
 
     public Long update(QnaArticleCommand command, List<MultipartFile> imageFiles) {
         QnaArticle originArticle = qnaArticleQueryPort.getArticle(command.getArticleId());
-        validatePermission(originArticle.getMemberId(), command.getMemberId());
+        validatePermission(originArticle.getMember().getMemberId(), command.getMemberId());
         command.updateImageUrls(getImageUrls(imageFiles));
         qnaArticleCommandPort.update(command.toDomain());
         return command.getArticleId();
@@ -44,7 +44,7 @@ public class QnaArticleService {
 
     public Long delete(QnaArticle article) {
         QnaArticle originArticle = qnaArticleQueryPort.getArticle(article.getArticleId());
-        validatePermission(originArticle.getMemberId(), article.getMemberId());
+        validatePermission(originArticle.getMember().getMemberId(), article.getMember().getMemberId());
         qnaArticleCommandPort.delete(article);
         return article.getArticleId();
     }

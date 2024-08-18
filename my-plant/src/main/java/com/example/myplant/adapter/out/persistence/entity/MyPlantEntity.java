@@ -72,7 +72,7 @@ public class MyPlantEntity extends DeletedAtAbstractEntity {
                 .plantSpot(this.plantSpot)
                 .potType(this.potType)
                 .relationshipScore(this.relationshipScore)
-                .plantCharacter(this.plantCharacterEntity.toDomain())
+                .plantCharacterId(this.plantCharacterEntity.toDomain().getPlantCharacterId())
                 .build();
     }
 
@@ -88,7 +88,7 @@ public class MyPlantEntity extends DeletedAtAbstractEntity {
                 .plantSpot(myPlant.getPlantSpot())
                 .potType(myPlant.getPotType())
                 .relationshipScore(myPlant.getRelationshipScore())
-                .plantCharacterEntity(PlantCharacterEntity.fromDomain(myPlant.getPlantCharacter()))
+                .plantCharacterEntity(PlantCharacterEntity.ofId(myPlant.getPlantCharacterId()))
                 .build();
     }
 
@@ -100,6 +100,10 @@ public class MyPlantEntity extends DeletedAtAbstractEntity {
         this.wateringIntervalInDays = myPlant.getWateringIntervalInDays();
         this.plantSpot = myPlant.getPlantSpot();
         this.potType = myPlant.getPotType();
+    }
+
+    public void updatePlantCharacter(PlantCharacterEntity plantCharacterEntity) {
+        this.plantCharacterEntity = plantCharacterEntity;
     }
 
     @Override

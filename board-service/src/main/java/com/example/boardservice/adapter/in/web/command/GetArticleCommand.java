@@ -1,6 +1,7 @@
 package com.example.boardservice.adapter.in.web.command;
 
 import com.example.boardservice.domain.Article;
+import com.example.boardservice.domain.Member;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -20,7 +21,7 @@ public class GetArticleCommand {
 
     public Article toDomain() {
         return Article.builder()
-                .memberId(this.memberId)
+                .member(Member.ofId(this.memberId))
                 .articleId(this.articleId)
                 .build();
     }

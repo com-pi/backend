@@ -38,7 +38,7 @@ public class GeneralArticleService {
 
     public Long update(GeneralArticleCommand articleUpdate, List<MultipartFile> imageFiles) {
         GeneralArticle originArticle = generalArticleQueryPort.getArticle(articleUpdate.getArticleId());
-        validatePermission(originArticle.getMemberId(), articleUpdate.getMemberId());
+        validatePermission(originArticle.getMember().getMemberId(), articleUpdate.getMemberId());
         articleUpdate.updateImageUrls(getImageUrls(imageFiles));
         generalArticleCommandPort.update(articleUpdate.toDomain());
         return articleUpdate.getArticleId();
@@ -46,7 +46,7 @@ public class GeneralArticleService {
 
     public Long delete(GeneralArticle article) {
         GeneralArticle originArticle = generalArticleQueryPort.getArticle(article.getArticleId());
-        validatePermission(originArticle.getMemberId(), article.getMemberId());
+        validatePermission(originArticle.getMember().getMemberId(), article.getMember().getMemberId());
         generalArticleCommandPort.delete(article);
         return article.getArticleId();
     }

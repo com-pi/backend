@@ -16,4 +16,5 @@ public interface MyPlantUseCase {
 
     Long deleteMyPlant(Long memberId, Long myPlantId);
 
+    Long updatePlantCharacter(MyPlant myPlant);
 }

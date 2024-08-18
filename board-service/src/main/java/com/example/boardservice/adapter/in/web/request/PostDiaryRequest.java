@@ -2,6 +2,7 @@ package com.example.boardservice.adapter.in.web.request;
 
 import com.example.boardservice.domain.ArticleType;
 import com.example.boardservice.domain.DiaryArticle;
+import com.example.boardservice.domain.Member;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -18,7 +19,7 @@ public class PostDiaryRequest {
 
     public DiaryArticle toDomain() {
         return DiaryArticle.builder()
-                .memberId(memberId)
+                .member(Member.ofId(memberId))
                 .title(title)
                 .content(content)
                 .imageUrls(imageUrlList)

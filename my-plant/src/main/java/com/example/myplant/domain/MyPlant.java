@@ -1,5 +1,6 @@
 package com.example.myplant.domain;
 
+import com.example.common.exception.UnauthorizedException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -35,6 +36,15 @@ public class MyPlant {
 
     private String deletionYn;
 
-    private PlantCharacter plantCharacter;
+    private Long plantCharacterId;
 
+    public void validatePermission(MyPlant originMyPlant) {
+        if(!isWriter(originMyPlant.getMemberId())) {
+            throw new UnauthorizedException("캐릭터를 수정할 권한이 없습니다.");
+        }
+    }
+
+    private boolean isWriter(Long originMemberId) {
+        return originMemberId.equals(memberId);
+    }
 }

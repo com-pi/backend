@@ -18,7 +18,7 @@ public class GeneralArticleCommand {
 
     public GeneralArticle toDomain() {
         return GeneralArticle.builder()
-                .memberId(memberId)
+                .member(Member.ofId(memberId))
                 .articleId(articleId)
                 .title(title)
                 .content(content)

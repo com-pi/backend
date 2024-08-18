@@ -5,6 +5,7 @@ import com.example.boardservice.adapter.in.web.command.GetSearchedArticleListCom
 import com.example.boardservice.application.port.in.CommonArticleUseCase;
 import com.example.boardservice.domain.Article;
 import com.example.boardservice.domain.ArticleHashtag;
+import com.example.boardservice.domain.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,12 +22,13 @@ public class CommonArticleFacade implements CommonArticleUseCase {
     private final CommonArticleService articleService;
     private final ArticleHashtagService articleHashtagService;
     private final ArticleLikeService likeService;
+    private final MemberService memberService;
 
     public List<Article> getArticleList(GetArticleListCommand command) {
         Page<Article> articlePage = articleService.getArticleList(command.getType(), command.getPageable());
         articlePage.forEach(this::addHashtags);
         addLikeStatusList(articlePage.getContent(), command.getMemberId());
-
+        addMember(articlePage.getContent());
         return articlePage.toList();
     }
 
@@ -44,14 +46,15 @@ public class CommonArticleFacade implements CommonArticleUseCase {
         List<Article> articleList = articleService.getArticleListByArticleId(articleIdList, pageable);
 
         articleList.forEach(this::addHashtags);
+        addMember(articleList);
         return articleList;
     }
 
     public Article getArticle(Article article) {
-        Article originArticle = this.articleService.getArticle(article.getArticleId());
+        Article originArticle = articleService.getArticle(article.getArticleId());
         addHashtags(originArticle);
-        addLikeStatus(originArticle, article.getMemberId());
-
+        addLikeStatus(originArticle, article.getMember().getMemberId());
+        addMember(List.of(originArticle));
         return originArticle;
     }
 
@@ -62,7 +65,7 @@ public class CommonArticleFacade implements CommonArticleUseCase {
                 : articleService.searchArticleList(command.getKeyword(), command.getType(), command.getPageable());
         articlePage.forEach(this::addHashtags);
         addLikeStatusList(articlePage.getContent(), command.getMemberId());
-
+        addMember(articlePage.getContent());
         return articlePage.toList();
     }
 
@@ -71,7 +74,7 @@ public class CommonArticleFacade implements CommonArticleUseCase {
         Page<Article> articlePage = articleService.getArticleListByMemberId(memberId, pageable);
         articlePage.forEach(this::addHashtags);
         addLikeStatusList(articlePage.getContent(), memberId);
-
+        addMember(articlePage.getContent());
         return articlePage.toList();
     }
 
@@ -80,6 +83,7 @@ public class CommonArticleFacade implements CommonArticleUseCase {
         Page<Article> articlePage = articleService.getLikedArticleId(memberId, pageable);
         articlePage.forEach(this::addHashtags);
         addLikeStatusList(articlePage.getContent());
+        addMember(articlePage.getContent());
         return articlePage.toList();
     }
 
@@ -116,4 +120,13 @@ public class CommonArticleFacade implements CommonArticleUseCase {
             article.addLikeStatus(true);
         });
     }
+
+    private void addMember(List<Article> articleList) {
+        List<Long> authorIdList = Article.getAuthorId(articleList);
+        List<Member> memberList = memberService.getMemberList(authorIdList);
+        for (int i = 0; i < articleList.size(); i++) {
+            articleList.get(i).addMember(memberList.get(i));
+        }
+    }
+
 }

@@ -17,5 +17,11 @@ eureka:
   instance:
     hostname: board-service # 쿠버네티스 서비스 명
 
+feign:
+  client:
+    config:
+      read-member:
+        url: http://auth-service:8080
+
 
 

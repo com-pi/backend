@@ -6,6 +6,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor
@@ -14,7 +15,7 @@ public class Article {
 
     private Long articleId;
 
-    private Long memberId;
+    private Member member;
 
     private String title;
 
@@ -42,6 +43,23 @@ public class Article {
 
     public void addLikeStatus(boolean isLiked) {
         this.isLiked = isLiked;
+    }
+
+    public void addMember(Member member) {
+        this.member = member;
+    }
+
+    public static List<Long> getAuthorId(List<Article> articleList) {
+        return articleList.stream()
+                .map(Article::getAuthorIdFromMember)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * private
+     */
+    private Long getAuthorIdFromMember() {
+        return this.member.getMemberId();
     }
 
 }

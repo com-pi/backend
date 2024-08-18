@@ -1,6 +1,7 @@
 package com.example.boardservice.adapter.in.web.command;
 
 import com.example.boardservice.domain.Comment;
+import com.example.boardservice.domain.Member;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -21,7 +22,7 @@ public class GetCommentListCommand {
     public Comment toDomain() {
         return Comment.builder()
                 .articleId(articleId)
-                .memberId(memberId)
+                .member(Member.ofId(memberId))
                 .build();
     }
 }

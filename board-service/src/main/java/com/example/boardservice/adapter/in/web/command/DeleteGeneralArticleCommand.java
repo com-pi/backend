@@ -1,6 +1,7 @@
 package com.example.boardservice.adapter.in.web.command;
 
 import com.example.boardservice.domain.GeneralArticle;
+import com.example.boardservice.domain.Member;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -20,7 +21,7 @@ public class DeleteGeneralArticleCommand {
 
     public GeneralArticle toDomain() {
         return GeneralArticle.builder()
-                .memberId(memberId)
+                .member(Member.ofId(memberId))
                 .articleId(articleId)
                 .build();
     }

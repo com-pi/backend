@@ -2,6 +2,7 @@ package com.example.boardservice.adapter.in.web.command;
 
 import com.example.boardservice.adapter.in.web.request.PostReplyRequest;
 import com.example.boardservice.domain.Comment;
+import com.example.boardservice.domain.Member;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -25,7 +26,7 @@ public class PostReplyCommand {
 
     public Comment toDomain() {
         return Comment.builder()
-                .memberId(memberId)
+                .member(Member.ofId(memberId))
                 .content(content)
                 .parent(Comment.ofId(parentId))
                 .createdDate(LocalDate.now())

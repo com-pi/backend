@@ -3,8 +3,10 @@ package com.example.myplant.adapter.in.web.controller;
 import com.example.common.annotation.Authenticate;
 import com.example.common.baseentity.CommonResponse;
 import com.example.common.domain.Role;
+import com.example.myplant.adapter.in.web.command.UpdatePlantCharacterCommand;
 import com.example.myplant.adapter.in.web.request.CreateMyPlantRequest;
 import com.example.myplant.adapter.in.web.request.UpdateMyPlantRequest;
+import com.example.myplant.adapter.in.web.request.UpdatePlantCharacterRequest;
 import com.example.myplant.adapter.in.web.response.MyPlantDetailResponse;
 import com.example.myplant.adapter.in.web.response.MyPlantForUpdateResponse;
 import com.example.myplant.adapter.in.web.response.MyPlantListResponse;
@@ -105,5 +107,16 @@ public class MyPlantController {
         return ResponseEntity.ok(MyPlantForUpdateResponse.from(myPlant));
     }
 
+    @Operation(summary = "식물 캐릭터 수정", description = "식물 캐릭터의 정보를 수정합니다.")
+    @Authenticate(Role.MEMBER)
+    @PatchMapping("characters/{myPlantId}")
+    public ResponseEntity<CommonResponse<Long>> updatePlantCharacter(
+            @PathVariable Long myPlantId,
+            @RequestBody UpdatePlantCharacterRequest request) {
+        UpdatePlantCharacterCommand command = UpdatePlantCharacterCommand.of(
+                PassportHolder.getPassport().memberId(), myPlantId, request.plantCharacterId());
+        Long plantId = myPlantUseCase.updatePlantCharacter(command.toDomain());
+        return ResponseEntity.ok(new CommonResponse<>("식물 캐릭터가 수정되었습니다.", plantId));
+    }
 
 }

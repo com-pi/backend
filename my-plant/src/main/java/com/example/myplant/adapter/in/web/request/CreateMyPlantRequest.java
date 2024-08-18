@@ -1,7 +1,6 @@
 package com.example.myplant.adapter.in.web.request;
 
 import com.example.myplant.domain.MyPlant;
-import com.example.myplant.domain.PlantCharacter;
 
 import java.time.LocalDate;
 
@@ -18,7 +17,7 @@ public record CreateMyPlantRequest (
     public MyPlant toDomain(Long memberId) {
         return MyPlant.builder()
                 .memberId(memberId)
-                .plantCharacter(PlantCharacter.ofId(this.characterId))
+                .plantCharacterId(this.characterId)
                 .lastWateringDate(this.lastWaterday)
                 .plantBirthday(this.plantBirthday)
                 .plantType(this.plantType)

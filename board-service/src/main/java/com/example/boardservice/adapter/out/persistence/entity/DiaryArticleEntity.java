@@ -2,6 +2,7 @@ package com.example.boardservice.adapter.out.persistence.entity;
 
 import com.example.boardservice.domain.ArticleType;
 import com.example.boardservice.domain.DiaryArticle;
+import com.example.boardservice.domain.Member;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -26,7 +27,7 @@ public class DiaryArticleEntity extends CommonArticleEntity {
     public DiaryArticle toDomain() {
         return DiaryArticle.builder()
                 .articleId(this.articleId)
-                .memberId(this.memberId)
+                .member(Member.ofId(this.memberId))
                 .title(this.title)
                 .content(this.content)
                 .viewCount(this.viewCount)
@@ -41,7 +42,7 @@ public class DiaryArticleEntity extends CommonArticleEntity {
     public static DiaryArticleEntity fromDomain(DiaryArticle article) {
         return DiaryArticleEntity.builder()
                 .articleId(article.getArticleId())
-                .memberId(article.getMemberId())
+                .memberId(article.getMember().getMemberId())
                 .title(article.getTitle())
                 .content(article.getContent())
                 .viewCount(article.getViewCount())

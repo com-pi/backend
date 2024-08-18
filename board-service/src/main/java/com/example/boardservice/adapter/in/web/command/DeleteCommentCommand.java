@@ -1,6 +1,7 @@
 package com.example.boardservice.adapter.in.web.command;
 
 import com.example.boardservice.domain.Comment;
+import com.example.boardservice.domain.Member;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -20,7 +21,7 @@ public class DeleteCommentCommand {
 
     public Comment toDomain() {
         return Comment.builder()
-                .memberId(memberId)
+                .member(Member.ofId(memberId))
                 .commentId(commentId)
                 .build();
     }

@@ -10,4 +10,5 @@ public interface MyPlantCommandPort {
 
     void delete(Long myPlantId);
 
+    void updatePlantCharacter(MyPlant myPlant);
 }

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 public class MyPlantCommandPortAdapter implements MyPlantCommandPort {
 
     private final MyPlantRepository myPlantRepository;
+    private final PlantCharacterRepository plantCharacterRepository;
 
     @Override
     public MyPlant save(MyPlant myPlant) {
@@ -37,6 +38,15 @@ public class MyPlantCommandPortAdapter implements MyPlantCommandPort {
         MyPlantEntity myPlantEntity = myPlantRepository.findById(myPlantId)
                 .orElseThrow(() -> new NotFoundException(MyPlantEntity.class));
         myPlantEntity.delete();
+    }
+
+    @Override
+    public void updatePlantCharacter(MyPlant myPlant) {
+        PlantCharacterEntity plantCharacterEntity = plantCharacterRepository.findById(myPlant.getPlantCharacterId())
+                .orElseThrow(() -> new NotFoundException(PlantCharacterEntity.class));
+        MyPlantEntity myPlantEntity = myPlantRepository.findById(myPlant.getMyPlantId())
+                .orElseThrow(() -> new NotFoundException(MyPlantEntity.class));
+        myPlantEntity.updatePlantCharacter(plantCharacterEntity);
     }
 
 }

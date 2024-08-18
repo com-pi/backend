@@ -36,11 +36,9 @@ public class PlantCharacterEntity {
                 .build();
     }
 
-    public static PlantCharacterEntity fromDomain(PlantCharacter plantCharacter) {
+    public static PlantCharacterEntity ofId(Long plantCharacterId) {
         return PlantCharacterEntity.builder()
-                .plantCharacterId(plantCharacter.getPlantCharacterId())
-                .imageUrl(plantCharacter.getImageUrl())
-                .characterName(plantCharacter.getCharacterName())
+                .plantCharacterId(plantCharacterId)
                 .build();
     }
 }

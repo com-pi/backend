@@ -2,6 +2,7 @@ package com.example.boardservice.adapter.out.persistence.entity;
 
 import com.example.boardservice.domain.ArticleType;
 import com.example.boardservice.domain.GeneralArticle;
+import com.example.boardservice.domain.Member;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -18,6 +19,7 @@ import java.util.List;
 @Table(name = "GENERAL_BOARD")
 public class GeneralArticleEntity extends CommonArticleEntity {
 
+
     @Builder
     public GeneralArticleEntity(Long articleId, Long memberId, String title, String content, Integer viewCount, Integer likeCount, Integer commentCount, List<String> imageUrls, ArticleType type) {
         super(articleId, memberId, title, content, viewCount, likeCount, commentCount, imageUrls, type);
@@ -26,7 +28,7 @@ public class GeneralArticleEntity extends CommonArticleEntity {
     public GeneralArticle toDomain() {
         return GeneralArticle.builder()
                 .articleId(this.articleId)
-                .memberId(this.memberId)
+                .member(Member.ofId(this.memberId))
                 .title(this.title)
                 .content(this.content)
                 .viewCount(this.viewCount)
@@ -40,7 +42,7 @@ public class GeneralArticleEntity extends CommonArticleEntity {
     public static GeneralArticleEntity fromDomain(GeneralArticle generalArticle) {
         return GeneralArticleEntity.builder()
                 .articleId(generalArticle.getArticleId())
-                .memberId(generalArticle.getMemberId())
+                .memberId(generalArticle.getMember().getMemberId())
                 .title(generalArticle.getTitle())
                 .content(generalArticle.getContent())
                 .viewCount(generalArticle.getViewCount())

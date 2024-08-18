@@ -18,7 +18,7 @@ public class QnaArticleCommand {
 
     public QnaArticle toDomain() {
         return QnaArticle.builder()
-                .memberId(memberId)
+                .member(Member.ofId(memberId))
                 .articleId(articleId)
                 .title(title)
                 .content(content)

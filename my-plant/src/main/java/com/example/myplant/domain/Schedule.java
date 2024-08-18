@@ -98,6 +98,12 @@ public class Schedule extends CommonEvent implements Comparable<Schedule>{
     }
 
     public boolean isScheduleMatchingToday(Schedule schedule, LocalDate today) {
+        // 단건 일정
+        if(!schedule.getIsRecurring()) {
+            return schedule.getStartDateTime().toLocalDate().isEqual(today);
+        }
+
+        // 반복 일정
         LocalDateTime startDateTime = schedule.getStartDateTime();
         LocalDateTime endDateTime = schedule.getEndDateTime();
         int frequency = schedule.getFrequency();
@@ -110,11 +116,7 @@ public class Schedule extends CommonEvent implements Comparable<Schedule>{
         }
 
         long daysBetween = ChronoUnit.DAYS.between(startDate, today);
-        if (daysBetween % frequency == 0 && !today.isAfter(endDate)) {
-            return true;
-        }
-
-        return false;
+        return daysBetween % frequency == 0 && !today.isAfter(endDate);
     }
 
     public List<LocalDate> getRecurringDate(Schedule schedule, LocalDate startDate, LocalDate endDate) {

@@ -1,6 +1,7 @@
 package com.example.boardservice.adapter.out.persistence.entity;
 
 import com.example.boardservice.domain.ArticleType;
+import com.example.boardservice.domain.Member;
 import com.example.boardservice.domain.QnaArticle;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -26,7 +27,7 @@ public class QnaArticleEntity extends CommonArticleEntity {
     public QnaArticle toDomain() {
         return QnaArticle.builder()
                 .articleId(this.articleId)
-                .memberId(this.memberId)
+                .member(Member.ofId(this.memberId))
                 .title(this.title)
                 .content(this.content)
                 .viewCount(this.viewCount)
@@ -41,7 +42,7 @@ public class QnaArticleEntity extends CommonArticleEntity {
     public static QnaArticleEntity fromDomain(QnaArticle qnaArticle) {
         return QnaArticleEntity.builder()
                 .articleId(qnaArticle.getArticleId())
-                .memberId(qnaArticle.getMemberId())
+                .memberId(qnaArticle.getMember().getMemberId())
                 .title(qnaArticle.getTitle())
                 .content(qnaArticle.getContent())
                 .viewCount(qnaArticle.getViewCount())

@@ -148,6 +148,9 @@ project(':board-service') {
 		// mysql 설정
 		implementation 'com.mysql:mysql-connector-j'
 
+		// feign client
+		implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+
 		runtimeOnly 'com.h2database:h2'
 	}
 }

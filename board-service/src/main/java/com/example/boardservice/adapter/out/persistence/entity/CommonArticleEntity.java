@@ -3,6 +3,7 @@ package com.example.boardservice.adapter.out.persistence.entity;
 import com.example.boardservice.adapter.out.persistence.converter.JsonToStringListConverter;
 import com.example.boardservice.domain.Article;
 import com.example.boardservice.domain.ArticleType;
+import com.example.boardservice.domain.Member;
 import com.example.common.baseentity.DeletedAtAbstractEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -50,7 +51,7 @@ public class CommonArticleEntity extends DeletedAtAbstractEntity {
     public Article toArticle() {
         return Article.builder()
                 .articleId(this.articleId)
-                .memberId(this.memberId)
+                .member(Member.ofId(this.memberId))
                 .title(this.title)
                 .content(this.content)
                 .viewCount(this.viewCount)

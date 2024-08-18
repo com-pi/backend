@@ -1,5 +1,6 @@
 package com.example.boardservice.adapter.in.web.command;
 
+import com.example.boardservice.domain.Member;
 import com.example.boardservice.domain.QnaArticle;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +21,7 @@ public class DeleteQnaArticleCommand {
 
     public QnaArticle toDomain() {
         return QnaArticle.builder()
-                .memberId(memberId)
+                .member(Member.ofId(memberId))
                 .articleId(articleId)
                 .build();
     }

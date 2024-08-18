@@ -1,12 +1,10 @@
 package com.example.boardservice.domain;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class Member {
 
@@ -16,15 +14,8 @@ public class Member {
 
     private String imageUrl;
 
-    /**
-     * 생성자
-     */
-    @Builder
-    public Member(Long memberId, String nickname, String imageUrl) {
-        this.memberId = memberId;
-        this.nickname = nickname;
-        this.imageUrl = imageUrl;
-    }
+    private String thumbnailUrl;
+
 
     private Member(Long memberId) {
         this.memberId = memberId;
@@ -36,4 +27,5 @@ public class Member {
     public static Member ofId(Long authorId) {
         return new Member(authorId);
     }
+
 }

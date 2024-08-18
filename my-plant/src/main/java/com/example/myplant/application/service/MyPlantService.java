@@ -60,6 +60,15 @@ public class MyPlantService implements MyPlantUseCase {
         return myPlantQueryPort.getMyPlantByMyPlantId(myPlantId);
     }
 
+    @Override
+    @Transactional
+    public Long updatePlantCharacter(MyPlant myPlant) {
+        MyPlant originMyPlant = myPlantQueryPort.getMyPlantByMyPlantId(myPlant.getMyPlantId());
+        myPlant.validatePermission(originMyPlant);
+        myPlantCommandPort.updatePlantCharacter(myPlant);
+        return myPlant.getMyPlantId();
+    }
+
     /**
      * private
      */

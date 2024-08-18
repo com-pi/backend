@@ -38,7 +38,7 @@ public class CommentFacade implements CommentUseCase {
     @Override
     public List<CommentWithReplies> getCommentList(Comment comment) {
         List<CommentWithReplies> commentList = commentService.getCommentList(comment.getArticleId());
-        addLikeStatusList(commentList, comment.getMemberId());
+        addLikeStatusList(commentList, comment.getAuthorId());
         return commentList;
     }
 

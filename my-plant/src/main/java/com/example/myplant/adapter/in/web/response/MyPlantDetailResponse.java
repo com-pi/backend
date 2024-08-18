@@ -8,7 +8,7 @@ public record MyPlantDetailResponse(
         Long myPlantId,
         String plantName,
         LocalDate plantBirthday,
-        String imageUrl,
+        Long plantCharacterId,
         Integer relationshipScore
 ) {
     public static MyPlantDetailResponse from(MyPlant myPlant) {
@@ -16,7 +16,7 @@ public record MyPlantDetailResponse(
                 myPlant.getMyPlantId(),
                 myPlant.getPlantName(),
                 myPlant.getPlantBirthday(),
-                myPlant.getPlantCharacter().getImageUrl(),
+                myPlant.getPlantCharacterId(),
                 myPlant.getRelationshipScore()
         );
     }

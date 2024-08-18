@@ -5,6 +5,7 @@ import com.example.boardservice.application.port.out.CommentQueryPort;
 import com.example.boardservice.application.port.out.CommonArticleCommandPort;
 import com.example.boardservice.domain.Comment;
 import com.example.boardservice.domain.CommentWithReplies;
+import com.example.boardservice.domain.Member;
 import com.example.boardservice.security.PassportHolder;
 import com.example.common.exception.UnauthorizedException;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class CommentService {
     private final CommentCommandPort commentCommandPort;
     private final CommentQueryPort commentQueryPort;
     private final CommonArticleCommandPort articleCommandPort;
+    private final MemberService memberService;
 
     @Transactional
     public Long post(Comment comment) {
@@ -40,7 +42,7 @@ public class CommentService {
     @Transactional
     public Long update(Comment comment) {
         Comment originComment = commentQueryPort.getComment(comment.getCommentId());
-        validatePermission(originComment.getMemberId(), comment.getMemberId());
+        validatePermission(originComment.getAuthorId(), comment.getAuthorId());
 
         commentCommandPort.update(comment);
         return comment.getCommentId();
@@ -49,7 +51,7 @@ public class CommentService {
     @Transactional
     public Long delete(Comment comment) {
         Comment originComment = commentQueryPort.getComment(comment.getCommentId());
-        validatePermission(originComment.getMemberId(), comment.getMemberId());
+        validatePermission(originComment.getAuthorId(), comment.getAuthorId());
 
         commentCommandPort.delete(comment);
         articleCommandPort.decreaseCommentCount(originComment.getArticleId());
@@ -58,6 +60,7 @@ public class CommentService {
 
     public List<CommentWithReplies> getCommentList(Long articleId) {
         List<Comment> commentList = commentQueryPort.getCommentList(articleId);
+        addMember(commentList);
         checkEditable(commentList);
 
         List<Comment> parentComments = getParents(commentList);
@@ -70,9 +73,6 @@ public class CommentService {
         return commentWithRepliesList;
     }
 
-    public int getCommentCount(Long articleId) {
-        return commentQueryPort.getCommentCount(articleId);
-    }
 
     /**
      * private
@@ -104,6 +104,14 @@ public class CommentService {
 
     private void checkEditable(List<Comment> commentList) {
         commentList.forEach(comment -> comment.addEditable(PassportHolder.getPassport().memberId()));
+    }
+
+    private void addMember(List<Comment> commentList) {
+        List<Long> authorIdList = commentList.stream().map(Comment::getAuthorId).toList();
+        List<Member> memberList = memberService.getMemberList(authorIdList);
+        for(int i = 0; i < commentList.size(); i++) {
+            commentList.get(i).addMember(memberList.get(i));
+        }
     }
 
 }

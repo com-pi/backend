@@ -7,7 +7,7 @@ import java.time.LocalDate;
 public record CommentResponse(
         Long commentId,
         Long parentId,
-        Long memberId,
+        MemberResponse member,
         String content,
         LocalDate createdDate,
         Boolean isEditable,
@@ -18,7 +18,7 @@ public record CommentResponse(
         return new CommentResponse(
                 comment.getCommentId(),
                 comment.getParent() != null ? comment.getParent().getCommentId() : null,
-                comment.getMemberId(),
+                MemberResponse.from(comment.getMember()),
                 comment.getContent(),
                 comment.getCreatedDate(),
                 comment.getIsEditable(),

@@ -1,6 +1,7 @@
 package com.example.boardservice.adapter.out.persistence.entity;
 
 import com.example.boardservice.domain.Comment;
+import com.example.boardservice.domain.Member;
 import com.example.common.baseentity.DeletedAtAbstractEntity;
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -71,7 +72,7 @@ public class CommentEntity extends DeletedAtAbstractEntity {
     public static CommentEntity fromDomain(Comment comment) {
         CommentEntity.CommentEntityBuilder commentBuilder = CommentEntity.builder()
                 .commentId(comment.getCommentId())
-                .memberId(comment.getMemberId())
+                .memberId(comment.getAuthorId())
                 .article(CommonArticleEntity.ofId(comment.getArticleId()))
                 .content(comment.getContent())
                 .createdDate(comment.getCreatedDate())
@@ -93,7 +94,7 @@ public class CommentEntity extends DeletedAtAbstractEntity {
     public Comment toDomain() {
         Comment.CommentBuilder commentBuilder = Comment.builder()
                 .commentId(this.commentId)
-                .memberId(this.memberId)
+                .member(Member.ofId(this.memberId))
                 .articleId(this.article.getArticleId())
                 .content(this.content)
                 .createdDate(this.createdDate)

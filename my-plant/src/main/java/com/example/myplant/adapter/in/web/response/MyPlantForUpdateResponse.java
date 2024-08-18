@@ -16,7 +16,7 @@ public record MyPlantForUpdateResponse(
 ) {
     public static MyPlantForUpdateResponse from(MyPlant myPlant) {
         return new MyPlantForUpdateResponse(
-                myPlant.getPlantCharacter().getPlantCharacterId(),
+                myPlant.getPlantCharacterId(),
                 myPlant.getLastWateringDate(),
                 myPlant.getPlantBirthday(),
                 myPlant.getPlantType(),

@@ -15,7 +15,7 @@ public class Comment {
 
     private String content;
 
-    private Long memberId;
+    private Member member;
 
     private Comment parent;
 
@@ -38,11 +38,19 @@ public class Comment {
     }
 
     public void addEditable(Long currentMemberId) {
-        this.isEditable = Objects.equals(this.memberId, currentMemberId);
+        this.isEditable = Objects.equals(this.member.getMemberId(), currentMemberId);
     }
 
     public void addLikeStatus(boolean isLiked) {
         this.isLiked = isLiked;
+    }
+
+    public Long getAuthorId() {
+        return this.member.getMemberId();
+    }
+
+    public void addMember(Member member) {
+        this.member = member;
     }
 
 }
