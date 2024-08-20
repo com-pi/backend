@@ -29,11 +29,12 @@ public record KakaoUserInfoResponse(
         return MemberCreate.builder()
                 .kakaoId(id.toString())
                 .email(kakao_account.email)
-                .nickname(kakao_account.profile().nickname != null ?
-                        kakao_account.profile().nickname : "새회원" +
-                        UUID.randomUUID().toString().replace("-", "")
+                .nickname(kakao_account.profile() != null && kakao_account.profile().nickname != null ?
+                        kakao_account.profile().nickname :
+                        "새회원" + UUID.randomUUID().toString().replace("-", "")
                 )
-                .imageUrl(kakao_account.profile().profile_image_url)
+                .imageUrl(kakao_account.profile() != null ?
+                        kakao_account.profile().profile_image_url : null)
                 .thumbnailUr(kakao_account.profile.thumbnail_image_url)
                 .build();
     }
