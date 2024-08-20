@@ -73,8 +73,8 @@ public class OAuthLoginService implements OAuthLoginUseCase {
                 throw new ConflictException("이메일/비밀번호를 통해 가입된 계정입니다.");
             }
             Member newMember = Member.createSocial(kakaoUserInfo.toMemberCreate());
-            memberCommand.save(newMember);
-            kakaoMember = Optional.of(newMember);
+            Member savedMember = memberCommand.save(newMember);
+            kakaoMember = Optional.of(savedMember);
         }
 
         ComPToken refreshToken = jwtUtil.generateToken(kakaoMember.get(), REFRESH_TOKEN);
@@ -120,8 +120,8 @@ public class OAuthLoginService implements OAuthLoginUseCase {
                 throw new ConflictException("이메일/비밀번호를 통해 가입된 계정입니다.");
             }
             Member newMember = Member.createSocial(naverUserInfo.toDomain());
-            memberCommand.save(newMember);
-            naverMember = Optional.of(newMember);
+            Member savedMember = memberCommand.save(newMember);
+            naverMember = Optional.of(savedMember);
         }
 
         ComPToken refreshToken = jwtUtil.generateToken(naverMember.get(), TokenType.REFRESH_TOKEN);

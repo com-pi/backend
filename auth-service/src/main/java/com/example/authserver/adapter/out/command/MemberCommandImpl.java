@@ -17,9 +17,10 @@ public class MemberCommandImpl implements MemberCommand {
 
     @Override
     @Transactional
-    public void save(Member member) {
+    public Member save(Member member) {
         MemberEntity memberEntity = MemberEntity.fromDomain(member);
-        memberJpaRepository.save(memberEntity);
+        MemberEntity savedMember = memberJpaRepository.save(memberEntity);
+        return MemberEntity.toDomain(savedMember);
     }
 
     @Override

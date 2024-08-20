@@ -4,7 +4,7 @@ import com.example.authserver.domain.Member;
 
 public interface MemberCommand {
 
-    void save(Member member);
+    Member save(Member member);
     void update(Member member);
 
 }
