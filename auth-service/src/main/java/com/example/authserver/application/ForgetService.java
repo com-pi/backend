@@ -1,12 +1,14 @@
 package com.example.authserver.application;
 
 import com.example.authserver.adapter.in.request.*;
+import com.example.authserver.application.port.out.external.SlackWebhookClient;
 import com.example.authserver.application.port.out.persistence.MemberCommand;
 import com.example.authserver.application.port.out.persistence.MemberQuery;
 import com.example.authserver.application.port.out.persistence.RedisPort;
 import com.example.authserver.application.util.JwtUtil;
 import com.example.authserver.domain.ComPToken;
 import com.example.authserver.domain.Member;
+import com.example.authserver.domain.SlackMessage;
 import com.example.authserver.domain.TokenType;
 import com.example.authserver.exception.BadRequestException;
 import com.example.authserver.exception.InvalidTokenException;
@@ -32,6 +34,7 @@ public class ForgetService {
     private final JwtUtil jwtUtil;
     private final Random random = new Random();
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final SlackWebhookClient smsPort;
 
     public String findId(FindIdRequest request){
         Member foundMember = memberQuery.findByPhoneNumber(request.phoneNumber())
@@ -43,6 +46,7 @@ public class ForgetService {
 
         String verificationCode = String.valueOf(random.nextInt(900000) + 100000);
         redisPort.setFindIdValidationCode(request.phoneNumber(), verificationCode);
+        smsPort.sendSlackMessage(SlackMessage.forgetIdMessage(request.phoneNumber(), verificationCode));
 
         return verificationCode;
     }
@@ -72,6 +76,8 @@ public class ForgetService {
                 request.email(),
                 verificationCode
         );
+
+        smsPort.sendSlackMessage(SlackMessage.findPasswordMessage(request.phoneNumber(), verificationCode));
 
         return verificationCode;
     }

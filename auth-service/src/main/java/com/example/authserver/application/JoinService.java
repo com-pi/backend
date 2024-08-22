@@ -74,7 +74,7 @@ public class JoinService implements JoinUseCase {
 
         String verificationCode = String.valueOf(random.nextInt(900000) + 100000);
 
-        smsPort.sendSlackMessage(SlackMessage.of(verificationCode, request.phoneNumber()));
+        smsPort.sendSlackMessage(SlackMessage.joinMessage(verificationCode, request.phoneNumber()));
         redisPort.saveVerificationCode(request.phoneNumber(), verificationCode);
 
         return verificationCode;
