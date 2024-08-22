@@ -6,6 +6,7 @@ import com.example.common.domain.Location;
 import com.example.common.domain.Role;
 
 public record MyInfoResponse(
+        Long id,
         String email,
         String phoneNumber,
         Role role,
@@ -20,6 +21,7 @@ public record MyInfoResponse(
 ) {
     public static MyInfoResponse of(Member member, Integer followerCount, Integer followingCount) {
         return new MyInfoResponse(
+                member.getId(),
                 member.getEmail(),
                 member.getPhoneNumber(),
                 member.getRole(),
