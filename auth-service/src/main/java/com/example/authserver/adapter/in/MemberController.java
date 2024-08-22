@@ -96,7 +96,7 @@ public class MemberController {
                 .profileImage(profileImage)
                 .build();
 
-        memberUseCase.modifyMemberInfoRequest(modifyMemberInfoRequest);
+        memberUseCase.modifyMemberInfo(modifyMemberInfoRequest);
 
         return CommonResponse.okWithMessage("회원 정보 변경 성공", null);
     }

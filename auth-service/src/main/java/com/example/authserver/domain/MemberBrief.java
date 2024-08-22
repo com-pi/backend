@@ -9,5 +9,12 @@ public record MemberBrief(
         String imageUrl,
         String thumbnailUrl
 ) {
-
+    public static MemberBrief fromDomain(Member member) {
+        return MemberBrief.builder()
+                .id(member.getId())
+                .nickname(member.getNickname())
+                .imageUrl(member.getImageUrl())
+                .thumbnailUrl(member.getThumbnailUrl())
+                .build();
+    }
 }

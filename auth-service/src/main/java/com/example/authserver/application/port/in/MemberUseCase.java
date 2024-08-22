@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface MemberUseCase {
 
-    void modifyMemberInfoRequest(ModifyMemberInfoRequest request);
+    void modifyMemberInfo(ModifyMemberInfoRequest request);
 
     MemberInfoResponse getMemberInfo(Long memberId);
     MyInfoResponse getMyInfo();

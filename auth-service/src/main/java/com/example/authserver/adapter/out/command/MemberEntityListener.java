@@ -1,13 +1,12 @@
 package com.example.authserver.adapter.out.command;
 
 import com.example.authserver.adapter.out.entity.MemberEntity;
+import com.example.authserver.adapter.out.repository.MemberCacheRepository;
 import com.example.authserver.domain.Event;
 import com.example.authserver.domain.EventType;
 import com.example.authserver.domain.Member;
 import com.example.authserver.event.MemberEventPublisher;
-import jakarta.persistence.PostUpdate;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreRemove;
+import jakarta.persistence.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -17,21 +16,37 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class MemberEntityListener {
 
-    private final MemberEventPublisher eventPublisher;
+//    private final MemberEventPublisher memberEventPublisher;
+    private final MemberCacheRepository memberCacheRepository;
 
     @PrePersist
     public void prePersist(MemberEntity member) {
-        eventPublisher.publishEvent(createEvent(EventType.CREATE, member));
+//        memberEventPublisher.publishEvent(createEvent(EventType.CREATE, member));
     }
 
-    @PostUpdate
-    public void postUpdate(MemberEntity employee) {
-        eventPublisher.publishEvent(createEvent(EventType.UPDATE, employee));
+    @PreUpdate
+    public void preUpdate(MemberEntity member) {
+//        memberEventPublisher.publishEvent(createEvent(EventType.UPDATE, member));
     }
 
     @PreRemove
-    public void preRemove(MemberEntity employee) {
-        eventPublisher.publishEvent(createEvent(EventType.DELETE, employee));
+    public void preRemove(MemberEntity member) {
+//        memberEventPublisher.publishEvent(createEvent(EventType.DELETE, member));
+    }
+
+    @PostPersist
+    public void postPersist(MemberEntity member) {
+        memberCacheRepository.saveMemberBrief(MemberEntity.toBrief(member));
+    }
+
+    @PostUpdate
+    public void postUpdate(MemberEntity member) {
+        memberCacheRepository.saveMemberBrief(MemberEntity.toBrief(member));
+    }
+
+    @PostRemove
+    public void postRemove(MemberEntity member) {
+        memberCacheRepository.deleteMemberBrief(member.getId());
     }
 
     public Event<MemberEntity> createEvent(EventType eventType, MemberEntity data) {
@@ -44,9 +59,5 @@ public class MemberEntityListener {
                 .data(data)
                 .build();
     }
-
-
-
-
 
 }

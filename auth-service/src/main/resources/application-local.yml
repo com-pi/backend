@@ -30,9 +30,6 @@ spring:
       port: 6379
       password: 1234
 
-    mongodb:
-      uri: mongodb://root:1234@localhost:27017/auth?authSource=admin
-
 --- # kafka 설정
 #spring:
 #  kafka:

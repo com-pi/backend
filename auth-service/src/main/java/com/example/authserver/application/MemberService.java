@@ -50,6 +50,7 @@ public class MemberService implements MemberUseCase {
     public MemberBriefInfoResponse getMemberBriefInfo(List<Long> memberIds) {
         List<MemberBrief> memberBriefList = new ArrayList<>();
         List<Long> notCached = new ArrayList<>();
+
         for(Long memberId : memberIds){
             MemberBrief briefById = memberQuery.findBriefById(memberId);
             if(briefById == null){
@@ -58,12 +59,13 @@ public class MemberService implements MemberUseCase {
                 memberBriefList.add(briefById);
             }
         }
+
         memberBriefList.addAll(memberQuery.findAllBriefById(notCached));
         return MemberBriefInfoResponse.of(memberBriefList);
     }
 
     @Override
-    public void modifyMemberInfoRequest(ModifyMemberInfoRequest request) {
+    public void modifyMemberInfo(ModifyMemberInfoRequest request) {
         ImageAndThumbnail imageAndThumbnail = new ImageAndThumbnail(null, null);
 
         if(request.getIsPicUploaded() && request.getProfileImage() != null){
