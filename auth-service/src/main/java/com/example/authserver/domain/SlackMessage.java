@@ -9,7 +9,7 @@ public record SlackMessage (
     }
 
     public static SlackMessage forgetIdMessage(String code, String phoneNumber) {
-        return new SlackMessage(String.format("아이디 변경을 위한 인증번호는 %s 입니다. 인증번호를 입력해주세요." +
+        return new SlackMessage(String.format("아이디 찾기를 위한 인증번호는 %s 입니다. 인증번호를 입력해주세요." +
                 " \n 발송 전화번호: %s", code, phoneNumber));
 }
 
