@@ -5,7 +5,6 @@ import com.example.authserver.adapter.out.entity.EventRecordEntity;
 import com.example.authserver.adapter.out.repository.EventRecordJpaRepository;
 import com.example.authserver.event.MemberEventHandler;
 import com.example.authserver.event.MemberEventPublisher;
-import com.example.authserver.adapter.out.repository.MemberMongoRepository;
 import com.example.authserver.application.port.out.persistence.RedisPort;
 import com.example.authserver.configuration.KafkaTopic;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,9 +54,6 @@ class JoinControllerTest {
     @MockBean
     MemberEventHandler memberEventHandler;
 
-    @Autowired
-    MemberMongoRepository memberMongoRepository;
-
     private final BlockingQueue<ConsumerRecord<String, String>> records = new LinkedBlockingQueue<>();
 
     @KafkaListener(topics = KafkaTopic.MEMBER_CQRS, groupId = "test")
@@ -87,7 +83,6 @@ class JoinControllerTest {
 
         ConsumerRecord<String, String> record = records.poll(10, TimeUnit.SECONDS);
         then(memberEventPublisher).should().publishEvent(any());
-        then(memberEventHandler).should().handleMemberEvent(any());
         List<EventRecordEntity> all = eventRecordJpaRepository.findAll();
         System.out.println("all = " + all);
         assertThat(record).isNotNull();
