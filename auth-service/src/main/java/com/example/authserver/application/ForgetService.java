@@ -46,7 +46,7 @@ public class ForgetService {
 
         String verificationCode = String.valueOf(random.nextInt(900000) + 100000);
         redisPort.setFindIdValidationCode(request.phoneNumber(), verificationCode);
-        smsPort.sendSlackMessage(SlackMessage.forgetIdMessage(request.phoneNumber(), verificationCode));
+        smsPort.sendSlackMessage(SlackMessage.forgetIdMessage(verificationCode, request.phoneNumber()));
 
         return verificationCode;
     }
@@ -77,7 +77,7 @@ public class ForgetService {
                 verificationCode
         );
 
-        smsPort.sendSlackMessage(SlackMessage.findPasswordMessage(request.phoneNumber(), verificationCode));
+        smsPort.sendSlackMessage(SlackMessage.findPasswordMessage(verificationCode, request.phoneNumber()));
 
         return verificationCode;
     }

@@ -13,8 +13,8 @@ public record SlackMessage (
                 " \n 발송 전화번호: %s", code, phoneNumber));
 }
 
-    public static SlackMessage findPasswordMessage(String s, String verificationCode) {
+    public static SlackMessage findPasswordMessage(String code, String phoneNumber) {
         return new SlackMessage(String.format("비밀번호 변경을 위한 인증번호는 %s 입니다. 인증번호를 입력해주세요." +
-                " \n 발송 전화번호: %s", verificationCode, s));
+                " \n 발송 전화번호: %s", code, phoneNumber));
     }
 }
