@@ -1,0 +1,14 @@
+dependencies {
+    implementation project(":common")
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'io.minio:minio:8.5.10'
+    implementation 'net.coobird:thumbnailator:0.4.20'
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
