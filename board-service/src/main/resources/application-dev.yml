@@ -7,6 +7,10 @@ spring:
     url: jdbc:mysql://mysql-dev:3306/board
     username: root
     password: 1234
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 30MB
 
 eureka:
   client:
@@ -22,6 +26,7 @@ feign:
     config:
       read-member:
         url: http://auth-service:8080
+
 
 
 

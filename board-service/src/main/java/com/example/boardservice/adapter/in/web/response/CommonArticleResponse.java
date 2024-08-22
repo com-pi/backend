@@ -13,9 +13,10 @@ public record CommonArticleResponse(
         String content,
         int likeCount,
         int commentCount,
-        boolean isLiked,
+        Boolean isLiked,
         List<String> hashtagList,
-        List<String> imageUrls
+        List<String> imageUrls,
+        Boolean isEditable
 ) {
     public static CommonArticleResponse from(Article article) {
         return new CommonArticleResponse(
@@ -26,9 +27,10 @@ public record CommonArticleResponse(
                 article.getContent(),
                 article.getLikeCount(),
                 article.getCommentCount(),
-                article.isLiked(),
+                article.getIsLiked(),
                 article.getHashtagList(),
-                article.getImageUrls()
+                article.getImageUrls(),
+                article.getIsEditable()
         );
     }
 }

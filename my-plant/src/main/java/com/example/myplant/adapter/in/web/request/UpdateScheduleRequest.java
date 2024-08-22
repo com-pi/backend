@@ -3,7 +3,6 @@ package com.example.myplant.adapter.in.web.request;
 import com.example.myplant.domain.Schedule;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 public record UpdateScheduleRequest(
     String title,
@@ -21,7 +20,7 @@ public record UpdateScheduleRequest(
             .endDateTime(endDateTime)
             .frequency(frequency)
             .colorType(colorType)
-            .isRecurring(Objects.nonNull(frequency))
+            .isRecurring(frequency != 0)
             .build();
     }
 }

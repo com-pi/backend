@@ -6,6 +6,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Getter
@@ -33,9 +34,11 @@ public class Article {
 
     private int likeCount;
 
-    private boolean isLiked;
+    private Boolean isLiked;
 
     private int commentCount;
+
+    private Boolean isEditable;
 
     public void addHashtagList(List<String> hashtagList) {
         this.hashtagList = hashtagList;
@@ -53,6 +56,10 @@ public class Article {
         return articleList.stream()
                 .map(Article::getAuthorIdFromMember)
                 .collect(Collectors.toList());
+    }
+
+    public void addEditable(Long currentMemberId) {
+        this.isEditable = Objects.equals(this.member.getMemberId(), currentMemberId);
     }
 
     /**
