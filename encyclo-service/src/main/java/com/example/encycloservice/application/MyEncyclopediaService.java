@@ -35,6 +35,9 @@ public class MyEncyclopediaService implements MyEncyclopediaUseCase {
 
     @Override
     public MyEncyclopediaDetailResponse getPlantListByEncyclopediaId(Long myEncyclopediaId, Integer page, Integer size) {
+        MyEncyclopedia myEncyclopedia = myEncyclopediaQuery.findById(myEncyclopediaId)
+                .orElseThrow(() -> new NotFoundException("내 도감을 찾을 수 없습니다."));
+
         Page<EncyclopediaPlantEntity> pageableResult =
                 myEncyclopediaQuery.getPlantListByEncyclopediaId(myEncyclopediaId, page, size);
 
@@ -45,6 +48,8 @@ public class MyEncyclopediaService implements MyEncyclopediaUseCase {
         return MyEncyclopediaDetailResponse.builder()
                 .totalElement(pageableResult.getTotalElements())
                 .totalPage(pageableResult.getTotalPages())
+                .title(myEncyclopedia.getTitle())
+                .coverImageUrl(myEncyclopedia.getCoverImageUrl())
                 .plantCollection(plantBriefList)
                 .build();
     }
