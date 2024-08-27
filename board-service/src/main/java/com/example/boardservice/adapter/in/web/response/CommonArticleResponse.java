@@ -1,6 +1,7 @@
 package com.example.boardservice.adapter.in.web.response;
 
 import com.example.boardservice.domain.Article;
+import com.example.boardservice.domain.ArticleType;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,7 +17,8 @@ public record CommonArticleResponse(
         Boolean isLiked,
         List<String> hashtagList,
         List<String> imageUrls,
-        Boolean isEditable
+        Boolean isEditable,
+        ArticleType type
 ) {
     public static CommonArticleResponse from(Article article) {
         return new CommonArticleResponse(
@@ -30,7 +32,8 @@ public record CommonArticleResponse(
                 article.getIsLiked(),
                 article.getHashtagList(),
                 article.getImageUrls(),
-                article.getIsEditable()
+                article.getIsEditable(),
+                article.getType()
         );
     }
 }

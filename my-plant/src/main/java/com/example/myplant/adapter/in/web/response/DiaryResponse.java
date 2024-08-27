@@ -11,7 +11,8 @@ public record DiaryResponse(
         List<PlantCare> plantCareList,
         String title,
         String content,
-        List<String> imageUrlList
+        List<String> imageUrlList,
+        Boolean isPublic
 ) {
     public static DiaryResponse from(Diary diary) {
         return new DiaryResponse(
@@ -20,7 +21,8 @@ public record DiaryResponse(
                 diary.getPlantCareList(),
                 diary.getTitle(),
                 diary.getContent(),
-                diary.getImageUrlList()
+                diary.getImageUrlList(),
+                diary.getIsPublic()
         );
     }
 }

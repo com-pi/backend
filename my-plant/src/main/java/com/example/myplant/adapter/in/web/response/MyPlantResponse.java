@@ -9,7 +9,8 @@ public record MyPlantResponse(
         String plantName,
         LocalDate plantBirthday,
         Integer wateringIntervalInDays,
-        Long plantCharacterId
+        Long plantCharacterId,
+        String plantLocation
 ) {
     public static MyPlantResponse from(MyPlant myPlant) {
         return new MyPlantResponse(
@@ -17,7 +18,8 @@ public record MyPlantResponse(
                 myPlant.getPlantName(),
                 myPlant.getPlantBirthday(),
                 myPlant.getWateringIntervalInDays(),
-                myPlant.getPlantCharacterId()
+                myPlant.getPlantCharacterId(),
+                myPlant.getPlantSpot()
         );
     }
 }
