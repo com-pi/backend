@@ -16,7 +16,7 @@ public class GatewayConfig {
         config.setAllowCredentials(true);
         config.addAllowedOrigin("http://localhost:3000");
         config.addAllowedOrigin("http://localhost:5500");
-        config.addAllowedOrigin("https://comppi.vercel.app/");
+        config.addAllowedOrigin("https://comppi.site");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 
