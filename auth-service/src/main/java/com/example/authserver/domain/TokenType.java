@@ -31,11 +31,11 @@ public enum TokenType {
 
     private final Supplier<Instant> instant;
     @Getter
-    private final long Seconds;
+    private final int Seconds;
     private final Function<JwtUtilImpl, String> secret;
 
 
-    TokenType(Supplier<Instant> instant, long toSeconds, Function<JwtUtilImpl, String> secret) {
+    TokenType(Supplier<Instant> instant, int toSeconds, Function<JwtUtilImpl, String> secret) {
         this.instant = instant;
         this.Seconds = toSeconds;
         this.secret = secret;
