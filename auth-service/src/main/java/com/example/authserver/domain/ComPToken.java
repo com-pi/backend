@@ -1,5 +1,6 @@
 package com.example.authserver.domain;
 
+import jakarta.servlet.http.Cookie;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,12 +18,22 @@ public class ComPToken {
         return new ComPToken(tokenType, token);
     }
 
-    public String generateRefreshTokenCookie() {
-        return String.format("RefreshToken=%s; Secure; Path=/; HttpOnly; Max-Age=%s", token, REFRESH_TOKEN.getSeconds());
+    public Cookie generateRefreshTokenCookie() {
+        Cookie refreshTokenCookie = new Cookie("RefreshToken", token);
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setSecure(true);
+        refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setMaxAge(REFRESH_TOKEN.getSeconds());
+        return refreshTokenCookie;
     }
 
-    public static String removeRefreshTokenCookie() {
-        return String.format("RefreshToken=; Secure; Path=/; HttpOnly; Max-Age=%s", "0");
+    public static Cookie removeRefreshTokenCookie() {
+        Cookie removeCookie = new Cookie("RefreshToken", "");
+        removeCookie.setSecure(true);
+        removeCookie.setHttpOnly(true);
+        removeCookie.setPath("/");
+        removeCookie.setMaxAge(0);
+        return removeCookie;
     }
 
 

@@ -11,7 +11,7 @@ import java.util.Optional;
 public class CookieUtil {
 
     public static void setRefreshCookie(ComPToken comPToken, HttpServletResponse response) {
-        response.setHeader("Set-Cookie", comPToken.generateRefreshTokenCookie());
+        response.addCookie(comPToken.generateRefreshTokenCookie());
     }
 
     public static Optional<String> getRefreshToken(HttpServletRequest request) {
@@ -26,7 +26,7 @@ public class CookieUtil {
     }
 
     public static void removeRefreshTokenCookies(HttpServletResponse response) {
-        response.setHeader("Set-Cookie", ComPToken.removeRefreshTokenCookie());
+        response.addCookie(ComPToken.removeRefreshTokenCookie());
     }
 
 }
