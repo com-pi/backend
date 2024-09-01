@@ -18,11 +18,11 @@ public class ComPToken {
     }
 
     public String generateRefreshTokenCookie() {
-        return String.format("RefreshToken=%s; Secure; Path=/; HttpOnly; Max-Age=%s", token, REFRESH_TOKEN.getSeconds());
+        return String.format("RefreshToken=%s; Secure; Path=/; SameSite=None; HttpOnly; Max-Age=%s", token, REFRESH_TOKEN.getSeconds());
     }
 
     public static String removeRefreshTokenCookie() {
-        return String.format("RefreshToken=; Secure; Path=/; HttpOnly; Max-Age=%s", "0");
+        return String.format("RefreshToken=; Secure; Path=/; SameSite=None; HttpOnly; Max-Age=%s", "0");
     }
 
 
