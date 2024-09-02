@@ -16,6 +16,7 @@ public class GatewayConfig {
         config.setAllowCredentials(true);
         config.addAllowedOrigin("https://comppi.site");
         config.addAllowedOrigin("https://api.comppi.site");
+        config.addExposedHeader("RefreshToken");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
 
