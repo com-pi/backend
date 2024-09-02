@@ -23,6 +23,7 @@ public class ComPToken {
         refreshTokenCookie.setHttpOnly(true);
         refreshTokenCookie.setSecure(true);
         refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setDomain(".comppi.site");
         refreshTokenCookie.setMaxAge(REFRESH_TOKEN.getSeconds());
         return refreshTokenCookie;
     }
@@ -32,9 +33,9 @@ public class ComPToken {
         removeCookie.setSecure(true);
         removeCookie.setHttpOnly(true);
         removeCookie.setPath("/");
+        removeCookie.setDomain(".comppi.site");
         removeCookie.setMaxAge(0);
         return removeCookie;
     }
-
 
 }
