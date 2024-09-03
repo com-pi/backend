@@ -13,7 +13,7 @@ public interface CommonArticleUseCase {
 
     Article getArticle(Article article);
 
-    List<Article> getArticleListByHashtag(String name, Pageable pageable);
+    List<Article> getArticleListByHashtag(String name, String type, Pageable pageable);
 
     List<Article> searchArticleList(GetSearchedArticleListCommand command);
 

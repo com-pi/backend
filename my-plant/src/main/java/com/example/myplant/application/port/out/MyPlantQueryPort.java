@@ -10,4 +10,6 @@ public interface MyPlantQueryPort {
 
     MyPlant getMyPlantByMyPlantId(Long myPlantId);
 
+    String getPlantType(Long myPlantId);
+
 }

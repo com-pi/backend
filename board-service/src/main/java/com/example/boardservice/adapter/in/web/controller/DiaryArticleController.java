@@ -28,6 +28,4 @@ public class DiaryArticleController {
         return ResponseEntity.ok(new CommonResponse<>("일지 게시글이 등록되었습니다.", articleId));
     }
 
-
-
 }

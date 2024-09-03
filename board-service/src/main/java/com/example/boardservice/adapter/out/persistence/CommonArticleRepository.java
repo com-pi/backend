@@ -61,4 +61,6 @@ public interface CommonArticleRepository extends JpaRepository<CommonArticleEnti
     Page<CommonArticleEntity> getLikedArticleId(
             @Param("memberId") Long memberId,
             @Param("deletionYn") String deletionYn, Pageable pageable);
+
+    List<CommonArticleEntity> findByTypeAndArticleIdIn(ArticleType type, List<Long> articleId, Sort sort);
 }

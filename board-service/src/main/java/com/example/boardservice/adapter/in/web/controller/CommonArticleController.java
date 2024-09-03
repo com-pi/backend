@@ -61,12 +61,15 @@ public class CommonArticleController {
     @Parameters({
             @Parameter(name = "page", description = "페이지 번호", example = "0"),
             @Parameter(name = "size", description = "페이지 크기", example = "4"),
-            @Parameter(name = "sort", description = "정렬 기준", example = "createdAt,DESC")
+            @Parameter(name = "sort", description = "정렬 기준", example = "createdAt,DESC"),
+            @Parameter(name = "name", description = "해시태그 검색 키워드", example = "해시태그1"),
+            @Parameter(name = "type", description = "1. 전체: common, 2. 자유: general, 3. 질문: qna, 4. 일지: diary", example = "common"),
     })
     public ResponseEntity<CommonArticleListResponse> getArticleListByHashtag(
             @RequestParam final String name,
+            @RequestParam(defaultValue = "common") final String type,
             @PageableDefault(size = 4, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        CommonArticleListResponse response = CommonArticleListResponse.from(useCase.getArticleListByHashtag(name, pageable));
+        CommonArticleListResponse response = CommonArticleListResponse.from(useCase.getArticleListByHashtag(name, type, pageable));
         return ResponseEntity.ok(response);
     }
 

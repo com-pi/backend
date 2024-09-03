@@ -33,8 +33,9 @@ public class CommonArticleFacade implements CommonArticleUseCase {
     }
 
     @Override
-    public List<Article> getArticleListByHashtag(String name, Pageable pageable) {
+    public List<Article> getArticleListByHashtag(String name, String type, Pageable pageable) {
         Long hashtagId = articleHashtagService.getHashtagIdByName(name);
+
         if(Objects.isNull(hashtagId)) {
             return Collections.emptyList();
         }
@@ -43,7 +44,7 @@ public class CommonArticleFacade implements CommonArticleUseCase {
                 .map(ArticleHashtag::getArticleId)
                 .toList();
 
-        List<Article> articleList = articleService.getArticleListByArticleId(articleIdList, pageable);
+        List<Article> articleList = articleService.getArticleListByArticleId(articleIdList, type, pageable);
 
         articleList.forEach(this::addHashtags);
         addMember(articleList);

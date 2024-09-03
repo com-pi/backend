@@ -32,8 +32,8 @@ public class CommonArticleQueryAdapter implements CommonArticleQueryPort {
     }
 
     @Override
-    public List<Article> getArticleListByArticleId(List<Long> articleIdList, Pageable pageable) {
-        List<CommonArticleEntity> commonArticleEntityList = articleRepository.findByArticleIdIn(articleIdList, pageable.getSort());
+    public List<Article> getArticleListByArticleId(List<Long> articleIdList, String type, Pageable pageable) {
+        List<CommonArticleEntity> commonArticleEntityList = articleRepository.findByTypeAndArticleIdIn(ArticleType.from(type), articleIdList, pageable.getSort());
         return commonArticleEntityList.stream()
                 .map(CommonArticleEntity::toArticle)
                 .toList();

@@ -29,4 +29,11 @@ public class MyPlantQueryAdapter implements MyPlantQueryPort {
         return myPlantEntity.toDomain();
     }
 
+    @Override
+    public String getPlantType(Long myPlantId) {
+        MyPlantEntity myPlantEntity = myPlantRepository.findByMyPlantIdAndDeletionYn(myPlantId, "N")
+                .orElseThrow(() -> new NotFoundException(MyPlantEntity.class));
+        return myPlantEntity.toDomain().getPlantType();
+    }
+
 }

@@ -12,7 +12,7 @@ public interface CommonArticleQueryPort {
 
     Page<Article> getArticleList(ArticleType type, Pageable pageable);
 
-    List<Article> getArticleListByArticleId(List<Long> articleIdList, Pageable pageable);
+    List<Article> getArticleListByArticleId(List<Long> articleIdList, String type, Pageable pageable);
 
     Article getArticle(Long articleId);
 

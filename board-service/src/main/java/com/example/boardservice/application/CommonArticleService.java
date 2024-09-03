@@ -27,8 +27,8 @@ public class CommonArticleService {
         return articlePage;
     }
 
-    public List<Article> getArticleListByArticleId(List<Long> articleIdList, Pageable pageable) {
-        List<Article> articleList = articleQueryPort.getArticleListByArticleId(articleIdList, pageable);
+    public List<Article> getArticleListByArticleId(List<Long> articleIdList, String type, Pageable pageable) {
+        List<Article> articleList = articleQueryPort.getArticleListByArticleId(articleIdList, type, pageable);
         checkEditable(articleList);
         return articleList;
     }

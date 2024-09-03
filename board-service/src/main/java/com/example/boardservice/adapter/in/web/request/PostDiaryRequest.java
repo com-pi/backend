@@ -16,6 +16,7 @@ public class PostDiaryRequest {
     private final String title;
     private final String content;
     private final List<String> imageUrlList;
+    private final List<String> hashtagList;
 
     public DiaryArticle toDomain() {
         return DiaryArticle.builder()
@@ -25,6 +26,7 @@ public class PostDiaryRequest {
                 .imageUrls(imageUrlList)
                 .viewCount(0)
                 .type(ArticleType.DIARY_BOARD)
+                .hashtagList(hashtagList)
                 .build();
     }
 
