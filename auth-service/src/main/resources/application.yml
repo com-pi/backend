@@ -1,11 +1,36 @@
 spring:
   application:
     name: auth-service
-
   profiles:
     default: dev
+
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+  instance:
+    hostname: auth-service
 
 logging:
   charset:
     console: UTF-8
     file: UTF-8
+
+## actuator 관련
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+
+## 문서화 관련
+springdoc:
+  swagger-ui:
+    display-request-duration: true
+    tags-sorter: alpha
+    operations-sorter: alpha
+    doc-expansion: none
+    syntax-highlight:
+      theme: nord
+    persist-authorization: true
+  pre-loading-enabled: true

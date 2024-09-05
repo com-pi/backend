@@ -1,0 +1,28 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://mysql-plant:3306/plant
+    username: root
+    password: 1234
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 30MB
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://discovery-eureka:8761/eureka
+  instance:
+    hostname: my-plant # 쿠버네티스 서비스 명
+
+feign:
+  client:
+    config:
+      diary-article:
+        url: http://board-service:8080

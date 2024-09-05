@@ -6,3 +6,20 @@ spring:
     default: dev
 
 
+--- # 기타 설정
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+
+springdoc:
+  swagger-ui:
+    display-request-duration: true
+    tags-sorter: alpha
+    operations-sorter: alpha
+    doc-expansion: none
+    syntax-highlight:
+      theme: nord
+    persist-authorization: true
+  pre-loading-enabled: true

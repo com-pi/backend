@@ -7,11 +7,12 @@ eureka:
     service-url:
       defaultZone: http://discovery-eureka:8761/eureka
 
+
 --- ## db 설정
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql-dev:3306/auth
+    url: jdbc:mysql://mysql-auth:3306/auth
     username: root
     password: 1234
 
@@ -21,7 +22,7 @@ spring:
       port: 6379
       password: 1234
 
---- ## secret 관련 Todo: Secret 따로관리 하기
+--- ## secret 관련
 oauth:
   naver:
     app-key: OhHssSBOwmc929lDfGOg
@@ -42,8 +43,6 @@ spring:
     multipart:
       max-file-size: 10MB
       max-request-size: 30MB
-
-
 
 
 --- # kafka 설정

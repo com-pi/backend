@@ -1,10 +1,17 @@
 spring:
   application:
     name: api-gateway
-
   profiles:
     default: dev
 
+eureka:
+  instance:
+    hostname: api-gateway
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+---
+spring:
   cloud:
     gateway:
       default-filters:
@@ -51,15 +58,10 @@ spring:
             - name: PathPrefixRemoveFilter
             - name: TokenValidateFilter
 
-secret:
-  accessToken: test1
-  refreshToken: test2
-
 springdoc:
   webjars:
     prefix:
   default-consumes-media-type: application/json;charset=UTF-8
-  default-produces-media-type: application/json;charset=UTF-8
   swagger-ui:
     path: swagger-ui.html
     tags-sorter: alpha
