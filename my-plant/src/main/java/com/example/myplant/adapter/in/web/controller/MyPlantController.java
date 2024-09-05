@@ -36,7 +36,7 @@ public class MyPlantController {
     @PostMapping
     public ResponseEntity<CommonResponse<Long>> registerPlant(
             @Schema(
-                    example = "{\"plantName\":\"테스트 식물\",\"plantType\":\"장미\"," +
+                    example = "{\"plantName\":\"테스트 식물\",\"plantTypeId\":\"54\",\"plantType\":\"스투키\"," +
                             "\"plantBirthday\":\"2024-06-05\",\"lastWaterday\":\"2024-06-06\"," +
                             "\"wateringIntervalInDays\":10,\"plantLocation\":\"dark\",\"potType\":\"hydro\"," +
                             "\"characterId\":1}"
@@ -52,7 +52,7 @@ public class MyPlantController {
     @PatchMapping
     public ResponseEntity<CommonResponse<Long>> updatePlant(
             @Schema(
-                    example = "{\"myPlantId\":\"1\",\"plantName\":\"수정 식물\",\"plantType\":\"들국화\"," +
+                    example = "{\"myPlantId\":\"1\",\"plantName\":\"수정 식물\",\"plantTypeId\":\"56\",\"plantType\":\"산세베리아\"," +
                             "\"plantBirthday\":\"2024-06-05\",\"lastWaterday\":\"2024-06-06\"," +
                             "\"wateringIntervalInDays\":10,\"plantLocation\":\"dark\",\"potType\":\"hydro\"," +
                             "\"characterId\":1}"
@@ -111,10 +111,13 @@ public class MyPlantController {
     @Authenticate(Role.MEMBER)
     @PatchMapping("characters/{myPlantId}")
     public ResponseEntity<CommonResponse<Long>> updatePlantCharacter(
-            @PathVariable Long myPlantId,
-            @RequestBody UpdatePlantCharacterRequest request) {
+            @Schema(
+                    example = "{\"plantCharacterId\": 1, \"plantLocation\": \"livingroom\"}"
+            )
+            @RequestBody UpdatePlantCharacterRequest request,
+            @PathVariable Long myPlantId) {
         UpdatePlantCharacterCommand command = UpdatePlantCharacterCommand.of(
-                PassportHolder.getPassport().memberId(), myPlantId, request.plantCharacterId());
+                PassportHolder.getPassport().memberId(), myPlantId, request);
         Long plantId = myPlantUseCase.updatePlantCharacter(command.toDomain());
         return ResponseEntity.ok(new CommonResponse<>("식물 캐릭터가 수정되었습니다.", plantId));
     }

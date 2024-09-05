@@ -21,6 +21,8 @@ public class MyPlantEntity extends DeletedAtAbstractEntity {
 
     private String plantName;
 
+    private Long plantTypeId;
+
     private String plantType;
 
     private LocalDate plantBirthday;
@@ -43,10 +45,11 @@ public class MyPlantEntity extends DeletedAtAbstractEntity {
      * 생성자
      */
     @Builder
-    public MyPlantEntity(Long myPlantId, Long memberId, String plantName, String plantType, LocalDate plantBirthday, LocalDate lastWateringDate, Integer wateringIntervalInDays, String plantSpot, String potType, Integer relationshipScore, PlantCharacterEntity plantCharacterEntity) {
+    public MyPlantEntity(Long myPlantId, Long memberId, String plantName, Long plantTypeId, String plantType, LocalDate plantBirthday, LocalDate lastWateringDate, Integer wateringIntervalInDays, String plantSpot, String potType, Integer relationshipScore, PlantCharacterEntity plantCharacterEntity) {
         this.myPlantId = myPlantId;
         this.memberId = memberId;
         this.plantName = plantName;
+        this.plantTypeId = plantTypeId;
         this.plantType = plantType;
         this.plantBirthday = plantBirthday;
         this.lastWateringDate = lastWateringDate;
@@ -65,6 +68,7 @@ public class MyPlantEntity extends DeletedAtAbstractEntity {
                 .myPlantId(this.myPlantId)
                 .memberId(this.memberId)
                 .plantName(this.plantName)
+                .plantTypeId(this.plantTypeId)
                 .plantType(this.plantType)
                 .plantBirthday(this.plantBirthday)
                 .lastWateringDate(this.lastWateringDate)
@@ -94,6 +98,7 @@ public class MyPlantEntity extends DeletedAtAbstractEntity {
 
     public void update(MyPlant myPlant) {
         this.plantName = myPlant.getPlantName();
+        this.plantTypeId = myPlant.getPlantTypeId();
         this.plantType = myPlant.getPlantType();
         this.plantBirthday = myPlant.getPlantBirthday();
         this.lastWateringDate = myPlant.getLastWateringDate();
@@ -104,6 +109,10 @@ public class MyPlantEntity extends DeletedAtAbstractEntity {
 
     public void updatePlantCharacter(PlantCharacterEntity plantCharacterEntity) {
         this.plantCharacterEntity = plantCharacterEntity;
+    }
+
+    public void updatePlantSpot(String plantSpot) {
+        this.plantSpot = plantSpot;
     }
 
     @Override

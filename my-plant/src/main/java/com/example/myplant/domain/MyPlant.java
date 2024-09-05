@@ -20,7 +20,11 @@ public class MyPlant {
 
     private String plantName;
 
+    private Long plantTypeId;
+
     private String plantType;
+
+    private String myPlant;
 
     private LocalDate plantBirthday;
 

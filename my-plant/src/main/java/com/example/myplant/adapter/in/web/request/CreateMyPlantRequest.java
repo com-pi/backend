@@ -8,6 +8,7 @@ public record CreateMyPlantRequest (
         Long characterId,
         LocalDate lastWaterday,
         LocalDate plantBirthday,
+        Long plantTypeId,
         String plantType,
         String plantLocation,
         String plantName,
@@ -20,6 +21,7 @@ public record CreateMyPlantRequest (
                 .plantCharacterId(this.characterId)
                 .lastWateringDate(this.lastWaterday)
                 .plantBirthday(this.plantBirthday)
+                .plantTypeId(this.plantTypeId)
                 .plantType(this.plantType)
                 .plantSpot(this.plantLocation)
                 .plantName(this.plantName)

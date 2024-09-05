@@ -47,6 +47,7 @@ public class MyPlantCommandPortAdapter implements MyPlantCommandPort {
         MyPlantEntity myPlantEntity = myPlantRepository.findById(myPlant.getMyPlantId())
                 .orElseThrow(() -> new NotFoundException(MyPlantEntity.class));
         myPlantEntity.updatePlantCharacter(plantCharacterEntity);
+        myPlantEntity.updatePlantSpot(myPlant.getPlantSpot());
     }
 
 }
