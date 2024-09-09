@@ -2,6 +2,10 @@ package com.example.authserver.adapter.in;
 
 import com.example.authserver.adapter.in.response.LoginResponse;
 import com.example.authserver.application.port.in.OAuthLoginUseCase;
+import com.example.authserver.exception.AlreadyLoggedInException;
+import com.example.authserver.util.AuthenticateResponse;
+import com.example.authserver.util.CookieUtil;
+import com.example.common.baseentity.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +16,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Optional;
+
+import static com.example.authserver.domain.TokenType.REFRESH_TOKEN;
 
 
 /**
@@ -29,15 +37,16 @@ public class OAuthController {
 
     @Operation(summary = "카카오 로그인")
     @PostMapping("/kakao")
-    public ResponseEntity<LoginResponse> OAuthLoginWithKakao(
+    public ResponseEntity<CommonResponse<LoginResponse>> OAuthLoginWithKakao(
             @RequestParam("code") String code,
             @RequestParam("redirect_url") String redirectUrl,
             HttpServletRequest request,
             HttpServletResponse response){
 
-        LoginResponse loginResponse = oAuthLoginUseCase.kakaoLogin(code, redirectUrl, request, response);
+        AuthenticateResponse loginResponse = oAuthLoginUseCase.kakaoLogin(code, redirectUrl);
+        CookieUtil.setRefreshCookie(loginResponse.refreshToken(), response);
 
-        return ResponseEntity.ok(loginResponse);
+        return ResponseEntity.;
     }
 
     @Operation(summary = "네이버 로그인")
@@ -52,6 +61,5 @@ public class OAuthController {
 
         return ResponseEntity.ok(loginResponse);
     }
-
 
 }

@@ -72,12 +72,6 @@ public class Member {
                 .build();
     }
 
-    public void authenticateWithPassword(String password, PasswordEncoder encoder) {
-        if(!encoder.matches(password, this.password)){
-            throw new NotFoundException(MemberEntity.class);
-        }
-    }
-
     public Member updateInfo(ModifyMemberInfoCommand command){
         return this.toBuilder()
                 .nickname(command.nickName() == null ? nickname : command.nickName())

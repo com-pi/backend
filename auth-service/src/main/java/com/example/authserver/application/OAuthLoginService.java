@@ -2,8 +2,6 @@ package com.example.authserver.application;
 
 import com.example.authserver.adapter.in.response.LoginResponse;
 import com.example.authserver.application.port.in.OAuthLoginUseCase;
-import com.example.authserver.application.port.out.external.*;
-import com.example.authserver.application.port.out.external.response.KakaoTokenResponse;
 import com.example.authserver.application.port.out.external.response.KakaoUserInfoResponse;
 import com.example.authserver.application.port.out.external.response.NaverTokenResponse;
 import com.example.authserver.application.port.out.external.response.NaverUserInfoResponse;
@@ -16,7 +14,9 @@ import com.example.authserver.domain.Member;
 import com.example.authserver.domain.TokenType;
 import com.example.authserver.exception.AlreadyLoggedInException;
 import com.example.authserver.exception.OAuthLoginException;
+import com.example.authserver.util.AuthenticateResponse;
 import com.example.authserver.util.CookieUtil;
+import com.example.authserver.util.OAuthAuthenticator;
 import com.example.common.exception.ConflictException;
 import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static com.example.authserver.domain.TokenType.ACCESS_TOKEN;
@@ -35,53 +36,41 @@ import static com.example.authserver.util.Secret.*;
 @RequiredArgsConstructor
 public class OAuthLoginService implements OAuthLoginUseCase {
 
-    private final KakaoAuthClient kakaoAuthClient;
-    private final KakaoAuthClient.KakaoTokenClient kakaoTokenClient;
-    private final NaverAuthClient naverAuthClient;
-    private final NaverAuthClient.NaverTokenClient naverTokenClient;
     private final MemberQuery memberQuery;
     private final MemberCommand memberCommand;
+    private final OAuthAuthenticator oAuthAuthenticator;
     private final JwtUtil jwtUtil;
     private final RedisPort redisPort;
-    private static final String GRANT_TYPE = "authorization_code";
 
     // Todo clean 아키텍쳐 적용, port 에는 인터페이스만 둘 것.
 
     @Override
     @Transactional
-    public LoginResponse kakaoLogin(
-            String code,
-            String redirectUrl,
-            HttpServletRequest request,
-            HttpServletResponse response) {
+    public AuthenticateResponse kakaoLogin (
+            final String code,
+            final String redirectUrl) {
 
-        doubleLoginCheck(request);
+        KakaoUserInfoResponse kakaoUserInfo = oAuthAuthenticator.autheticate(code, redirectUrl);
 
-        KakaoTokenResponse token = kakaoAuthClient.getAccessToken(KAKAO_APP_KEY, KAKAO_SECRET, code, redirectUrl, GRANT_TYPE);
-        KakaoUserInfoResponse kakaoUserInfo = kakaoTokenClient.getUserInfo("Bearer " + token.access_token());
         Optional<Member> kakaoMember = memberQuery.findByKakaoId(kakaoUserInfo.id().toString());
 
-        boolean isNewMember = kakaoMember.isEmpty();
+        if(kakaoMember.isPresent()) {
+            ComPToken accessToken = jwtUtil.generateToken(kakaoMember.get(), ACCESS_TOKEN);
+            ComPToken refreshToken = jwtUtil.generateToken(kakaoMember.get(), REFRESH_TOKEN);
+            redisPort.saveRefreshToken(kakaoMember.get(), refreshToken);
+            boolean isNewMember = kakaoMember.get().getLastLogin() == null;
+            kakaoMember.get().loginStamp(LocalDateTime.now());
+            return new AuthenticateResponse(accessToken, refreshToken, isNewMember);
+        }
 
-        if(isNewMember) {
-            Optional<Member> byEmail = memberQuery.findByEmail(kakaoUserInfo.kakao_account().email());
+        Optional<Member> emailMember = memberQuery.findByEmail(kakaoUserInfo.kakao_account().email());
 
-            if (byEmail.isPresent()) {
-                if(byEmail.get().getKakaoId() != null) {
-                    throw new ConflictException("카카오 계정으로 가입된 회원입니다.");
-                }
-                throw new ConflictException("이메일/비밀번호를 통해 가입된 계정입니다.");
-            }
+
             Member newMember = Member.createSocial(kakaoUserInfo.toMemberCreate());
             Member savedMember = memberCommand.save(newMember);
             kakaoMember = Optional.of(savedMember);
-        }
 
-        ComPToken refreshToken = jwtUtil.generateToken(kakaoMember.get(), REFRESH_TOKEN);
-        redisPort.saveRefreshToken(kakaoMember.get(), refreshToken);
-        CookieUtil.setRefreshCookie(refreshToken, response);
 
-        ComPToken accessToken = jwtUtil.generateToken(kakaoMember.get(), ACCESS_TOKEN);
 
         return LoginResponse.of(accessToken, isNewMember);
     }
@@ -131,6 +120,10 @@ public class OAuthLoginService implements OAuthLoginUseCase {
 
         return LoginResponse.of(accessToken, isNewMember);
     }
+
+
+
+
 
     private void doubleLoginCheck(HttpServletRequest request) {
         Optional<String> refreshToken = CookieUtil.getRefreshToken(request);

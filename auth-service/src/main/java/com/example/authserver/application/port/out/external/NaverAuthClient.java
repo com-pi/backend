@@ -18,12 +18,4 @@ public interface NaverAuthClient {
             @RequestParam("client_secret") String clientSecret,
             @RequestParam("grant_type") String grantType);
 
-    @FeignClient(name = "naver-token", url = "https://openapi.naver.com")
-    interface NaverTokenClient {
-
-        @PostMapping("/v1/nid/me")
-        NaverUserInfoResponse getUserInfo(@RequestHeader("Authorization") String accessToken);
-
-    }
-
 }
