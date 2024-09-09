@@ -72,11 +72,7 @@ public class GlobalExceptionHandler {
         return CommonResponse.badRequestWithMessage(exception.getMessage());
     }
 
-    @ExceptionHandler(AlreadyLoggedInException.class)
-    public ResponseEntity<CommonResponse<Void>> handleAlreadyLoggedInException(AlreadyLoggedInException exception) {
-        log.error(exception.getMessage(), exception);
-        return CommonResponse.conflictWithMessage(exception.getMessage());
-    }
+
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<CommonResponse<Void>> handleUnauthorizedException(UnauthorizedException exception) {

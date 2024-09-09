@@ -9,13 +9,13 @@ import static com.example.authserver.domain.TokenType.REFRESH_TOKEN;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class ComPToken {
+public class ComppiToken {
 
     private final TokenType tokenType;
     private final String token;
 
-    public static ComPToken of(TokenType tokenType, String token) {
-        return new ComPToken(tokenType, token);
+    public static ComppiToken of(TokenType tokenType, String token) {
+        return new ComppiToken(tokenType, token);
     }
 
     public Cookie generateRefreshTokenCookie() {

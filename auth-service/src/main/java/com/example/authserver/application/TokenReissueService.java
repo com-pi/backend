@@ -3,7 +3,7 @@ package com.example.authserver.application;
 import com.example.authserver.adapter.in.response.TokenReIssueResponse;
 import com.example.authserver.util.JwtUtilImpl;
 import com.example.authserver.application.port.out.persistence.RedisPort;
-import com.example.authserver.domain.ComPToken;
+import com.example.authserver.domain.ComppiToken;
 import com.example.authserver.exception.InvalidTokenException;
 import com.example.authserver.util.CookieUtil;
 import com.example.common.domain.Passport;
@@ -37,8 +37,8 @@ public class TokenReissueService {
         }
 
         if (refreshToken.equals(storedToken.get())) {
-            ComPToken comPToken = jwtUtil.generateToken(passport, ACCESS_TOKEN);
-            return TokenReIssueResponse.of(comPToken);
+            ComppiToken comppiToken = jwtUtil.generateToken(passport, ACCESS_TOKEN);
+            return TokenReIssueResponse.of(comppiToken);
         }
 
         CookieUtil.removeRefreshTokenCookies(response);

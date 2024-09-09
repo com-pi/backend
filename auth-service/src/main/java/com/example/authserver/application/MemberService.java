@@ -13,6 +13,7 @@ import com.example.authserver.application.port.out.persistence.MemberCommand;
 import com.example.authserver.application.port.out.persistence.MemberQuery;
 import com.example.authserver.domain.Member;
 import com.example.authserver.domain.MemberBrief;
+import com.example.authserver.domain.ModifyMemberInfoCommand;
 import com.example.authserver.exception.BadRequestException;
 import com.example.common.domain.Address;
 import com.example.common.domain.Location;

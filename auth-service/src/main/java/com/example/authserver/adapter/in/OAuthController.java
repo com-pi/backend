@@ -2,9 +2,11 @@ package com.example.authserver.adapter.in;
 
 import com.example.authserver.adapter.in.response.LoginResponse;
 import com.example.authserver.application.port.in.OAuthLoginUseCase;
+import com.example.authserver.domain.AuthenticateResult;
+import com.example.authserver.util.CookieUtil;
+import com.example.common.baseentity.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,29 +31,28 @@ public class OAuthController {
 
     @Operation(summary = "카카오 로그인")
     @PostMapping("/kakao")
-    public ResponseEntity<LoginResponse> OAuthLoginWithKakao(
+    public ResponseEntity<CommonResponse<LoginResponse>> OAuthLoginWithKakao(
             @RequestParam("code") String code,
             @RequestParam("redirect_url") String redirectUrl,
-            HttpServletRequest request,
             HttpServletResponse response){
 
-        LoginResponse loginResponse = oAuthLoginUseCase.kakaoLogin(code, redirectUrl, request, response);
+        AuthenticateResult authenticateResult = oAuthLoginUseCase.kakaoLogin(code, redirectUrl);
 
-        return ResponseEntity.ok(loginResponse);
+        CookieUtil.setRefreshCookie(authenticateResult.tokenPair().refreshToken(), response);
+        return CommonResponse.okWithMessage("로그인에 성공하였습니다.", authenticateResult.toLoginResponse());
     }
 
     @Operation(summary = "네이버 로그인")
     @PostMapping("/naver")
-    public ResponseEntity<LoginResponse> OAuthLoginWithNaver (
+    public ResponseEntity<CommonResponse<LoginResponse>> OAuthLoginWithNaver (
         @RequestParam("code") String code,
         @RequestParam(value = "state", required = false) String state,
-        HttpServletRequest request,
         HttpServletResponse response) {
 
-        LoginResponse loginResponse = oAuthLoginUseCase.naverLogin(code, state, request, response);
+        AuthenticateResult authenticateResult = oAuthLoginUseCase.naverLogin(code, state);
 
-        return ResponseEntity.ok(loginResponse);
+        CookieUtil.setRefreshCookie(authenticateResult.tokenPair().refreshToken(), response);
+        return CommonResponse.okWithMessage("로그인에 성공하였습니다.", authenticateResult.toLoginResponse());
     }
-
 
 }

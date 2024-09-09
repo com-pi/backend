@@ -1,12 +1,12 @@
 package com.example.authserver.adapter.in.response;
 
-import com.example.authserver.domain.ComPToken;
+import java.time.LocalDateTime;
 
 public record LoginResponse(
-        ComPToken comPToken,
-        Boolean isNewMember
+        String accessToken,
+        LocalDateTime lastLoginAt
 ) {
-    public static LoginResponse of(ComPToken comPToken, Boolean isNewMember){
-        return new LoginResponse(comPToken, isNewMember);
+    public static LoginResponse of(String accessToken, LocalDateTime lastLoginAt){
+        return new LoginResponse(accessToken, lastLoginAt);
     }
 }

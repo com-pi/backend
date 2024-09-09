@@ -5,7 +5,7 @@ import com.example.authserver.domain.MemberCreate;
 
 import java.util.UUID;
 
-public record NaverUserInfoResponse(
+public record NaverUserInfo(
         String resultcode,
         String message,
         NaverProfile response) {
@@ -28,7 +28,7 @@ public record NaverUserInfoResponse(
                 .naverId(response.id)
                 .nickname(response.nickname() != null ?
                         response.nickname() : "새회원" +
-                        UUID.randomUUID().toString().replace("-", "")
+                        UUID.randomUUID().toString().replace("-", "").substring(0, 8)
                 )
                 .email(response.email)
                 .imageUrl(response.profile_image)

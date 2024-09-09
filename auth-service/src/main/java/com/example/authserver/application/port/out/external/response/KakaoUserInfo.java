@@ -4,7 +4,7 @@ import com.example.authserver.domain.MemberCreate;
 
 import java.util.UUID;
 
-public record KakaoUserInfoResponse(
+public record KakaoUserInfo(
         Long id,
         KakaoAccount kakao_account) {
     /**
@@ -31,7 +31,7 @@ public record KakaoUserInfoResponse(
                 .email(kakao_account.email)
                 .nickname(kakao_account.profile() != null && kakao_account.profile().nickname != null ?
                         kakao_account.profile().nickname :
-                        "새회원" + UUID.randomUUID().toString().replace("-", "")
+                        "새회원" + UUID.randomUUID().toString().replace("-", "").substring(0, 8)
                 )
                 .imageUrl(kakao_account.profile() != null ?
                         kakao_account.profile().profile_image_url : null)

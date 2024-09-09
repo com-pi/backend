@@ -1,11 +1,8 @@
 package com.example.authserver.domain;
 
-import com.example.authserver.adapter.out.entity.MemberEntity;
-import com.example.authserver.application.ModifyMemberInfoCommand;
 import com.example.common.domain.Address;
 import com.example.common.domain.Location;
 import com.example.common.domain.Role;
-import com.example.common.exception.NotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -70,12 +67,6 @@ public class Member {
         return Member.builder()
                 .id(id)
                 .build();
-    }
-
-    public void authenticateWithPassword(String password, PasswordEncoder encoder) {
-        if(!encoder.matches(password, this.password)){
-            throw new NotFoundException(MemberEntity.class);
-        }
     }
 
     public Member updateInfo(ModifyMemberInfoCommand command){

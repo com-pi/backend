@@ -6,7 +6,7 @@ import com.example.authserver.application.port.out.persistence.MemberCommand;
 import com.example.authserver.application.port.out.persistence.MemberQuery;
 import com.example.authserver.application.port.out.persistence.RedisPort;
 import com.example.authserver.application.util.JwtUtil;
-import com.example.authserver.domain.ComPToken;
+import com.example.authserver.domain.ComppiToken;
 import com.example.authserver.domain.Member;
 import com.example.authserver.domain.SlackMessage;
 import com.example.authserver.domain.TokenType;
@@ -82,7 +82,7 @@ public class ForgetService {
         return verificationCode;
     }
 
-    public ComPToken verifyPasswordCode(VerifyFindPasswordCodeRequest request){
+    public ComppiToken verifyPasswordCode(VerifyFindPasswordCodeRequest request){
         boolean isMatch = redisPort.verifyFindPasswordValidationCode(
                 request.phoneNumber(),
                 request.email(),
@@ -95,7 +95,7 @@ public class ForgetService {
         Member member = memberQuery.findByPhoneNumber(request.phoneNumber())
                 .orElseThrow(() -> new NotFoundException(Member.class));
 
-        ComPToken passwordChangeToken = jwtUtil.generateToken(member, TokenType.PASSWORD_CHANGE_TOKEN);
+        ComppiToken passwordChangeToken = jwtUtil.generateToken(member, TokenType.PASSWORD_CHANGE_TOKEN);
         redisPort.setChangePasswordCode(request.phoneNumber(), request.email(), passwordChangeToken);
 
         return passwordChangeToken;

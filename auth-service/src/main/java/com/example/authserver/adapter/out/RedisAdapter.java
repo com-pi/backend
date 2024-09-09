@@ -1,7 +1,7 @@
 package com.example.authserver.adapter.out;
 
 import com.example.authserver.application.port.out.persistence.RedisPort;
-import com.example.authserver.domain.ComPToken;
+import com.example.authserver.domain.ComppiToken;
 import com.example.authserver.domain.Member;
 import com.example.common.domain.Passport;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,7 @@ public class RedisAdapter implements RedisPort {
     private final String CHANGE_PASSWORD_REDIS_KEY = "ChangePassword:";
 
     @Override
-    public void saveRefreshToken(Member member, ComPToken refreshToken) {
+    public void saveRefreshToken(Member member, ComppiToken refreshToken) {
         redisTemplate.opsForValue().set(
                 String.format(REFRESH_TOKEN_REDIS_KEY + member.getId()),
                 refreshToken.getToken(),
@@ -95,10 +95,10 @@ public class RedisAdapter implements RedisPort {
     }
 
     @Override
-    public void setChangePasswordCode(String phoneNumber, String email, ComPToken comPToken) {
+    public void setChangePasswordCode(String phoneNumber, String email, ComppiToken comppiToken) {
         redisTemplate.opsForValue().set(
                 CHANGE_PASSWORD_REDIS_KEY + String.format("%s/%s", phoneNumber, email),
-                comPToken.getToken(),
+                comppiToken.getToken(),
                 Duration.ofMinutes(5));
     }
 

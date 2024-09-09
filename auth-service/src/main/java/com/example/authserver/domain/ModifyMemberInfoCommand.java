@@ -1,4 +1,4 @@
-package com.example.authserver.application;
+package com.example.authserver.domain;
 
 import com.example.common.domain.Address;
 import com.example.common.domain.Location;
