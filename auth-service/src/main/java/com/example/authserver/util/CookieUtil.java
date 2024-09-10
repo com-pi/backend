@@ -1,6 +1,6 @@
 package com.example.authserver.util;
 
-import com.example.authserver.domain.ComPToken;
+import com.example.authserver.domain.ComppiToken;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,8 +10,8 @@ import java.util.Optional;
 
 public class CookieUtil {
 
-    public static void setRefreshCookie(ComPToken comPToken, HttpServletResponse response) {
-        response.addCookie(comPToken.generateRefreshTokenCookie());
+    public static void setRefreshCookie(ComppiToken comppiToken, HttpServletResponse response) {
+        response.addCookie(comppiToken.generateRefreshTokenCookie());
     }
 
     public static Optional<String> getRefreshToken(HttpServletRequest request) {
@@ -26,7 +26,7 @@ public class CookieUtil {
     }
 
     public static void removeRefreshTokenCookies(HttpServletResponse response) {
-        response.addCookie(ComPToken.removeRefreshTokenCookie());
+        response.addCookie(ComppiToken.removeRefreshTokenCookie());
     }
 
 }

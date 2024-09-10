@@ -5,7 +5,7 @@ import com.example.authserver.application.port.out.persistence.MemberCommand;
 import com.example.authserver.application.port.out.persistence.MemberQuery;
 import com.example.authserver.application.port.out.persistence.RedisPort;
 import com.example.authserver.application.util.JwtUtil;
-import com.example.authserver.domain.ComPToken;
+import com.example.authserver.domain.ComppiToken;
 import com.example.authserver.domain.Member;
 import com.example.authserver.domain.TokenType;
 import com.example.authserver.exception.BadRequestException;
@@ -187,7 +187,7 @@ class ForgetServiceTest {
                 .phoneNumber("01012345678")
                 .build();
 
-        ComPToken comPToken = ComPToken.of(TokenType.PASSWORD_CHANGE_TOKEN, "token");
+        ComppiToken comppiToken = ComppiToken.of(TokenType.PASSWORD_CHANGE_TOKEN, "token");
 
         given(redisPort.verifyFindPasswordValidationCode(
                 request.phoneNumber(),
@@ -199,15 +199,15 @@ class ForgetServiceTest {
                 .willReturn(Optional.of(member));
 
         given(jwtUtil.generateToken(member, TokenType.PASSWORD_CHANGE_TOKEN))
-                .willReturn(comPToken);
+                .willReturn(comppiToken);
 
         // when
-        ComPToken resultToken = forgetService.verifyPasswordCode(request);
+        ComppiToken resultToken = forgetService.verifyPasswordCode(request);
 
         // then
         assertThat(resultToken).isNotNull();
         assertThat(resultToken.getTokenType()).isEqualTo(TokenType.PASSWORD_CHANGE_TOKEN);
-        assertThat(resultToken.getToken()).isEqualTo(comPToken.getToken());
+        assertThat(resultToken.getToken()).isEqualTo(comppiToken.getToken());
     }
 
     @Test
@@ -234,10 +234,10 @@ class ForgetServiceTest {
     @Test
     void changePassword_올바른_토큰으로_요청시_패스워드를_변경합니다(){
         // given
-        ComPToken comPToken = ComPToken.of(TokenType.PASSWORD_CHANGE_TOKEN, "token");
+        ComppiToken comppiToken = ComppiToken.of(TokenType.PASSWORD_CHANGE_TOKEN, "token");
 
         ChangePasswordRequest request = ChangePasswordRequest.builder()
-                .changePasswordToken(comPToken.getToken())
+                .changePasswordToken(comppiToken.getToken())
                 .newPassword("password")
                 .build();
 
@@ -249,7 +249,7 @@ class ForgetServiceTest {
 
         Passport passport = new Passport(1L, Role.MEMBER);
 
-        given(jwtUtil.validateToken(comPToken.getToken(), comPToken.getTokenType()))
+        given(jwtUtil.validateToken(comppiToken.getToken(), comppiToken.getTokenType()))
                 .willReturn(Optional.of(passport));
 
         given(memberQuery.findById(passport.memberId())).willReturn(Optional.of(member));

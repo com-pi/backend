@@ -1,6 +1,6 @@
 package com.example.authserver.application.port.out.external;
 
-import com.example.authserver.application.port.out.external.response.NaverUserInfoResponse;
+import com.example.authserver.application.port.out.external.response.NaverUserInfo;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -10,6 +10,6 @@ public
 interface NaverTokenClient {
 
     @PostMapping("/v1/nid/me")
-    NaverUserInfoResponse getUserInfo(@RequestHeader("Authorization") String accessToken);
+    NaverUserInfo getUserInfo(@RequestHeader("Authorization") String accessToken);
 
 }

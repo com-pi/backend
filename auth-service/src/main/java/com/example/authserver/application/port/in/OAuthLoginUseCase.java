@@ -1,17 +1,14 @@
 package com.example.authserver.application.port.in;
 
-import com.example.authserver.adapter.in.response.LoginResponse;
-import com.example.authserver.util.AuthenticateResponse;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import com.example.authserver.domain.AuthenticateResult;
 
 public interface OAuthLoginUseCase {
 
-    AuthenticateResponse kakaoLogin(
+    AuthenticateResult kakaoLogin(
             String code,
             String redirectUrl);
 
-    LoginResponse naverLogin(
+    AuthenticateResult naverLogin(
             String code,
             String state);
 

@@ -5,7 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.example.authserver.application.util.JwtUtil;
-import com.example.authserver.domain.ComPToken;
+import com.example.authserver.domain.ComppiToken;
 import com.example.authserver.domain.Member;
 import com.example.authserver.domain.TokenType;
 import com.example.common.domain.Passport;
@@ -30,7 +30,7 @@ public class JwtUtilImpl implements JwtUtil {
     private String passwordChangeTokenSecret;
 
     @Override
-    public ComPToken generateToken(Member member, TokenType tokenType) {
+    public ComppiToken generateToken(Member member, TokenType tokenType) {
 
         String token = JWT.create().withIssuer(TOKEN_ISSUER)
                 .withExpiresAt(tokenType.getInstant())
@@ -38,11 +38,11 @@ public class JwtUtilImpl implements JwtUtil {
                 .withClaim("rol", member.getRole().name())
                 .sign(Algorithm.HMAC256(tokenType.getSecret(this)));
 
-        return ComPToken.of(tokenType, token);
+        return ComppiToken.of(tokenType, token);
     }
 
     @Override
-    public ComPToken generateToken(Passport passPort, TokenType tokenType) {
+    public ComppiToken generateToken(Passport passPort, TokenType tokenType) {
 
         String token = JWT.create().withIssuer(TOKEN_ISSUER)
                 .withExpiresAt(tokenType.getInstant())
@@ -50,7 +50,7 @@ public class JwtUtilImpl implements JwtUtil {
                 .withClaim("rol", passPort.role().name())
                 .sign(Algorithm.HMAC256(tokenType.getSecret(this)));
 
-        return ComPToken.of(tokenType, token);
+        return ComppiToken.of(tokenType, token);
     }
 
     @Override

@@ -2,7 +2,7 @@ package com.example.authserver.adapter.in;
 
 import com.example.authserver.adapter.in.request.*;
 import com.example.authserver.application.ForgetService;
-import com.example.authserver.domain.ComPToken;
+import com.example.authserver.domain.ComppiToken;
 import com.example.common.baseentity.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -54,12 +54,12 @@ public class ForgetController {
     @Operation(summary = "비밀번호 변경 - 인증번호 인증", description = "전송된 인증번호를 입력하여 확인하고 새로운 비밀번호 등록을 위함 임시 토큰을 반환합니다.<br>" +
             "이후 비밀번호 변경 페이지에서 비밀번호 변경 요청시 를 다시 토큰을 전달하도록 합니다.")
     @GetMapping("/password")
-    public ResponseEntity<CommonResponse<ComPToken>> verifyPassword(
+    public ResponseEntity<CommonResponse<ComppiToken>> verifyPassword(
             @ParameterObject @Valid VerifyFindPasswordCodeRequest request
     ){
-        ComPToken comPToken = forgetService.verifyPasswordCode(request);
+        ComppiToken comppiToken = forgetService.verifyPasswordCode(request);
 
-        return CommonResponse.okWithMessage("인증번호 확인 완료. 비밀번호 변경을 위한 토큰을 발급합니다", comPToken);
+        return CommonResponse.okWithMessage("인증번호 확인 완료. 비밀번호 변경을 위한 토큰을 발급합니다", comppiToken);
     }
 
     @Operation(summary = "비밀번호 변경", description = "비밀번호를 변경합니다. 발급된 토큰으로 신원을 확인 합니다.")

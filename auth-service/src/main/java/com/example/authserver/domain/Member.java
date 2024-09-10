@@ -1,11 +1,8 @@
 package com.example.authserver.domain;
 
-import com.example.authserver.adapter.out.entity.MemberEntity;
-import com.example.authserver.application.ModifyMemberInfoCommand;
 import com.example.common.domain.Address;
 import com.example.common.domain.Location;
 import com.example.common.domain.Role;
-import com.example.common.exception.NotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

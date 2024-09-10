@@ -1,8 +1,9 @@
 package com.example.authserver.adapter.in;
 
 import com.example.authserver.adapter.in.request.LoginRequest;
+import com.example.authserver.adapter.in.response.LoginResponse;
 import com.example.authserver.application.port.in.LoginUseCase;
-import com.example.authserver.util.AuthenticateResponse;
+import com.example.authserver.domain.AuthenticateResult;
 import com.example.authserver.util.CookieUtil;
 import com.example.common.baseentity.CommonResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,17 +27,18 @@ public class LoginController {
 
     @Operation(summary = "로그인")
     @PostMapping()
-    public ResponseEntity<CommonResponse<AuthenticateResponse>> login(
+    public ResponseEntity<CommonResponse<LoginResponse>> login(
             @RequestBody @Valid LoginRequest request,
             HttpServletResponse response) {
 
-        AuthenticateResponse authenticateResponse = loginUseCase.login(request);
-        if (authenticateResponse == null) {
+        AuthenticateResult authenticateResult = loginUseCase.login(request);
+
+        if (authenticateResult == null) {
             return CommonResponse.badRequestWithMessage("일치하는 회원 정보가 없습니다.", null);
         }
 
-        CookieUtil.setRefreshCookie(authenticateResponse.refreshToken(), response);
-        return CommonResponse.okWithMessage("로그인에 성공하였습니다.", authenticateResponse);
+        CookieUtil.setRefreshCookie(authenticateResult.tokenPair().refreshToken(), response);
+        return CommonResponse.okWithMessage("로그인에 성공하였습니다.", authenticateResult.toLoginResponse());
     }
 
 }

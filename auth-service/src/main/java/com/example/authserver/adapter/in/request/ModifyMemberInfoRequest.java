@@ -1,6 +1,6 @@
 package com.example.authserver.adapter.in.request;
 
-import com.example.authserver.application.ModifyMemberRequest;
+import com.example.authserver.domain.ModifyMemberRequest;
 import com.example.common.baseentity.SelfValidating;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
