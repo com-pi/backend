@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,8 +34,8 @@ public class LoginController {
 
         AuthenticateResult authenticateResult = loginUseCase.login(request);
 
-        if (authenticateResult == null) {
-            return CommonResponse.badRequestWithMessage("일치하는 회원 정보가 없습니다.", null);
+        if(!HttpStatus.OK.equals(authenticateResult.result())) {
+           return CommonResponse.badRequestWithMessage("일치하는 회원 정보가 없습니다.", null);
         }
 
         CookieUtil.setRefreshCookie(authenticateResult.tokenPair().refreshToken(), response);
