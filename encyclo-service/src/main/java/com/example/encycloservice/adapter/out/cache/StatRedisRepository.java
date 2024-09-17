@@ -1,13 +1,14 @@
 package com.example.encycloservice.adapter.out.cache;
 
-import com.example.encycloservice.application.port.out.PopularPlantStatResult;
 import com.example.encycloservice.adapter.out.persistence.RecentPlantDetailStatResult;
+import com.example.encycloservice.application.port.out.PopularPlantStatResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.temporal.TemporalUnit;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
@@ -26,8 +27,8 @@ public class StatRedisRepository implements StatRepository {
 
     @Override
     public void recordPopularPlant(Long plantId, String time, Long memberId) {
-        String plantIdTimeKey = String.format("popularity:%s:%s", plantId, time);
-        String plantIdKey = String.format("popularity:%s", plantId);
+        final String plantIdTimeKey = String.format("%s:%s:%s", RedisKey.popularity, plantId, time);
+        final String plantIdKey = String.format("%s:%s", RedisKey.popularity, plantId);
 
         createSetIfAbsent(plantIdTimeKey);
         createSetIfAbsent(plantIdKey);
@@ -73,10 +74,10 @@ public class StatRedisRepository implements StatRepository {
     }
 
     @Override
-    public void updatePopularPlantStat(LocalDateTime now) {
+    public void updatePopularPlantStat(LocalDateTime now, long timeAmount, TemporalUnit unit) {
 
         double epochNow = getEpochMillis(now);
-        double epochPast = getEpochMillis(now.minusDays(3));
+        double epochPast = getEpochMillis(now.minus(timeAmount, unit));
 
         Set<String> plantIdWithinPast = redisTemplate.opsForZSet()
                 .reverseRangeByScore(RedisKey.recentPlantDetails, epochPast, epochNow);
@@ -88,7 +89,7 @@ public class StatRedisRepository implements StatRepository {
         Map<String, Long> plantViewStat = new HashMap<>();
 
         for (String plantId : plantIdWithinPast){
-            String plantIdKey = String.format("popularity:%s", plantId);
+            String plantIdKey = String.format("%s:%s", RedisKey.popularity, plantId);
             Set<String> plantIdTimeKeys = redisTemplate.opsForSet().members(plantIdKey);
             if(plantIdTimeKeys == null) {
                 plantIdTimeKeys = new HashSet<>();

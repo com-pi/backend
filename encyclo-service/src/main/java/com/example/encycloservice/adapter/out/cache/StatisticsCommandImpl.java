@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalUnit;
 
 @Component
 @RequiredArgsConstructor
@@ -32,8 +33,8 @@ public class StatisticsCommandImpl implements StatisticsCommand {
     }
 
     @Override
-    public void updatePopularPlantStat(LocalDateTime now) {
-        statRepository.updatePopularPlantStat(now);
+    public void updatePopularPlantStat(LocalDateTime now, long timeAmount, TemporalUnit unit) {
+        statRepository.updatePopularPlantStat(now, timeAmount, unit);
     }
 
 }

@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +34,7 @@ public class StatisticsService implements StatisticsUseCase {
 
     @Override
     public void updatePopularPlantList(LocalDateTime now) {
-        statisticsCommand.updatePopularPlantStat(now);
+        statisticsCommand.updatePopularPlantStat(now, 1L, ChronoUnit.HOURS);
     }
 
 }
