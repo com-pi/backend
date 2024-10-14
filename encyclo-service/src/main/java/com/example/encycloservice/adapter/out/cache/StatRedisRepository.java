@@ -8,7 +8,8 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.temporal.TemporalUnit;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.IntStream;
@@ -20,31 +21,8 @@ public class StatRedisRepository implements StatRepository {
     private final RedisTemplate<String, String> redisTemplate;
     private final PopularityRecordRepository popularityRecordRepository;
 
-    @Override
-    public void recordRecentPlantDetails(Long plantId, long epochTimeStamp) {
-        redisTemplate.opsForZSet().add(RedisKey.recentPlantDetails, plantId.toString(), epochTimeStamp);
-    }
-
-    @Override
-    public void recordPopularPlant(Long plantId, String time, Long memberId) {
-        final String plantIdTimeKey = String.format("%s:%s:%s", RedisKey.popularity, plantId, time);
-        final String plantIdKey = String.format("%s:%s", RedisKey.popularity, plantId);
-
-        createSetIfAbsent(plantIdTimeKey);
-        createSetIfAbsent(plantIdKey);
-
-        redisTemplate.opsForSet().add(plantIdTimeKey, memberId.toString());
-        redisTemplate.opsForSet().add(plantIdKey, plantIdTimeKey);
-    }
-
-    private void createSetIfAbsent(String key) {
-        int expirationTimeInDay = 5;
-        if(Boolean.FALSE.equals(redisTemplate.hasKey(key))){
-            redisTemplate.opsForSet().add(key, "dummy");
-            redisTemplate.expire(key, expirationTimeInDay, TimeUnit.DAYS);
-            redisTemplate.opsForSet().remove(key, "dummy");
-        }
-    }
+    private final DateTimeFormatter dateTimeHour = DateTimeFormatter.ofPattern("MMddHH");
+    final int expirationTimeInDay = 1;
 
     @Override
     public RecentPlantDetailStatResult getRecentPlantDetails(int page, int size) {
@@ -73,31 +51,60 @@ public class StatRedisRepository implements StatRepository {
                 .build();
     }
 
-    @Override
-    public void updatePopularPlantStat(LocalDateTime now, long timeAmount, TemporalUnit unit) {
 
-        double epochNow = getEpochMillis(now);
-        double epochPast = getEpochMillis(now.minus(timeAmount, unit));
+    @Override
+    public void recordRecentPlantDetails(Long plantId, long currentEpochSecond) {
+        redisTemplate.opsForZSet().add(RedisKey.recentPlantDetails, plantId.toString(), currentEpochSecond);
+    }
+
+    @Override
+    public void recordPopularPlant(Long plantId, LocalDateTime time, Long memberId) {
+        final String plantIdTimeKey = String.format("%s:%s:%s", RedisKey.popularity, plantId, time.format(dateTimeHour));
+        final String plantIdKey = RedisKey.getPopularityPlantIdKey(plantId);
+
+        // 특정 식물에 특정 시간 구간에서 처음 조회가 발생한 경우
+        if(Boolean.FALSE.equals(redisTemplate.hasKey(plantIdTimeKey))) {
+            redisTemplate.opsForSet().add(plantIdTimeKey, "dummy");
+            redisTemplate.expire(plantIdTimeKey, expirationTimeInDay, TimeUnit.DAYS);
+            redisTemplate.opsForSet().remove(plantIdTimeKey, "dummy");
+            redisTemplate.opsForZSet().add(plantIdKey, plantIdTimeKey, time.atZone(ZoneId.systemDefault()).toEpochSecond());
+        }
+
+        redisTemplate.opsForSet().add(plantIdTimeKey, memberId.toString());
+    }
+
+
+    @Override
+    public void updatePopularPlantStat(LocalDateTime now) {
+        long nowSecond = now.truncatedTo(ChronoUnit.HOURS)
+                .atZone(ZoneId.systemDefault()).toEpochSecond();
+        long pastSecond = now.truncatedTo(ChronoUnit.HOURS).minusDays(expirationTimeInDay)
+                .atZone(ZoneId.systemDefault()).toEpochSecond();
+
+        redisTemplate.opsForZSet()
+                .removeRangeByScore(RedisKey.recentPlantDetails, 0, nowSecond - 1);
 
         Set<String> plantIdWithinPast = redisTemplate.opsForZSet()
-                .reverseRangeByScore(RedisKey.recentPlantDetails, epochPast, epochNow);
+                .rangeByScore(RedisKey.recentPlantDetails, pastSecond, nowSecond);
 
-        if(plantIdWithinPast == null) {
-            plantIdWithinPast = new HashSet<>();
+        if(plantIdWithinPast == null || plantIdWithinPast.isEmpty()) {
+            return;
         }
 
         Map<String, Long> plantViewStat = new HashMap<>();
-
         for (String plantId : plantIdWithinPast){
-            String plantIdKey = String.format("%s:%s", RedisKey.popularity, plantId);
+            String plantIdKey = RedisKey.getPopularityPlantIdKey(plantId);
             Set<String> plantIdTimeKeys = redisTemplate.opsForSet().members(plantIdKey);
-            if(plantIdTimeKeys == null) {
-                plantIdTimeKeys = new HashSet<>();
+
+            if(plantIdTimeKeys == null || plantIdTimeKeys.isEmpty()) {
+                continue;
             }
+
             Long views = 0L;
             for (String plantIdTimeKey : plantIdTimeKeys){
                 views += redisTemplate.opsForSet().size(plantIdTimeKey);
             }
+
             plantViewStat.put(plantId, views);
         }
 
@@ -107,10 +114,6 @@ public class StatRedisRepository implements StatRepository {
     @Override
     public PopularPlantStatResult getPopularPlantList() {
         return popularityRecordRepository.getPopularPlantStat();
-    }
-
-    private double getEpochMillis(LocalDateTime time){
-        return (double) time.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
     }
 
 }

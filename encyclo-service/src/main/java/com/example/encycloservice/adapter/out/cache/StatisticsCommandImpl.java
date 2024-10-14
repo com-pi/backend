@@ -8,33 +8,30 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalUnit;
 
 @Component
 @RequiredArgsConstructor
 public class StatisticsCommandImpl implements StatisticsCommand {
 
     private final StatRepository statRepository;
-    private final DateTimeFormatter dateTimeHour = DateTimeFormatter.ofPattern("MMddHH");
 
 
     @Async
     @Override
     public void recordRecentPlantDetails(PlantSpecies plantSpecies, LocalDateTime now) {
-        long currentTimeMillis = now.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli();
-        statRepository.recordRecentPlantDetails(plantSpecies.getId(), currentTimeMillis);
+        long currentTimeSecond = now.atZone(ZoneId.systemDefault()).toEpochSecond();
+        statRepository.recordRecentPlantDetails(plantSpecies.getId(), currentTimeSecond);
     }
 
     @Async
     @Override
     public void recordPopularPlant(PlantSpecies plantSpecies, Long memberId, LocalDateTime now) {
-        statRepository.recordPopularPlant(plantSpecies.getId(), now.format(dateTimeHour), memberId);
+        statRepository.recordPopularPlant(plantSpecies.getId(), now, memberId);
     }
 
     @Override
-    public void updatePopularPlantStat(LocalDateTime now, long timeAmount, TemporalUnit unit) {
-        statRepository.updatePopularPlantStat(now, timeAmount, unit);
+    public void updatePopularPlantStat(LocalDateTime now) {
+        statRepository.updatePopularPlantStat(now);
     }
 
 }

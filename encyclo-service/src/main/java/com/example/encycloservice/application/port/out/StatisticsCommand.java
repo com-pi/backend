@@ -4,7 +4,6 @@ import com.example.encycloservice.domain.PlantSpecies;
 import org.springframework.scheduling.annotation.Async;
 
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalUnit;
 
 public interface StatisticsCommand {
 
@@ -14,6 +13,6 @@ public interface StatisticsCommand {
     @Async
     void recordPopularPlant(PlantSpecies plantSpecies, Long memberId, LocalDateTime timeStamp);
 
-    void updatePopularPlantStat(LocalDateTime now, long time, TemporalUnit unit);
+    void updatePopularPlantStat(LocalDateTime now);
 
 }
