@@ -2,16 +2,15 @@ package com.example.encycloservice.application;
 
 import com.example.encycloservice.adapter.in.response.PopularPlantStatResponse;
 import com.example.encycloservice.adapter.in.response.RecentPlantDetailResponse;
+import com.example.encycloservice.adapter.out.persistence.RecentPlantDetailStatResult;
 import com.example.encycloservice.application.port.in.StatisticsUseCase;
 import com.example.encycloservice.application.port.out.EncyclopediaQuery;
 import com.example.encycloservice.application.port.out.StatisticsCommand;
 import com.example.encycloservice.application.port.out.StatisticsQuery;
-import com.example.encycloservice.adapter.out.persistence.RecentPlantDetailStatResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -34,7 +33,7 @@ public class StatisticsService implements StatisticsUseCase {
 
     @Override
     public void updatePopularPlantList(LocalDateTime now) {
-        statisticsCommand.updatePopularPlantStat(now, 1L, ChronoUnit.HOURS);
+        statisticsCommand.updatePopularPlantStat(now);
     }
 
 }

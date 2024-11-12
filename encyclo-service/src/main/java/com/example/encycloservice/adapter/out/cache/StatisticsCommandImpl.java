@@ -8,15 +8,12 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalUnit;
 
 @Component
 @RequiredArgsConstructor
 public class StatisticsCommandImpl implements StatisticsCommand {
 
     private final StatRepository statRepository;
-    private final DateTimeFormatter dateTimeHour = DateTimeFormatter.ofPattern("MMddHH");
 
 
     @Async
@@ -29,12 +26,12 @@ public class StatisticsCommandImpl implements StatisticsCommand {
     @Async
     @Override
     public void recordPopularPlant(PlantSpecies plantSpecies, Long memberId, LocalDateTime now) {
-        statRepository.recordPopularPlant(plantSpecies.getId(), now.format(dateTimeHour), memberId);
+        statRepository.recordPopularPlant(plantSpecies.getId(), memberId, now);
     }
 
     @Override
-    public void updatePopularPlantStat(LocalDateTime now, long timeAmount, TemporalUnit unit) {
-        statRepository.updatePopularPlantStat(now, timeAmount, unit);
+    public void updatePopularPlantStat(LocalDateTime now) {
+        statRepository.updatePopularPlantStat(now);
     }
 
 }
