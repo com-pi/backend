@@ -5,9 +5,9 @@ import com.example.authserver.adapter.out.repository.MemberCacheRepository;
 import com.example.authserver.domain.Event;
 import com.example.authserver.domain.EventType;
 import com.example.authserver.domain.Member;
-import com.example.authserver.event.MemberEventPublisher;
 import jakarta.persistence.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
@@ -34,16 +34,13 @@ public class MemberEntityListener {
 //        memberEventPublisher.publishEvent(createEvent(EventType.DELETE, member));
     }
 
-    @PostPersist
-    public void postPersist(MemberEntity member) {
-        memberCacheRepository.saveMemberBrief(MemberEntity.toBrief(member));
-    }
-
+    @Async
     @PostUpdate
     public void postUpdate(MemberEntity member) {
         memberCacheRepository.saveMemberBrief(MemberEntity.toBrief(member));
     }
 
+    @Async
     @PostRemove
     public void postRemove(MemberEntity member) {
         memberCacheRepository.deleteMemberBrief(member.getId());
